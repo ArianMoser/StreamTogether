@@ -21,10 +21,7 @@ app
         });
 
         exp.get("/", (req, res) => {
-            let query={
-                xzy:"abc"
-            }
-            return app.render(req, res, "/index", query);
+            return app.render(req, res, "/index");
         });
 
         exp.get("*", (req, res) => {

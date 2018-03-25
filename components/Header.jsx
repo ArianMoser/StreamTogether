@@ -7,11 +7,7 @@ export default class Header extends Component{
     {
         return (
             <Fragment>
-                hallo <br/>
-                
-                {this.props.isLoggedIn===true?"eingeloggt":"ausgeloggt"}
                 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"></link>
-                <div> Das ist ein Header</div>
                 {this.props.children}
             </Fragment>
         )
