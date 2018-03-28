@@ -7,6 +7,9 @@ Starten mit den erstellten Dateien: 	npm start				(später für den Server)
 
 Zum aufsetzten: nginx aufsetzten , node drauf, datenbank drauf, alles einstellen, fertisch
 
+WICHTIG: SSL, Sicherer Zugang
+Websockets: für Chat (Websockets chat example), für die Synchronisation zwischen den Räumen auch hilfreich
+
 
 Thema:                                  Frontend               Backend
 

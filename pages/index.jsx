@@ -230,6 +230,7 @@ const HomepageLayout = () => (
               <Header inverted as="h4" content="About" />
               <List link inverted>
                 <List.Item as="a">Contact Us</List.Item>
+                <List.Item as="a">Impressum</List.Item>
                 <List.Item as="a">Data privacy</List.Item>
               </List>
             </Grid.Column>
