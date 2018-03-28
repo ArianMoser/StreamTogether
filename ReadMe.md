@@ -5,6 +5,7 @@ Development Mode starten : 				npm run dev				(Zum arbeiten und testen)
 Alles erstellen: 						npm run build			(ganz zum schluss wenn alles läuft)
 Starten mit den erstellten Dateien: 	npm start				(später für den Server)
 
+Zum aufsetzten: nginx aufsetzten , node drauf, datenbank drauf, alles einstellen, fertisch
 
 
 Thema:                                  Frontend               Backend
