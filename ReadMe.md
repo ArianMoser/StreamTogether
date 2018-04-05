@@ -18,8 +18,9 @@ Thema:                                  Frontend               Backend
 Startseite                              ok
 Login                                   ok
 Registrierung                           ok
-Impressum                               -
-Datenschutz                             -
+Impressum                               ok(noch verbessern)    nicht notwendig
+Datenschutz                             ok(noch verbessern)    nicht notwendig
+Contact Us                              -
 Datenbank                               -
 Raumseite                               -
 Übersicht von Räumen                    begin
