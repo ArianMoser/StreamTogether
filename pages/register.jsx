@@ -12,7 +12,7 @@ import {
   Segment
 } from "semantic-ui-react";
 
-export default class Login extends Component {
+export default class register extends Component {
   render() {
     return (
       <OwnHeader>
