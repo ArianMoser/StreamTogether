@@ -24,7 +24,7 @@ const HomepageHeading = () => (
   <Container text>
     <Header
       as="h1"
-      content="Stream Together"
+      content="Welcome on StreamTogether"
       inverted
       style={{
         fontSize: "4em",
@@ -35,7 +35,7 @@ const HomepageHeading = () => (
     />
     <Header
       as="h2"
-      content="Stream now videos with your friends!"
+      content="Stream videos with your friends!"
       inverted
       style={{
         fontSize: "1.7em",
@@ -43,10 +43,7 @@ const HomepageHeading = () => (
         marginTop: "1.5em"
       }}
     />
-    <Button primary size="huge">
-      Create Room
-      <Icon name="right arrow" />
-    </Button>
+  
   </Container>
 );
 
@@ -101,7 +98,7 @@ class DesktopContainer extends Component {
                     >
                       Rooms
                     </Menu.Item>
-                  </Link>
+                  </Link>	  
                   <Link href="/help">
                     <Menu.Item
                       name="help"
@@ -110,6 +107,7 @@ class DesktopContainer extends Component {
                     >
                       Help
                     </Menu.Item>
+
                   </Link>
                   <Menu.Item position="right">
                     <Link href="/login">
@@ -160,62 +158,96 @@ const HomepageLayout = () => (
       <Grid container stackable verticalAlign="middle">
         <Grid.Row>
           <Grid.Column width={8}>
-            <Header as="h3" style={{ fontSize: "2em" }}>
-              Bdouaduoawghdouaghwdoawö
+            <Header as="h1" style={{ fontSize: "2em" }}>
+              StreamTogether step for step
             </Header>
-            <p style={{ fontSize: "1.33em" }}>
-              aduioahduoawgbdagwduaogbdagdagdoägawgdäahdawhdugadgawgdäo
-            </p>
-            <Header as="h3" style={{ fontSize: "2em" }}>
-              Jeder zweiter Elefant ist Links-Rüssler
+			 <Header as="h4" style={{ fontSize: "2em" }}>
+              Step 1:
             </Header>
-            <p style={{ fontSize: "1.33em" }}>
-              Auch gibt es niemanden, der den Schmerz an sich liebt, sucht oder
-              wünscht, nur, weil er Schmerz ist, es sei denn, es kommt zu
-              zufälligen Umständen, in denen Mühen und Schmerz ihm große Freude
-              bereiten können. Um ein triviales Beispiel zu nehmen, wer von uns
-              unterzieht sich je anstrengender körperlicher Betätigung, außer um
-              Vorteile daraus zu ziehen? Aber wer hat irgend ein Recht, einen
-              Menschen zu tadeln, der die Entscheidung trifft, eine Freude zu
-              genießen, die keine unangenehmen Folgen hat, oder einen, der
-              Schmerz vermeidet, welcher keine daraus resultierende Freude nach
-              sich zieht? Auch gibt es niemanden, der den Schmerz an sich liebt,
-              sucht oder wünscht, nur, weil er Schmerz ist, es sei.
+            <p style={{ fontSize: "1.33em" }}>  
+			    <Button primary size="huge">
+					Create Room
+				<Icon name="right arrow" />
+				</Button>
             </p>
+			<p style={{ fontSize: "1.33em" }}> 
+			You do not need to register to create a room.
+			</p>
+			<p style={{ fontSize: "1.33em" }}> 
+			But: Get more functions by creating your own account!
+			</p>
+          </Grid.Column>  
+    	 </Grid.Row>
+		 
+		 <Grid.Row>
+			<Grid.Column width={8}>
+			 <Header as="h4" style={{ fontSize: "2em" }}>
+              Step 2:
+            </Header>
+			<p style={{ fontSize: "1.33em" }}> 
+			Share your room with others by inviting them.
+			</p>
           </Grid.Column>
-          <Grid.Column floated="right" width={7}>
+		  <Grid.Column floated="right" width={7}>
             <Image
               bordered
               rounded
               size="large"
               src="../static/Tomorrowland2015.jpg"
             />
+          </Grid.Column>	
+		</Grid.Row>
+		
+		<Grid.Row>
+			<Grid.Column width={8}>
+			 <Header as="h4" style={{ fontSize: "2em" }}>
+              Step 3:
+            </Header>
+			<p style={{ fontSize: "1.33em" }}> 
+			Watch. Videos. Together.
+			</p>
           </Grid.Column>
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Column textAlign="center">
-            <Button size="huge">Klicke auf den tollen Button</Button>
-          </Grid.Column>
-        </Grid.Row>
+		</Grid.Row>
+			
+			
+
+		
+		
+		
       </Grid>
     </Segment>
 
     <Segment style={{ padding: "0em" }} vertical>
       <Grid celled="internally" columns="equal" stackable>
+	  <Grid.Row>
+	  <Grid.Column textAlign="center">
+	  <Header as="h4" style={{ fontSize: "2em" }}>
+         Why do you should use StreamTogether?
+      </Header>
+	  </Grid.Column>
+	  </Grid.Row>
         <Grid.Row textAlign="center">
           <Grid.Column style={{ paddingBottom: "5em", paddingTop: "5em" }}>
             <Header as="h3" style={{ fontSize: "2em" }}>
-              "Test123"
+              Stream with friends
             </Header>
-            <p style={{ fontSize: "1.33em" }}>Tesrsrfsefesfsefsef</p>
           </Grid.Column>
           <Grid.Column style={{ paddingBottom: "5em", paddingTop: "5em" }}>
             <Header as="h3" style={{ fontSize: "2em" }}>
-              "#Hiermusswascooelshin"
+              Another reason
             </Header>
             <p style={{ fontSize: "1.33em" }}>
               <Image avatar src="../static/Tomorrowland2015.jpg" />
               <b>I/b> am the BOSS</b>
+            </p>
+          </Grid.Column>
+		    <Grid.Column style={{ paddingBottom: "5em", paddingTop: "5em" }}>
+            <Header as="h3" style={{ fontSize: "2em" }}>
+              And one more reason
+            </Header>
+            <p style={{ fontSize: "1.33em" }}>
+              <Image avatar src="../static/Tomorrowland2015.jpg" />
+              <b>I</b> am the <b>BOSS</b>
             </p>
           </Grid.Column>
         </Grid.Row>

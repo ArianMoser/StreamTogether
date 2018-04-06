@@ -1,84 +1,209 @@
+//Imports
+import PropTypes from "prop-types";
+import React, { Component } from "react";
+import Link from "next/link";
 import OwnHeader from "../components/Header";
-import React, { Component } from 'react';
-import { Icon, Image,Accordion,activeIndex, Statistic } from "semantic-ui-react";
+import {
+  Card,	
+  Button,
+  Container,
+  Divider,
+  Grid,
+  Header,
+  Icon,
+  Image,
+  List,
+  Menu,
+  Responsive,
+  Segment,
+  Sidebar,
+  Visibility,
+  Accordion,
+  activeIndex,
+  Statistic
+} from "semantic-ui-react";
 
-export default class help extends Component {
-  state = { activeIndex: 0 }
+//Header Settings
+const HomepageHeading = () => (
+  <Container text>
+    <Header
+      as="h1"
+      content="Help"
+      inverted
+      style={{
+        fontSize: "4em",
+        fontWeight: "normal",
+        marginBottom: 0,
+        marginTop: "3em"
+      }}
+    />
 
-  handleClick = (e, titleProps) => {
-    const { index } = titleProps
-    const { activeIndex } = this.state
-    const newIndex = activeIndex === index ? -1 : index
+  </Container>
+);
 
-    this.setState({ activeIndex: newIndex })
-  }
+
+
+//Nav Bar
+class DesktopContainer extends Component {
+  state = {};
+
+  handleItemClick = (e, { name }) => this.setState({ activeItem: name });
+  hideFixedMenu = () => this.setState({ fixed: false });
+  showFixedMenu = () => this.setState({ fixed: true });
 
   render() {
-    const { activeIndex } = this.state
+    const { children } = this.props;
+    const { fixed } = this.state;
+    const { activeItem } = this.state;
+
     return (
       <OwnHeader>
-        <Statistic.Group>
-          <Statistic>
-            <Statistic.Value>22</Statistic.Value>
-            <Statistic.Label>Active Rooms</Statistic.Label>
-          </Statistic>
+        <Responsive {...Responsive.onlyComputer}>
+          <Visibility
+            once={false}
+            onBottomPassed={this.showFixedMenu}
+            onBottomPassedReverse={this.hideFixedMenu}
+          >
+            <Segment
+              inverted
+              color="grey"
+              textAlign="center"
+              style={{ minHeight: 550, padding: "1em 0em" }}
+              vertical
+            >
+              <Menu
+                fixed={fixed ? "top" : null}
+                inverted={!fixed}
+                secondary={!fixed}
+                size="large"
+              >
+                <Container>
+				 <Link href="/index">
+                  <Menu.Item
+                    name="home"
+                    active={activeItem === "home"}
+                    onClick={this.handleItemClick}
+                  >
+                    Start
+                  </Menu.Item>
+				 </Link>
+                  <Link href="/rooms">
+                    <Menu.Item
+                      name="rooms"
+                      active={activeItem === "rooms"}
+                      onClick={this.handleItemClick}
+                    >
+                      Rooms
+                    </Menu.Item>
+                  </Link>	  
+                  <Link href="/help">
+                    <Menu.Item
+                      name="help"
+                      active={activeItem === "help"}
+                      onClick={this.handleItemClick}
+					  active
+                    >
+                      Help
+                    </Menu.Item>
 
-          <Statistic>
-            <Statistic.Value text>
-              Three<br />
-              Thousand
-            </Statistic.Value>
-            <Statistic.Label>Signups</Statistic.Label>
-          </Statistic>
-
-          <Statistic>
-            <Statistic.Value>
-              <Icon name="music" />
-              214
-            </Statistic.Value>
-            <Statistic.Label>Played Videos</Statistic.Label>
-          </Statistic>
-        </Statistic.Group>
-
-        <Accordion fluid styled>
-          <Accordion.Title active={activeIndex === 0} index={0} onClick={this.handleClick}>
-            <Icon name='dropdown' />
-            What is a dog?
-        </Accordion.Title>
-          <Accordion.Content active={activeIndex === 0}>
-            <p>
-              A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a
-            {' '}welcome guest in many households across the world.
-          </p>
-          </Accordion.Content>
-
-          <Accordion.Title active={activeIndex === 1} index={1} onClick={this.handleClick}>
-            <Icon name='dropdown' />
-            What kinds of dogs are there?
-        </Accordion.Title>
-          <Accordion.Content active={activeIndex === 1}>
-            <p>
-              There are many breeds of dogs. Each breed varies in size and temperament. Owners often select a breed of
-            {' '}dog that they find to be compatible with their own lifestyle and desires from a companion.
-          </p>
-          </Accordion.Content>
-
-          <Accordion.Title active={activeIndex === 2} index={2} onClick={this.handleClick}>
-            <Icon name='dropdown' />
-            How do you acquire a dog?
-        </Accordion.Title>
-          <Accordion.Content active={activeIndex === 2}>
-            <p>
-              Three common ways for a prospective owner to acquire a dog is from pet shops, private owners, or shelters.
-          </p>
-            <p>
-              A pet shop may be the most convenient way to buy a dog. Buying a dog from a private owner allows you to
-            {' '}assess the pedigree and upbringing of your dog before choosing to take it home. Lastly, finding your
-            {' '}dog from a shelter, helps give a good home to a dog who may not find one so readily.
-          </p>
-          </Accordion.Content>
-        </Accordion>
+                  </Link>
+                  <Menu.Item position="right">
+                    <Link href="/login">
+                      <Button as="logIn" inverted={!fixed} color="green">
+                        Log In
+                      </Button>
+                    </Link>
+                    <Link href="/register">
+                      <Button
+                        as="signUp"
+                        inverted={!fixed}
+                        color="orange"
+                        style={{ marginLeft: "0.5em" }}
+                      >
+                        Sign Up
+                      </Button>
+                    </Link>
+                  </Menu.Item>
+                </Container>
+              </Menu>
+              <HomepageHeading />
+            </Segment>
+          </Visibility>
+          {children}
+        </Responsive>
       </OwnHeader>
     );
   }
 }
+
+DesktopContainer.propTypes = {
+  children: PropTypes.node
+};
+
+const ResponsiveContainer = ({ children }) => (
+  <div>
+    <DesktopContainer>{children}</DesktopContainer>
+  </div>
+);
+
+ResponsiveContainer.propTypes = {
+  children: PropTypes.node
+};
+
+const HomepageLayout = () => (
+  <ResponsiveContainer>
+    <Segment style={{ padding: "8em 0em" }} vertical>
+      <Grid container stackable verticalAlign="middle">
+        <Grid.Row>
+          <Grid.Column width={8}>
+			<p style={{ fontSize: "1.33em" }}>
+				Here are some important things that may will help you.
+			</p>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    </Segment>
+
+    <Segment inverted vertical style={{ padding: "5em 0em" }}>
+      <Container>
+        <Grid divided inverted stackable>
+          <Grid.Row>
+            <Grid.Column width={3}>
+              <Header inverted as="h4" content="About" />
+              <List link inverted>
+                <Link href="/contact">
+                  <List.Item as="a">Contact Us</List.Item>
+                </Link>
+                <Link href="/impressum">
+                  <List.Item as="a">Impressum</List.Item>
+                </Link>
+                <Link href="/dataprivacy">
+                  <List.Item as="a">Data privacy</List.Item>
+                </Link>
+              </List>
+            </Grid.Column>
+            <Grid.Column width={3}>
+              <Header inverted as="h4" content="Services" />
+              <List link inverted>
+                <Link href="/help">
+                  <List.Item as="a">Help</List.Item>
+                </Link>
+              </List>
+            </Grid.Column>
+            <Grid.Column width={7}>
+              <Header as="h4" inverted>
+                Footer Header
+              </Header>
+              <p>Bla Bla BLAAA Bla Bla Bla Bla BLaaaa MIMIMIMIM</p>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Container>
+    </Segment>
+  </ResponsiveContainer>
+);
+
+export default HomepageLayout;
+
+
+
