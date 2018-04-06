@@ -43,7 +43,6 @@ const HomepageHeading = () => (
         marginTop: "1.5em"
       }}
     />
-  
   </Container>
 );
 
@@ -98,7 +97,7 @@ class DesktopContainer extends Component {
                     >
                       Rooms
                     </Menu.Item>
-                  </Link>	  
+                  </Link>
                   <Link href="/help">
                     <Menu.Item
                       name="help"
@@ -107,7 +106,6 @@ class DesktopContainer extends Component {
                     >
                       Help
                     </Menu.Item>
-
                   </Link>
                   <Menu.Item position="right">
                     <Link href="/login">
@@ -161,71 +159,79 @@ const HomepageLayout = () => (
             <Header as="h1" style={{ fontSize: "2em" }}>
               StreamTogether step for step
             </Header>
-			 <Header as="h4" style={{ fontSize: "2em" }}>
+            <Header as="h4" style={{ fontSize: "2em" }}>
               Step 1:
             </Header>
-            <p style={{ fontSize: "1.33em" }}>  
-			    <Button primary size="huge">
-					Create Room
-				<Icon name="right arrow" />
-				</Button>
+            <p style={{ fontSize: "1.33em" }}>
+              <Button primary size="huge">
+                Create Room
+                <Icon name="right arrow" />
+              </Button>
             </p>
-			<p style={{ fontSize: "1.33em" }}> 
-			You do not need to register to create a room.
-			</p>
-			<p style={{ fontSize: "1.33em" }}> 
-			But: Get more functions by creating your own account!
-			</p>
-          </Grid.Column>  
-    	 </Grid.Row>
-		 
-		 <Grid.Row>
-			<Grid.Column width={8}>
-			 <Header as="h4" style={{ fontSize: "2em" }}>
+            <p style={{ fontSize: "1.33em" }}>
+              You do not need to register to create a room.
+            </p>
+            <p style={{ fontSize: "1.33em" }}>
+              But: Get more functions by creating your own account!
+            </p>
+          </Grid.Column>
+          <Grid.Column floated="right" width={7}>
+            <Image
+              bordered
+              rounded
+              size="large"
+              src="../static/MusicListen.jpg"
+            />
+          </Grid.Column>
+        </Grid.Row>
+
+        <Grid.Row>
+          <Grid.Column width={8}>
+            <Header as="h4" style={{ fontSize: "2em" }}>
               Step 2:
             </Header>
-			<p style={{ fontSize: "1.33em" }}> 
-			Share your room with others by inviting them.
-			</p>
+            <p style={{ fontSize: "1.33em" }}>
+              Share your room with others by inviting them.
+            </p>
           </Grid.Column>
-		  <Grid.Column floated="right" width={7}>
+          <Grid.Column floated="right" width={7}>
             <Image
               bordered
               rounded
               size="large"
               src="../static/Tomorrowland2015.jpg"
             />
-          </Grid.Column>	
-		</Grid.Row>
-		
-		<Grid.Row>
-			<Grid.Column width={8}>
-			 <Header as="h4" style={{ fontSize: "2em" }}>
+          </Grid.Column>
+        </Grid.Row>
+
+        <Grid.Row>
+          <Grid.Column width={8}>
+            <Header as="h4" style={{ fontSize: "2em" }}>
               Step 3:
             </Header>
-			<p style={{ fontSize: "1.33em" }}> 
-			Watch. Videos. Together.
-			</p>
+            <p style={{ fontSize: "1.33em" }}>Watch. Videos. Together.</p>
           </Grid.Column>
-		</Grid.Row>
-			
-			
-
-		
-		
-		
+          <Grid.Column floated="right" width={7}>
+            <Image
+              bordered
+              rounded
+              size="large"
+              src="../static/yt.png"
+            />
+          </Grid.Column>
+        </Grid.Row>
       </Grid>
     </Segment>
 
     <Segment style={{ padding: "0em" }} vertical>
       <Grid celled="internally" columns="equal" stackable>
-	  <Grid.Row>
-	  <Grid.Column textAlign="center">
-	  <Header as="h4" style={{ fontSize: "2em" }}>
-         Why do you should use StreamTogether?
-      </Header>
-	  </Grid.Column>
-	  </Grid.Row>
+        <Grid.Row>
+          <Grid.Column textAlign="center">
+            <Header as="h4" style={{ fontSize: "2em" }}>
+              Why do you should use StreamTogether?
+            </Header>
+          </Grid.Column>
+        </Grid.Row>
         <Grid.Row textAlign="center">
           <Grid.Column style={{ paddingBottom: "5em", paddingTop: "5em" }}>
             <Header as="h3" style={{ fontSize: "2em" }}>
@@ -241,7 +247,7 @@ const HomepageLayout = () => (
               <b>I/b> am the BOSS</b>
             </p>
           </Grid.Column>
-		    <Grid.Column style={{ paddingBottom: "5em", paddingTop: "5em" }}>
+          <Grid.Column style={{ paddingBottom: "5em", paddingTop: "5em" }}>
             <Header as="h3" style={{ fontSize: "2em" }}>
               And one more reason
             </Header>
