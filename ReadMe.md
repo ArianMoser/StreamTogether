@@ -1,5 +1,6 @@
 # StreamTogether
 
+OFFLINE:
 Installieren: 							        npm install				(Nötig)
 Development Mode starten : 				  npm run dev				(Zum arbeiten und testen)
 Alles erstellen: 						        npm run build			(ganz zum schluss wenn alles läuft)
@@ -7,11 +8,20 @@ Starten mit den erstellten Dateien: npm start				(später für den Server)
 
 STRG + SHIFT + F = Code ausrichten
 
-Zum aufsetzten: nginx aufsetzten , node drauf, datenbank drauf, alles einstellen, fertisch
+http://gruppe2.testsites.info/
+ONLINE: In home/alex/Web-Projekt/StreamTogether/ gehen und dann npm befehle(npm dev run, oder npm run build->nom start)
+
+Nginx Befehele:
+To stop your web server, you can type:              sudo systemctl stop nginx
+To start the web server when it is stopped, type:   sudo systemctl start nginx
+To stop and then start the service again, type:     sudo systemctl restart nginx
+reload:                                             sudo systemctl reload nginx
+auto boot off:                                      sudo systemctl disable nginx
+auto boot on:                                       sudo systemctl enable nginx
+
 
 WICHTIG: SSL, Sicherer Zugang
 Websockets: für Chat (Websockets chat example), für die Synchronisation zwischen den Räumen auch hilfreich
-
 
 Thema:                                  Frontend               Backend
 
