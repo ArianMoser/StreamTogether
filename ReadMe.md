@@ -16,7 +16,7 @@ ONLINE:
 
 1: In home/alex/Web-Projekt/StreamTogether/ gehen
 2: git pull
-3: npm build  
+3: npm run build  
 4: pm2 start npm -- start
 
 
