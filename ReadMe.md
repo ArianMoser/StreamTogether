@@ -9,7 +9,12 @@ Starten mit den erstellten Dateien: npm start				(später für den Server)
 STRG + SHIFT + F = Code ausrichten
 
 http://gruppe2.testsites.info/
-ONLINE: In home/alex/Web-Projekt/StreamTogether/ gehen und dann npm befehle(npm dev run, oder npm run build->nom start)
+ONLINE: 
+
+1: In home/alex/Web-Projekt/StreamTogether/ gehen
+2: git pull
+3: npm build  
+4: pm2 start npm -- start
 
 Nginx Befehele:
 To stop your web server, you can type:              sudo systemctl stop nginx
