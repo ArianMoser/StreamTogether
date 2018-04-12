@@ -11,10 +11,15 @@ STRG + SHIFT + F = Code ausrichten
 http://gruppe2.testsites.info/
 ONLINE: 
 
+<optional> pm2 stop all
+<optional> pm2 restart all
+
 1: In home/alex/Web-Projekt/StreamTogether/ gehen
 2: git pull
 3: npm build  
 4: pm2 start npm -- start
+
+
 
 Nginx Befehele:
 To stop your web server, you can type:              sudo systemctl stop nginx
