@@ -1,6 +1,7 @@
 import OwnHeader from "../components/Header";
 import Link from "next/link";
 import React, { Component } from "react";
+import {registerFunction} from './PostMethods';
 import {
   Button,
   Form,
@@ -13,6 +14,27 @@ import {
 } from "semantic-ui-react";
 
 export default class register extends Component {
+  async onSubmitHandler(event) {
+    event.preventDefault();
+
+    console.log(event.target[0].value);
+    console.log(event.target[1].value); //PASSWORT HASH VERWENDEN!
+    console.log(event.target[2].value);
+    console.log(event.target[3].value);
+
+    if (event.target[2].value == event.target[3].value) {
+      const response = await registerFunction(
+        "/register",
+        event.target[0].value,
+        event.target[1].value,
+        event.target[2].value
+      );
+      console.log("Register Complete! Number of records inserted: " + response);
+    } else {
+      console.log("Password not equal!");
+    }
+  }
+
   render() {
     return (
       <OwnHeader>
@@ -32,7 +54,7 @@ export default class register extends Component {
               <Header as="h1" color="black" textAlign="center">
                 Register a new account
               </Header>
-              <Form size="large">
+              <Form size="large" onSubmit={this.onSubmitHandler}>
                 <Segment stacked>
                   <Form.Input
                     fluid
@@ -40,7 +62,7 @@ export default class register extends Component {
                     iconPosition="left"
                     placeholder="Username"
                   />
-                  <Form.Input
+                  <Form.Input                                                     //KRITERIEN FÜR EINGABEN NOCH HINZUFÜGEN!
                     fluid
                     icon="mail"
                     iconPosition="left"

@@ -2,7 +2,7 @@ import OwnHeader from "../components/Header";
 import Link from "next/link";
 import React, { Component } from "react";
 import $ from 'jquery';
-import {meineFKT} from './PostMethods';
+import {loginFunction} from './PostMethods';
 
 import {
   Button,
@@ -20,12 +20,12 @@ export default class Login extends Component {
   async onSubmitHandler(event) {
     event.preventDefault();
 
-    console.log(event.target[0].value)
-    console.log(event.target[1].value)
+    console.log("Username : " + event.target[0].value);
+    console.log("Passwort : " + event.target[1].value);
 
-    const response = await meineFKT("/login", event.target[0].value, event.target[1].value)
-    console.log(response)
-    document.getElementById("test").innerHTML = response[0].Vorname;
+    const response = await loginFunction("/login", event.target[0].value, event.target[1].value);
+    console.log(response);
+    document.getElementById("test").innerHTML = response[0].username;
 
   }
   
