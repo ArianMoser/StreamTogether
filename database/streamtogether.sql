@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.5.2
+-- version 4.7.9
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 24. Mrz 2018 um 21:54
--- Server-Version: 10.1.21-MariaDB
--- PHP-Version: 5.6.30
+-- Erstellungszeit: 14. Apr 2018 um 00:50
+-- Server-Version: 10.1.31-MariaDB
+-- PHP-Version: 5.6.34
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -53,11 +55,18 @@ CREATE TABLE `room` (
 
 CREATE TABLE `user` (
   `ID` int(11) NOT NULL,
-  `nickname` varchar(500) NOT NULL,
+  `username` varchar(500) NOT NULL,
   `email` varchar(500) NOT NULL,
   `password` varchar(500) NOT NULL,
   `room-id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Table for all users ';
+
+--
+-- Daten für Tabelle `user`
+--
+
+INSERT INTO `user` (`ID`, `username`, `email`, `password`, `room-id`) VALUES
+(1, 'Alex', 'test@web.de', 'aidwhaäjdawidh', NULL);
 
 -- --------------------------------------------------------
 
@@ -114,16 +123,19 @@ ALTER TABLE `video`
 --
 ALTER TABLE `room`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT für Tabelle `user`
 --
 ALTER TABLE `user`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT für Tabelle `video`
 --
 ALTER TABLE `video`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- Constraints der exportierten Tabellen
 --
@@ -140,6 +152,7 @@ ALTER TABLE `playlist`
 --
 ALTER TABLE `user`
   ADD CONSTRAINT `FkRoomIDFromUser` FOREIGN KEY (`room-id`) REFERENCES `room` (`ID`);
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
