@@ -2,7 +2,7 @@ import OwnHeader from "../components/Header";
 import Link from "next/link";
 import React, { Component } from "react";
 import $ from 'jquery';
-import {loginFunction} from './PostMethods';
+import {userFunctionLogin} from './PostMethods';
 
 import {
   Button,
@@ -20,12 +20,25 @@ export default class Login extends Component {
   async onSubmitHandler(event) {
     event.preventDefault();
 
-    console.log("Username : " + event.target[0].value);
-    console.log("Passwort : " + event.target[1].value);
+    const username = event.target[0].value;
+    const password = event.target[1].value
 
-    const response = await loginFunction("/login", event.target[0].value, event.target[1].value);
+    console.log("Username : " + username);
+    console.log("Passwort : " + password);
+
+    const response = await userFunctionLogin("/login", username);
     console.log(response);
-    document.getElementById("test").innerHTML = response[0].username;
+    if (response.length == "0")
+    {
+      console.log("No user found");
+    }else {
+      //Überprüfen auf Passwort - mit Hash
+      document.getElementById("test").innerHTML = response[0].username;
+      console.log("User found!");
+    }
+    
+
+    
 
   }
   

@@ -1,7 +1,8 @@
 import OwnHeader from "../components/Header";
 import Link from "next/link";
 import React, { Component } from "react";
-import {registerFunction} from './PostMethods';
+import $ from "jquery";
+import { registerFunction, userFunctionByUsername, userFunctionByEmail } from "./PostMethods";
 import {
   Button,
   Form,
@@ -17,21 +18,43 @@ export default class register extends Component {
   async onSubmitHandler(event) {
     event.preventDefault();
 
-    console.log(event.target[0].value);
-    console.log(event.target[1].value); //PASSWORT HASH VERWENDEN!
-    console.log(event.target[2].value);
-    console.log(event.target[3].value);
+    const username = event.target[0].value;
+    const email = event.target[1].value;
+    const pw = event.target[2].value
+    const pw2 = event.target[3].value
 
-    if (event.target[2].value == event.target[3].value) {
-      const response = await registerFunction(
-        "/register",
-        event.target[0].value,
-        event.target[1].value,
-        event.target[2].value
-      );
-      console.log("Register Complete! Number of records inserted: " + response);
+    console.log("Input :" + username);
+    console.log("Input :" + email);
+    console.log("Input :" + pw);
+    console.log("Input :" + pw2);
+
+    //Check if Passwords are equal!
+    if (pw == pw2) {
+      const responSelectUsername = await userFunctionByUsername("/getuserbyusername", username);
+      console.log("Number of entries in the database with username " + username + " :" + responSelectUsername.length);
+      //Check if Username is Used!
+      if (responSelectUsername.length == "0")
+      {
+        const responSelectEmail = await userFunctionByEmail("/getuserbyemail", email);
+        console.log("Number of entries in the database with email " + email + " :" + responSelectEmail.length);  
+        if (responSelectEmail.length == "0")
+        {
+          const responseRegister = await registerFunction(
+            "/register",
+            username,
+            email,
+            pw
+          );
+          console.log("Reg. Complete | Affected Rows: " + responseRegister.affectedRows);
+        }else {
+          console.log("Email is Used!");
+        }
+        
+      } else{
+        console.log("Username is Used!");
+      }
     } else {
-      console.log("Password not equal!");
+      console.log("Password not Equal!");
     }
   }
 
@@ -54,19 +77,21 @@ export default class register extends Component {
               <Header as="h1" color="black" textAlign="center">
                 Register a new account
               </Header>
-              <Form size="large" onSubmit={this.onSubmitHandler}>
+              <Form error size="large" onSubmit={this.onSubmitHandler}>
                 <Segment stacked>
                   <Form.Input
                     fluid
                     icon="user"
                     iconPosition="left"
                     placeholder="Username"
+                    required
                   />
-                  <Form.Input                                                     //KRITERIEN FÜR EINGABEN NOCH HINZUFÜGEN!
+                  <Form.Input //KRITERIEN FÜR EINGABEN NOCH HINZUFÜGEN!
                     fluid
                     icon="mail"
                     iconPosition="left"
                     placeholder="E-Mail"
+                    required
                   />
                   <Form.Input
                     fluid
@@ -74,6 +99,7 @@ export default class register extends Component {
                     iconPosition="left"
                     placeholder="Password"
                     type="password"
+                    required
                   />
                   <Form.Input
                     fluid
@@ -81,6 +107,7 @@ export default class register extends Component {
                     iconPosition="left"
                     placeholder="Repeat password"
                     type="password"
+                    required
                   />
                   <Button color="orange" fluid size="large">
                     Register

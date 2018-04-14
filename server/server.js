@@ -42,12 +42,20 @@ app
         console.log(err.fatal);
       } else {
         console.log("Database CONNECTED");
-        exp.post("/login", (req, res) => {
-          database.selectUserByUserId(res, req.body, connection);
-        });
+        
         exp.post("/register", (req, res) => {
-            database.insertUser(res, req.body, connection);
-          });
+          console.log(req.body)
+          database.insertUser(res, req.body, connection);
+        });
+        exp.post("/getuserbyusername", (req, res) => {
+          database.selectUserByUsername(res, req.body, connection);
+        });
+        exp.post("/getuserbyemail", (req, res) => {
+          database.selectUserByEmail(res, req.body, connection);
+        });
+        exp.post("/login", (req, res) => {
+          database.selectUserByUsernameOrEmail(res, req.body, connection);
+        });
       }
     });
 
