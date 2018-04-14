@@ -46,6 +46,7 @@ export default class register extends Component {
             pw
           );
           console.log("Reg. Complete | Affected Rows: " + responseRegister.affectedRows);
+          //window.location = "./login";
         }else {
           console.log("Email is Used!");
         }

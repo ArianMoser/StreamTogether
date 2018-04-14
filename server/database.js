@@ -19,9 +19,8 @@ var call = module.exports = {
                                                                                          //AUF SICHERHEIT DER EINGEGEBENEN SACHEN NOCH PRÜFEN MYSQLI STRING UND SO DIESER SCHEIß!
     },
     selectUserByUsernameOrEmail: function (res, dieNutzerDaten, connection) {
-        console.log( mysql.escape(dieNutzerDaten.username))
+        console.log(dieNutzerDaten)
         const query = 'SELECT * from user WHERE username=' + mysql.escape(dieNutzerDaten.username) +' OR email=' + mysql.escape(dieNutzerDaten.email);
-        console.log(query);
         connection.query(query, function(err, rows, fields) {
             if(err){
                 console.log("An error ocurred performing the query.");
@@ -51,7 +50,7 @@ var call = module.exports = {
      //----------------------INSERT----------------------//
     insertUser: function (res, dieNutzerDaten, connection) {
         console.log(dieNutzerDaten);
-        const query = 'INSERT INTO user (username, email, password)VALUES ("'+ dieNutzerDaten.username +'","'+ dieNutzerDaten.email +'","'+ dieNutzerDaten.password + '");';
+        const query = 'INSERT INTO user (username, email, password)VALUES ('+  mysql.escape(dieNutzerDaten.username) +','+  mysql.escape(dieNutzerDaten.email) +','+  mysql.escape(dieNutzerDaten.password) + ');';
         connection.query(query, function(err, rows, fields) {
             if(err){
                 console.log("An error ocurred performing the query.");

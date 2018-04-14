@@ -1,8 +1,9 @@
 import OwnHeader from "../components/Header";
 import Link from "next/link";
 import React, { Component } from "react";
-import $ from 'jquery';
-import {userFunctionLogin} from './PostMethods';
+import $ from "jquery";
+import { userFunctionLogin } from "./PostMethods";
+const bcrypt = require("bcryptjs");
 
 import {
   Button,
@@ -16,32 +17,30 @@ import {
 } from "semantic-ui-react";
 
 export default class Login extends Component {
-
   async onSubmitHandler(event) {
     event.preventDefault();
 
     const username = event.target[0].value;
-    const password = event.target[1].value
+    const password = event.target[1].value;
 
     console.log("Username : " + username);
     console.log("Passwort : " + password);
 
     const response = await userFunctionLogin("/login", username);
     console.log(response);
-    if (response.length == "0")
-    {
+    if (response.length == "0") {
       console.log("No user found");
-    }else {
-      //Überprüfen auf Passwort - mit Hash
-      document.getElementById("test").innerHTML = response[0].username;
-      console.log("User found!");
+    } else {
+      console.log("User found");
+      if (bcrypt.compareSync(password, response[0].password)) {
+        document.getElementById("test").innerHTML = response[0].username;
+        console.log("Password correct!");
+      } else {
+        console.log("Password incorrect");
+      }
     }
-    
-
-    
-
   }
-  
+
   render() {
     return (
       <OwnHeader>
@@ -86,7 +85,7 @@ export default class Login extends Component {
                   <Grid.Row textAlign="center">
                     <Grid.Column>
                       <Link href="/">
-                        <Button animated='vertical' fluid>
+                        <Button animated="vertical" fluid>
                           <Button.Content visible>Back home</Button.Content>
                           <Button.Content hidden>
                             <Icon name="home" />
@@ -96,11 +95,9 @@ export default class Login extends Component {
                     </Grid.Column>
                     <Grid.Column>
                       <Link href="/register">
-                        <Button animated='vertical' fluid>
+                        <Button animated="vertical" fluid>
                           <Button.Content visible>New?</Button.Content>
-                          <Button.Content hidden>
-                            Register
-                          </Button.Content>
+                          <Button.Content hidden>Register</Button.Content>
                         </Button>
                       </Link>
                     </Grid.Column>

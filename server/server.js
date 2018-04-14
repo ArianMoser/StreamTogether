@@ -44,7 +44,6 @@ app
         console.log("Database CONNECTED");
         
         exp.post("/register", (req, res) => {
-          console.log(req.body)
           database.insertUser(res, req.body, connection);
         });
         exp.post("/getuserbyusername", (req, res) => {

@@ -43,6 +43,10 @@ See our result online ([Website](http://gruppe2.testsites.info/ "Our Website"))
 * WICHTIG:    SSL, Sicherer Zugang
 * Websockets: für Chat (Websockets chat example), für die Synchronisation zwischen den Räumen auch hilfreich
 
+* Alex:TODO:
+* Anzeigen für den Benutzer erstellen.
+* Cookie setzen
+
 |Thema:                               | Frontend         | Backend          |
 | -----------------------------------:| :--------------: | :--------------: |
 | Startseite                          | ok               |                  |

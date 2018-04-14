@@ -1,5 +1,5 @@
 import $ from "jquery";
-//const bcrypt = require("bcryptjs");
+const bcrypt = require("bcryptjs");
 
 //----------------------GETUSERDATA----------------------//
 export const userFunctionByUsername = (api, username) => {
@@ -59,7 +59,8 @@ export const userFunctionLogin = (api, username) => {
 
 
 //----------------------REGISTER----------------------//
-export const registerFunction = (api, username, email, password) => {     //HASH FUNKTION ENBINGEN
+export const registerFunction = (api, username, email, password) => {
+  const hash = bcrypt.hashSync(password, 11);
   return new Promise((resolve, reject) => {
     $.ajax({
       url: api,
@@ -69,7 +70,7 @@ export const registerFunction = (api, username, email, password) => {     //HASH
       data: JSON.stringify({
         username: username,
         email: email,
-        password: password
+        password: hash
       }),
       success: function(res) {
         resolve(res);
