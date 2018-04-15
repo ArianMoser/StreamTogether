@@ -4,7 +4,8 @@ import $ from 'jquery';
 var call = module.exports = {
     //----------------------SELECT----------------------//
     selectUserByUsername: function (res, dieNutzerDaten, connection) {
-        const query = 'SELECT from user WHERE username= "' + mysql.escape(dieNutzerDaten.username) + '";';
+      console.log(dieNutzerDaten.username)
+        const query = 'SELECT * from user WHERE username= ' + mysql.escape(dieNutzerDaten.username) + ' ;';
         connection.query(query, function(err, rows, fields) {
             if(err){
                 console.log("An error ocurred performing the query.");
@@ -20,7 +21,7 @@ var call = module.exports = {
     },
     selectUserByUsernameOrEmail: function (res, dieNutzerDaten, connection) {
         console.log(dieNutzerDaten)
-        const query = 'SELECT * from user WHERE username="' + mysql.escape(dieNutzerDaten.username) +'" OR email="' + mysql.escape(dieNutzerDaten.email) + '";';
+        const query = 'SELECT * from user WHERE username= ' + mysql.escape(dieNutzerDaten.username) +' OR email= ' + mysql.escape(dieNutzerDaten.email) + ' ;';
         connection.query(query, function(err, rows, fields) {
             if(err){
                 console.log("An error ocurred performing the query.");
@@ -34,7 +35,7 @@ var call = module.exports = {
         });
     },
     selectUserByEmail: function (res, dieNutzerDaten, connection) {
-        const query = 'SELECT * from user WHERE email="' + mysql.escape(dieNutzerDaten.email) + '";';
+        const query = 'SELECT * from user WHERE email= ' + mysql.escape(dieNutzerDaten.email) + ' ;';
         connection.query(query, function(err, rows, fields) {
             if(err){
                 console.log("An error ocurred performing the query.");
@@ -48,7 +49,7 @@ var call = module.exports = {
         });
     },
     selectRoomById: function (res, dieNutzerDaten, connection) {
-        const query = 'SELECT * from room WHERE ID="' + mysql.escape(dieNutzerDaten.id) + '";';
+        const query = 'SELECT * from room WHERE ID= ' + mysql.escape(dieNutzerDaten.id) + ' ;';
         connection.query(query, function(err, rows, fields) {
             if(err){
                 console.log("An error ocurred performing the query.");
@@ -62,7 +63,7 @@ var call = module.exports = {
         });
     },
     selectRoomByUserId: function (res, dieNutzerDaten, connection) {
-        const query = 'SELECT room.ID, room.title, user.username as "Ersteller", room.description, room.password FROM room, user WHERE user.room_id = room.ID AND user.ID = "' + mysql.escape(dieNutzerDaten.userId) + '";';
+        const query = 'SELECT room.ID, room.title, user.username as "Ersteller", room.description, room.password FROM room, user WHERE user.room_id = room.ID AND user.ID = ' + mysql.escape(dieNutzerDaten.userId) + ' ;';
         connection.query(query, function(err, rows, fields) {
             if(err){
                 console.log("An error ocurred performing the query.");
@@ -76,7 +77,7 @@ var call = module.exports = {
         });
     },
     selectVideosByRoomId: function (res, dieNutzerDaten, connection) {
-        const query = 'SELECT video.id, video.title, video.description FROM room,playlist,video WHERE room.ID = playlist.room_ID AND video.ID = playlist.video_ID AND room.ID = "' + mysql.escape(dieNutzerDaten.roomId) + '";';
+        const query = 'SELECT video.id, video.title, video.description FROM room,playlist,video WHERE room.ID = playlist.room_ID AND video.ID = playlist.video_ID AND room.ID = ' + mysql.escape(dieNutzerDaten.roomId) + ' ;';
         connection.query(query, function(err, rows, fields) {
             if(err){
                 console.log("An error ocurred performing the query.");
@@ -92,7 +93,7 @@ var call = module.exports = {
      //----------------------INSERT----------------------//
     insertUser: function (res, dieNutzerDaten, connection) {
         console.log(dieNutzerDaten);
-        const query = 'INSERT INTO user (username, email, password)VALUES ("'+  mysql.escape(dieNutzerDaten.username) +'","'+  mysql.escape(dieNutzerDaten.email) +'","'+  mysql.escape(dieNutzerDaten.password) + '");';
+        const query = 'INSERT INTO user (username, email, password)VALUES (' +  mysql.escape(dieNutzerDaten.username) +' , '+  mysql.escape(dieNutzerDaten.email) +' , '+  mysql.escape(dieNutzerDaten.password) + ' );';
         connection.query(query, function(err, rows, fields) {
             if(err){
                 console.log("An error ocurred performing the query.");
