@@ -19,24 +19,6 @@ import {
   Visibility
 } from "semantic-ui-react";
 
-//Header Settings
-const HomepageHeading = () => (
-  <Container text>
-    <Header
-      as="h1"
-      content="Impressum"
-      inverted
-      style={{
-        fontSize: "4em",
-        fontWeight: "normal",
-        marginBottom: 0,
-        marginTop: "3em"
-      }}
-    />
-
-  </Container>
-);
-
 //Nav Bar
 class DesktopContainer extends Component {
   state = {};
@@ -52,7 +34,6 @@ class DesktopContainer extends Component {
 
     return (
       <OwnHeader>
-        <Responsive {...Responsive.onlyComputer}>
           <Visibility
             once={false}
             onBottomPassed={this.showFixedMenu}
@@ -60,7 +41,7 @@ class DesktopContainer extends Component {
           >
             <Segment
               inverted
-              color="grey"
+              color="black"
               textAlign="center"
               style={{ minHeight: 550, padding: "1em 0em" }}
               vertical
@@ -72,15 +53,15 @@ class DesktopContainer extends Component {
                 size="large"
               >
                 <Container>
-				<Link href="/index">
-                  <Menu.Item
-                    name="home"
-                    active={activeItem === "home"}
-                    onClick={this.handleItemClick}
-                  >
-                    Start
-                  </Menu.Item>
-				 </Link> 
+                  <Link href="/index">
+                    <Menu.Item
+                      name="home"
+                      active={activeItem === "home"}
+                      onClick={this.handleItemClick}
+                    >
+                      Start
+                    </Menu.Item>
+                  </Link>
                   <Link href="/rooms">
                     <Menu.Item
                       name="rooms"
@@ -89,7 +70,7 @@ class DesktopContainer extends Component {
                     >
                       Rooms
                     </Menu.Item>
-                  </Link>	  
+                  </Link>
                   <Link href="/help">
                     <Menu.Item
                       name="help"
@@ -98,7 +79,6 @@ class DesktopContainer extends Component {
                     >
                       Help
                     </Menu.Item>
-
                   </Link>
                   <Menu.Item position="right">
                     <Link href="/login">
@@ -119,109 +99,112 @@ class DesktopContainer extends Component {
                   </Menu.Item>
                 </Container>
               </Menu>
-              <HomepageHeading />
+              <Container text>
+                <Header
+                  as="h1"
+                  content="Impressum"
+                  inverted
+                  style={{
+                    fontSize: "4em",
+                    fontWeight: "normal",
+                    marginBottom: 0,
+                    marginTop: "3em"
+                  }}
+                />
+              </Container>
             </Segment>
           </Visibility>
-          {children}
-        </Responsive>
+          <Segment style={{ padding: "8em 0em" }} vertical>
+            <Grid container stackable verticalAlign="middle">
+              <Grid.Row>
+                <Grid.Column width={8}>
+                  <p style={{ fontSize: "1.33em" }}>
+                    <h2>Angaben gem&auml;&szlig; &sect; 5 TMG:</h2>{" "}
+                    <p>
+                      Max Mustermann<br />
+                      Musterstra&szlig;e 111<br /> Geb&auml;ude 44<br /> 90210
+                      Musterstadt
+                    </p>{" "}
+                    <h2>Kontakt:</h2>
+                    <p>
+                      Telefon: +49 (0) 123 44 55 66<br /> Telefax: +49 (0) 123
+                      44 55 99<br /> E-Mail: mustermann@musterfirma.de
+                    </p>{" "}
+                    <h2>Haftung f&uuml;r Inhalte</h2>{" "}
+                    <p>
+                      Als Diensteanbieter sind wir gem&auml;&szlig; &sect; 7
+                      Abs.1 TMG f&uuml;r eigene Inhalte auf diesen Seiten nach
+                      den allgemeinen Gesetzen verantwortlich. Nach &sect;&sect;
+                      8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht
+                      verpflichtet, &uuml;bermittelte oder gespeicherte fremde
+                      Informationen zu &uuml;berwachen oder nach Umst&auml;nden
+                      zu forschen, die auf eine rechtswidrige T&auml;tigkeit
+                      hinweisen.
+                    </p>
+                    <p>
+                      Verpflichtungen zur Entfernung oder Sperrung der Nutzung
+                      von Informationen nach den allgemeinen Gesetzen bleiben
+                      hiervon unber&uuml;hrt. Eine diesbez&uuml;gliche Haftung
+                      ist jedoch erst ab dem Zeitpunkt der Kenntnis einer
+                      konkreten Rechtsverletzung m&ouml;glich. Bei Bekanntwerden
+                      von entsprechenden Rechtsverletzungen werden wir diese
+                      Inhalte umgehend entfernen.
+                    </p>{" "}
+                    <h2>Haftung f&uuml;r Links</h2>{" "}
+                    <p>
+                      Unser Angebot enth&auml;lt Links zu externen Websites
+                      Dritter, auf deren Inhalte wir keinen Einfluss haben.
+                      Deshalb k&ouml;nnen wir f&uuml;r diese fremden Inhalte
+                      auch keine Gew&auml;hr &uuml;bernehmen. F&uuml;r die
+                      Inhalte der verlinkten Seiten ist stets der jeweilige
+                      Anbieter oder Betreiber der Seiten verantwortlich. Die
+                      verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf
+                      m&ouml;gliche Rechtsverst&ouml;&szlig;e
+                      &uuml;berpr&uuml;ft. Rechtswidrige Inhalte waren zum
+                      Zeitpunkt der Verlinkung nicht erkennbar.
+                    </p>{" "}
+                    <p>
+                      Eine permanente inhaltliche Kontrolle der verlinkten
+                      Seiten ist jedoch ohne konkrete Anhaltspunkte einer
+                      Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von
+                      Rechtsverletzungen werden wir derartige Links umgehend
+                      entfernen.
+                    </p>
+                    <h2>Urheberrecht</h2>{" "}
+                    <p>
+                      Die durch die Seitenbetreiber erstellten Inhalte und Werke
+                      auf diesen Seiten unterliegen dem deutschen Urheberrecht.
+                      Die Vervielf&auml;ltigung, Bearbeitung, Verbreitung und
+                      jede Art der Verwertung au&szlig;erhalb der Grenzen des
+                      Urheberrechtes bed&uuml;rfen der schriftlichen Zustimmung
+                      des jeweiligen Autors bzw. Erstellers. Downloads und
+                      Kopien dieser Seite sind nur f&uuml;r den privaten, nicht
+                      kommerziellen Gebrauch gestattet.
+                    </p>{" "}
+                    <p>
+                      Soweit die Inhalte auf dieser Seite nicht vom Betreiber
+                      erstellt wurden, werden die Urheberrechte Dritter
+                      beachtet. Insbesondere werden Inhalte Dritter als solche
+                      gekennzeichnet. Sollten Sie trotzdem auf eine
+                      Urheberrechtsverletzung aufmerksam werden, bitten wir um
+                      einen entsprechenden Hinweis. Bei Bekanntwerden von
+                      Rechtsverletzungen werden wir derartige Inhalte umgehend
+                      entfernen.
+                    </p>{" "}
+                    <p>
+                      Quelle:{" "}
+                      <a href="https://www.erecht24.de/impressum-generator.html">
+                        https://www.e-recht24.de/impressum-generator.html
+                      </a>
+                    </p>
+                  </p>
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Segment>
       </OwnHeader>
     );
   }
 }
 
-DesktopContainer.propTypes = {
-  children: PropTypes.node
-};
-
-const ResponsiveContainer = ({ children }) => (
-  <div>
-    <DesktopContainer>{children}</DesktopContainer>
-  </div>
-);
-
-ResponsiveContainer.propTypes = {
-  children: PropTypes.node
-};
-
-const HomepageLayout = () => (
-  <ResponsiveContainer>
-    <Segment style={{ padding: "8em 0em" }} vertical>
-      <Grid container stackable verticalAlign="middle">
-        <Grid.Row>
-          <Grid.Column width={8}>
-            <p style={{ fontSize: "1.33em" }}>
-            <h2>Angaben gem&auml;&szlig; &sect; 5 TMG:</h2> <p>Max Mustermann<br />
-Musterstra&szlig;e 111<br /> Geb&auml;ude 44<br /> 90210 Musterstadt</p> <h2>Kontakt:</h2>
-<p>Telefon: +49 (0) 123 44 55 66<br /> Telefax: +49 (0) 123 44 55 99<br /> E-Mail:
-mustermann@musterfirma.de</p> <h2>Haftung f&uuml;r Inhalte</h2> <p>Als Diensteanbieter sind wir
-gem&auml;&szlig; &sect; 7 Abs.1 TMG f&uuml;r eigene Inhalte auf diesen Seiten nach den allgemeinen
-Gesetzen verantwortlich. Nach &sect;&sect; 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht
-verpflichtet, &uuml;bermittelte oder gespeicherte fremde Informationen zu &uuml;berwachen oder nach
-Umst&auml;nden zu forschen, die auf eine rechtswidrige T&auml;tigkeit hinweisen.</p>
-<p>Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen
-Gesetzen bleiben hiervon unber&uuml;hrt. Eine diesbez&uuml;gliche Haftung ist jedoch erst ab dem
-Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung m&ouml;glich. Bei Bekanntwerden von
-entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.</p> <h2>Haftung
-f&uuml;r Links</h2> <p>Unser Angebot enth&auml;lt Links zu externen Websites Dritter, auf deren Inhalte
-wir keinen Einfluss haben. Deshalb k&ouml;nnen wir f&uuml;r diese fremden Inhalte auch keine
-Gew&auml;hr &uuml;bernehmen. F&uuml;r die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter
-oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf
-m&ouml;gliche Rechtsverst&ouml;&szlig;e &uuml;berpr&uuml;ft. Rechtswidrige Inhalte waren zum
-Zeitpunkt der Verlinkung nicht erkennbar.</p> <p>Eine permanente inhaltliche Kontrolle der verlinkten
-Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei
-Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.</p>
-<h2>Urheberrecht</h2> <p>Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten
-unterliegen dem deutschen Urheberrecht. Die Vervielf&auml;ltigung, Bearbeitung, Verbreitung und jede
-Art der Verwertung au&szlig;erhalb der Grenzen des Urheberrechtes bed&uuml;rfen der schriftlichen
-Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur f&uuml;r
-den privaten, nicht kommerziellen Gebrauch gestattet.</p> <p>Soweit die Inhalte auf dieser Seite nicht
-vom Betreiber erstellt wurden, werden die Urheberrechte Dritter beachtet. Insbesondere werden Inhalte
-Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam
-werden, bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen 
-werden wir derartige Inhalte umgehend entfernen.</p> <p>Quelle: <a href="https://www.erecht24.de/impressum-generator.html">https://www.e-recht24.de/impressum-generator.html</a></p>
-            </p>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
-    </Segment>
-
-    <Segment inverted vertical style={{ padding: "5em 0em" }}>
-      <Container>
-        <Grid divided inverted stackable>
-          <Grid.Row>
-            <Grid.Column width={3}>
-              <Header inverted as="h4" content="About" />
-              <List link inverted>
-                <Link href="/contact">
-                  <List.Item as="a">Contact Us</List.Item>
-                </Link>
-                <Link href="/impressum">
-                  <List.Item as="a">Impressum</List.Item>
-                </Link>
-                <Link href="/dataprivacy">
-                  <List.Item as="a">Data privacy</List.Item>
-                </Link>
-              </List>
-            </Grid.Column>
-            <Grid.Column width={3}>
-              <Header inverted as="h4" content="Services" />
-              <List link inverted>
-                <Link href="/help">
-                  <List.Item as="a">Help</List.Item>
-                </Link>
-              </List>
-            </Grid.Column>
-            <Grid.Column width={7}>
-              <Header as="h4" inverted>
-                Footer Header
-              </Header>
-              <p>Bla Bla BLAAA Bla Bla Bla Bla BLaaaa MIMIMIMIM</p>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Container>
-    </Segment>
-  </ResponsiveContainer>
-);
-
-export default HomepageLayout;
+export default DesktopContainer;
