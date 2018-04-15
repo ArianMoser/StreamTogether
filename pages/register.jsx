@@ -36,7 +36,7 @@ export default class register extends Component {
       if (responSelectUsername.length == "0")
       {
         const responSelectEmail = await userFunctionByEmail("/getuserbyemail", email);
-        console.log("Number of entries in the database with email " + email + " :" + responSelectEmail.length);  
+        console.log("Number of entries in the database with email " + email + " :" + responSelectEmail.length);
         if (responSelectEmail.length == "0")
         {
           const responseRegister = await registerFunction(
@@ -46,13 +46,16 @@ export default class register extends Component {
             pw
           );
           console.log("Reg. Complete | Affected Rows: " + responseRegister.affectedRows);
-          document.getElementById("feedback").innerHTML = '<div class="ui positive message"><div class="header">Registration successful</div><p>You may now log-in with the username you have chosen</p></div>';
-          //window.location = "./login";
+          document.getElementById("feedback").innerHTML = '<div class="ui positive message"><div class="header">Registration successful</div><p>You will be forwarded to the log-in page in a few seconds</p></div>';
+          setTimeout(continueToLogIn,4000);
+          function continueToLogIn(){
+            window.location = "./login";
+          }
         }else {
           console.log("Email is Used!");
           document.getElementById("feedback").innerHTML = '<div class="ui negative message"><div class="header">Email is already used</div><p>Please choose a different email</p></div>';
         }
-        
+
       } else{
         console.log("Username is Used!");
         document.getElementById("feedback").innerHTML = '<div class="ui negative message"><div class="header">Username is already used</div><p>Please choose a different username</p></div>';

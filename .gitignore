@@ -9,6 +9,9 @@
 # production
 /.next
 
+# ide
+/.idea/
+
 # misc
 .DS_Store
 .env.local
