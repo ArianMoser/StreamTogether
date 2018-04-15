@@ -1,6 +1,15 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import YouTubePlayer from '../components/YouTubePlayer';
+import LikeButton from '../components/LikeButton';
+import {
+ List,
+ Button,
+ Icon,
+ Input,
+ Grid,
+ Table
+ } from 'semantic-ui-react';
 
 const API_KEY = "AIzaSyCkXsSdyK3kKmUYEe9T9wf6AUli3V6Nzus";
 
@@ -29,7 +38,7 @@ class YouTubeSearch extends Component {
    * @param  {Event} e onChange event
    */
   _updateQuery(e) {
-    console.log(e);
+  //  console.log(e);
     this.setState({
       query: e.target.value
     });
@@ -43,13 +52,12 @@ class YouTubeSearch extends Component {
     this.searchAPI({
       key: API_KEY,
       q: this.state.query,
-      maxResults: 25
+      maxResults: 5
     }, (response) => {
       this.setState({
         searchResults: response.items,
         nextPageToken: response.nextPageToken
        });
-      console.log(videos);
     });
   }
 
@@ -61,7 +69,7 @@ class YouTubeSearch extends Component {
     this.searchAPI({
       key: API_KEY,
       q: this.state.query,
-      maxResults: 25,
+      maxResults: 5,
       pageToken: this.state.nextPageToken
     }, (response) => {
       this.setState({
@@ -92,20 +100,21 @@ class YouTubeSearch extends Component {
 
     axios.get('https://www.googleapis.com/youtube/v3/search', { params: params })
       .then(function(response) {
-        console.log(response.data);
+          console.log(response.data);
         callback(response.data);
       })
       .catch(function(error) {
-        console.error(error);
+        //console.error(error);
     });
   }
 
   render() {
     // Prepare list of all videos that were returned by the YouTube API
     var videoList = this.state.searchResults.map(video => {
-      //<img src={"https://img.youtube.com/vi/" + video.id.videoId + "/default.jpg"} height="100px"></img>
-      return <li>{video.snippet.title} - {video.id.videoId}<button onClick={ () => { this._chooseVideo(video.id.videoId) } }>Choose Video</button></li>;
+      //<img src={"https://img.youtube.com/vi/" + video.id.videoId + "/default.jpg"} height="100px"></img>      {video.snippet.title} - {video.id.videoId}
+      return(<Table.Row><Table.Cell> <img src={"https://img.youtube.com/vi/" + video.id.videoId + "/default.jpg"} height="100px"></img> </Table.Cell><Table.Cell>{video.snippet.title}</Table.Cell><Table.Cell width={3}><LikeButton/></Table.Cell><Table.Cell width={3}><Button icon color='red' onClick={ () => { this._chooseVideo(video.id.videoId) } }><Icon name='youtube'/><Icon name='play'/></Button></Table.Cell></Table.Row>);
     });
+
 
     if(this.state.chosenVideoId == 0)
       var videoPlayer = (<h2>Noch kein Video ausgewählt.</h2>);
@@ -113,22 +122,35 @@ class YouTubeSearch extends Component {
       var videoPlayer = (<YouTubePlayer videoId={ this.state.chosenVideoId } timecode={ this.state.chosenVideoTimecode }></YouTubePlayer>)
 
     if(this.state.searchResults.length > 0)
-      var nextPageButton = (<button onClick={ this._loadMore }>Load more</button>);
+      var nextPageButton = (<Button icon labelPosition='right' onClick={ this._loadMore }><Icon name='chevron right'/>More</Button>);
     else
-      var nextPageButton = (<button onClick={ this._loadMore } disabled>Load more</button>);
+      var nextPageButton = (<List.Item>Please search for a video.</List.Item>);
 
     return(
-      <div>
-        { videoPlayer }
-
-        <button onClick={ this._searchVideos }>Search</button>
-        <input type="text" onChange={ this._updateQuery } value={ this.state.query } />
-
-        <ul>
-          { videoList }
-        </ul>
-        { nextPageButton }
-      </div>
+  <div>
+    <Grid>
+      <Grid.Row>
+        <Grid.Column width={10}>
+          { videoPlayer }
+            <Grid>
+              <Grid.Row>
+                  <Input icon='youtube' iconPosition='left' placeholder='Search for videos...' type="text" onChange={ this._updateQuery } value={ this.state.query } />
+                  <Button icon labelPosition='right' floated='right' onClick={ this._searchVideos } ><Icon name="right arrow"/>Search</Button>
+              </Grid.Row>
+            </Grid>
+           <Table basic='very' celled collapsing>
+              <Table.Body>
+                { videoList }
+              </Table.Body>
+              { nextPageButton }
+          </Table>
+        </Grid.Column>
+        <Grid.Column width={6}>
+        HIER SOLL DER CHAT HIN
+        </Grid.Column>
+      </Grid.Row>
+    </Grid>
+  </div>
     );
   }
 }

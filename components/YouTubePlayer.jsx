@@ -10,8 +10,8 @@ class YouTubePlayer extends Component {
   render() {
     return (
       <div>
-        <iframe width="560" height="315" src={"https://www.youtube.com/embed/" + this.props.videoId +
-        "?amp;showinfo=0&amp;start=" + this.props.timecode + "allowfullscreen"} frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <iframe width="100%" height="400px"src={"https://www.youtube.com/embed/" + this.props.videoId +
+        "?amp;showinfo=0&amp;start=" + this.props.timecode } frameborder="0" allow="autoplay; encrypted-media" allowfullscreen="allowfullscreen"></iframe>
       </div>
     );
   }

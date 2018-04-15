@@ -151,7 +151,9 @@ const HomepageLayout = () => (
   <ResponsiveContainer>
     <Segment style={{ padding: "8em 0em" }} vertical>
       <Grid container stackable verticalAlign="middle">
-        <YouTubeSearch></YouTubeSearch>
+        <List divided verticalAlign='middle'>
+          <YouTubeSearch></YouTubeSearch>
+        </List>
       </Grid>
     </Segment>
 
