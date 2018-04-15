@@ -18,7 +18,7 @@ import {
 
 export default class Login extends Component {
 
-
+  
 
   async onSubmitHandler(event) {
     event.preventDefault();
@@ -40,10 +40,6 @@ export default class Login extends Component {
         document.getElementById("test").innerHTML = response[0].username;
         console.log("Password correct!");
         document.getElementById("feedback").innerHTML = '<div class="ui positive message"><div class="header">Login successful</div><p>You will be redirected</p></div>';
-        setTimeout(continueToLogIn,2000);
-        function continueToLogIn(){
-          window.location = "./index";
-        }
       } else {
         console.log("Password incorrect");
         document.getElementById("feedback").innerHTML = '<div class="ui negative message"><div class="header">Error</div><p>Username or Password not correct</p></div>';
@@ -77,6 +73,7 @@ export default class Login extends Component {
                     icon="user"
                     iconPosition="left"
                     placeholder="Username/E-Mail"
+                    required
                   />
                   <Form.Input
                     fluid
@@ -84,6 +81,7 @@ export default class Login extends Component {
                     iconPosition="left"
                     placeholder="Password"
                     type="password"
+                    required
                   />
                   <div id= "feedback">
                   </div>
