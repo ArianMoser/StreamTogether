@@ -46,16 +46,20 @@ export default class register extends Component {
             pw
           );
           console.log("Reg. Complete | Affected Rows: " + responseRegister.affectedRows);
+          document.getElementById("feedback").innerHTML = '<div class="ui positive message"><div class="header">Registration successful</div><p>You may now log-in with the username you have chosen</p></div>';
           //window.location = "./login";
         }else {
           console.log("Email is Used!");
+          document.getElementById("feedback").innerHTML = '<div class="ui negative message"><div class="header">Email is already used</div><p>Please choose a different email</p></div>';
         }
         
       } else{
         console.log("Username is Used!");
+        document.getElementById("feedback").innerHTML = '<div class="ui negative message"><div class="header">Username is already used</div><p>Please choose a different username</p></div>';
       }
     } else {
       console.log("Password not Equal!");
+      document.getElementById("feedback").innerHTML = '<div class="ui negative message"><div class="header">Passwords are not equal</div><p>Please enter your password again</p></div>';
     }
   }
 
@@ -110,6 +114,9 @@ export default class register extends Component {
                     type="password"
                     required
                   />
+                  <div id= "feedback">
+                  </div>
+                  <br/>
                   <Button color="orange" fluid size="large">
                     Register
                   </Button>

@@ -47,6 +47,7 @@ See our result online ([Website](http://gruppe2.testsites.info/ "Our Website"))
 * Anzeigen für den Benutzer erstellen.
 * Cookie setzen
 
+
 |Thema:                               | Frontend         | Backend          |
 | -----------------------------------:| :--------------: | :--------------: |
 | Startseite                          | ok               |                  |
@@ -54,11 +55,11 @@ See our result online ([Website](http://gruppe2.testsites.info/ "Our Website"))
 | Registrierung                       | ok               |                  |
 | Impressum                           | ok				 |  nicht notwendig |
 | Datenschutz                         | ok				 |  nicht notwendig |
-| Contact Us                          | -                |                  |
-| Datenbank                           | -                |                  |
+| Contact Us                          | ok(noch Maps?)   |                  |
+| Datenbank                           | ok               |                  |
 | Raumseite                           | -                |                  |
 | Übersicht von Räumen                | begin            |                  |
-| Konto übersicht                     | -                |                  |
+| Konto übersicht                     | ok               |                  |
 |                                     |                  |                  |
 | Einloggen                           |                  |                  |
 | Ausloggen                           |                  |                  |

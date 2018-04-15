@@ -156,6 +156,9 @@ const HomepageLayout = () => (
 				mustermann@musterfirma.de</p> 
             </p>
           </Grid.Column>
+		  <Grid.Column width={8}>
+			<iframe width="100%" height="400" src="https://maps.google.de/maps?hl=de&q=Akurala%20Beach&t=&z=15&ie=UTF8&iwloc=B&output=embed" frameborder="0" ></iframe>
+		  </Grid.Column>
         </Grid.Row>
       </Grid>
     </Segment>

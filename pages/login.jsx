@@ -17,6 +17,9 @@ import {
 } from "semantic-ui-react";
 
 export default class Login extends Component {
+
+  
+
   async onSubmitHandler(event) {
     event.preventDefault();
 
@@ -30,13 +33,16 @@ export default class Login extends Component {
     console.log(response);
     if (response.length == "0") {
       console.log("No user found");
+      document.getElementById("feedback").innerHTML = '<div class="ui negative message"><div class="header">Error</div><p>Username or Password not correct</p></div>';
     } else {
       console.log("User found");
       if (bcrypt.compareSync(password, response[0].password)) {
         document.getElementById("test").innerHTML = response[0].username;
         console.log("Password correct!");
+        document.getElementById("feedback").innerHTML = '<div class="ui positive message"><div class="header">Login successful</div><p>You will be redirected</p></div>';
       } else {
         console.log("Password incorrect");
+        document.getElementById("feedback").innerHTML = '<div class="ui negative message"><div class="header">Error</div><p>Username or Password not correct</p></div>';
       }
     }
   }
@@ -75,6 +81,9 @@ export default class Login extends Component {
                     placeholder="Password"
                     type="password"
                   />
+                  <div id= "feedback">
+                  </div>
+                  <br/>
                   <Button color="green" fluid size="large" id="test">
                     Login
                   </Button>

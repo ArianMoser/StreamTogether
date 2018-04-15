@@ -271,6 +271,8 @@ const HomepageLayout = () => (
                 im Impressum angegebenen Adresse an uns wenden.
               </p>
               <p>&nbsp;</p>{" "}
+              <h2>Datenschutzerklärung Google Maps</h2><p>Diese Webseite verwendet das Produkt Google Maps von Google Inc. Durch Nutzung dieser Webseite erklären Sie sich mit der Erfassung, Bearbeitung sowie Nutzung der automatisiert erhobenen Daten durch Google Inc, deren Vertreter sowie Dritter einverstanden.
+							Die Nutzungsbedingungen von Google Maps finden sie unter <a href="https://www.google.com/intl/de_de/help/terms_maps.html">"Nutzungsbedingungen von Google Maps"</a>.</p>
               <p>
                 Quelle:{" "}
                 <a href="https://www.e-recht24.de/musterdatenschutzerklaerung.html">
