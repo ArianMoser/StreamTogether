@@ -22,7 +22,16 @@ import {
 
 //Nav Bar
 class DesktopContainer extends Component {
-  state = {};
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  static get defaultProps() {
+    return {
+      activeItem: "rooms"
+    };
+  }
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
   hideFixedMenu = () => this.setState({ fixed: false });
@@ -31,7 +40,7 @@ class DesktopContainer extends Component {
   render() {
     const { children } = this.props;
     const { fixed } = this.state;
-    const { activeItem } = this.state;
+    const activeItem = this.props.activeItem;
 
     return (
       <OwnHeader>
@@ -47,7 +56,7 @@ class DesktopContainer extends Component {
             style={{ minHeight: 550, padding: "1em 0em" }}
             vertical
           >
-            <Navbar />
+            <Navbar name={activeItem} />
             <Container text>
               <Header
                 as="h1"

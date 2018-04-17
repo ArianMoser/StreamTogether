@@ -1,17 +1,23 @@
 import React, { Fragment, Component } from "react";
 import Link from "next/link";
-import {
-  Button,
-  Container,
-  Menu
-} from "semantic-ui-react";
-
+import { Button, Container, Menu } from "semantic-ui-react";
 
 export default class Navbar extends Component {
   state = {};
 
-  constructor(props){
+  constructor(props) {
     super(props);
+  }
+
+  static get defaultProps() {
+    return {
+      name: "home"
+    };
+  }
+
+  componentDidMount() {
+    this.setState({ activeItem: this.props.name });
+    console.log("penis" + this.props.name);
   }
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
@@ -21,7 +27,12 @@ export default class Navbar extends Component {
   render() {
     const { children } = this.props;
     const { fixed } = this.state;
-    const { activeItem } = this.state;
+    const activeItem = this.props.name;
+
+    console.log("penis1");
+    console.log(activeItem);
+    //console.log("fixed" + this.state.fixed);
+
     return (
       <Menu
         fixed={fixed ? "top" : null}
@@ -30,14 +41,15 @@ export default class Navbar extends Component {
         size="large"
       >
         <Container>
-          <Menu.Item
-            name="home"
-            active={activeItem === "home"}
-            onClick={this.handleItemClick}
-            active
-          >
-            Start
-          </Menu.Item>
+          <Link href="/">
+            <Menu.Item
+              name="home"
+              active={activeItem === "home"}
+              onClick={this.handleItemClick}
+            >
+              Start
+            </Menu.Item>
+          </Link>
           <Link href="/rooms">
             <Menu.Item
               name="rooms"
