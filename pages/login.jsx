@@ -17,9 +17,6 @@ import {
 } from "semantic-ui-react";
 
 export default class Login extends Component {
-
-  
-
   async onSubmitHandler(event) {
     event.preventDefault();
 
@@ -33,23 +30,30 @@ export default class Login extends Component {
     console.log(response);
     if (response.length == "0") {
       console.log("No user found");
-      document.getElementById("feedback").innerHTML = '<div class="ui negative message"><div class="header">Error</div><p>Username or Password not correct</p></div>';
+      document.getElementById("feedback").innerHTML =
+        '<div class="ui negative message"><div class="header">Error</div><p>Username or Password not correct</p></div>';
     } else {
       console.log("User found");
       if (bcrypt.compareSync(password, response[0].password)) {
         document.getElementById("test").innerHTML = response[0].username;
         console.log("Password correct!");
-        document.getElementById("feedback").innerHTML = '<div class="ui positive message"><div class="header">Login successful</div><p>You will be redirected</p></div>';
+        document.getElementById("feedback").innerHTML =
+          '<div class="ui positive message"><div class="header">Login successful</div><p>You will be redirected</p></div>';
+        setTimeout(continueToLogIn, 2000);
+        function continueToLogIn() {
+          window.location = "./index";
+        }
       } else {
         console.log("Password incorrect");
-        document.getElementById("feedback").innerHTML = '<div class="ui negative message"><div class="header">Error</div><p>Username or Password not correct</p></div>';
+        document.getElementById("feedback").innerHTML =
+          '<div class="ui negative message"><div class="header">Error</div><p>Username or Password not correct</p></div>';
       }
     }
   }
 
   render() {
     return (
-      <OwnHeader>
+      <OwnHeader useFooter={false} useHeader={false}>
         <div className="login-site">
           <style>{` body > div,
                     body > div > div,
@@ -83,9 +87,8 @@ export default class Login extends Component {
                     type="password"
                     required
                   />
-                  <div id= "feedback">
-                  </div>
-                  <br/>
+                  <div id="feedback" />
+                  <br />
                   <Button color="green" fluid size="large" id="test">
                     Login
                   </Button>

@@ -12,6 +12,7 @@ import {
   Form,
   Grid,
   Icon,
+  Popup,
   Header,
   Image,
   Message,
@@ -80,8 +81,11 @@ export default class register extends Component {
               "Reg. Complete | Affected Rows: " + responseRegister.affectedRows
             );
             document.getElementById("feedback").innerHTML =
-              '<div class="ui positive message"><div class="header">Registration successful</div><p>You may now log-in with the username you have chosen</p></div>';
-            //window.location = "./login";
+              '<div class="ui positive message"><div class="header">Registration successful</div><p>You will be forwarded to the log-in page in a few seconds</p></div>';
+            setTimeout(continueToLogIn, 4000);
+            function continueToLogIn() {
+              window.location = "./login";
+            }
           } else {
             console.log("Email is Used!");
             document.getElementById("feedback").innerHTML =
@@ -105,7 +109,7 @@ export default class register extends Component {
 
   render() {
     return (
-      <OwnHeader>
+      <OwnHeader useFooter={false} useHeader={false}>
         <div className="register-site">
           <style>{` body > div,
                     body > div > div,
@@ -131,7 +135,9 @@ export default class register extends Component {
                     placeholder="Username"
                     pattern="^[A-Za-z0-9_]{1,32}$"
                     required
+                    title="Length between 1 and 32. Allowed characters: A-Z, a-z, 0-9 and _"
                   />
+
                   <Form.Input
                     fluid
                     icon="mail"
@@ -148,6 +154,7 @@ export default class register extends Component {
                     type="password"
                     pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                     required
+                    title="At least: 1 uppercase letter, 1 lowercase letter, 1 digit & min. 8 characters"
                   />
                   <Form.Input
                     fluid
@@ -157,6 +164,7 @@ export default class register extends Component {
                     type="password"
                     pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                     required
+                    title="At least: 1 uppercase letter, 1 lowercase letter, 1 digit & min. 8 characters"
                   />
                   <div id="feedback" />
                   <br />
