@@ -18,12 +18,12 @@ import {
   Sidebar,
   Visibility
 } from "semantic-ui-react";
+import Navbar from "../components/Navbar";
 
 //Nav Bar
 class DesktopContainer extends Component {
   state = {};
 
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name });
   hideFixedMenu = () => this.setState({ fixed: false });
   showFixedMenu = () => this.setState({ fixed: true });
 
@@ -46,58 +46,7 @@ class DesktopContainer extends Component {
             style={{ minHeight: 550, padding: "1em 0em" }}
             vertical
           >
-            <Menu
-              fixed={fixed ? "top" : null}
-              inverted={!fixed}
-              secondary={!fixed}
-              size="large"
-            >
-              <Container>
-                <Menu.Item
-                  name="home"
-                  active={activeItem === "home"}
-                  onClick={this.handleItemClick}
-                  active
-                >
-                  Start
-                </Menu.Item>
-                <Link href="/rooms">
-                  <Menu.Item
-                    name="rooms"
-                    active={activeItem === "rooms"}
-                    onClick={this.handleItemClick}
-                  >
-                    Rooms
-                  </Menu.Item>
-                </Link>
-                <Link href="/help">
-                  <Menu.Item
-                    name="help"
-                    active={activeItem === "help"}
-                    onClick={this.handleItemClick}
-                  >
-                    Help
-                  </Menu.Item>
-                </Link>
-                <Menu.Item position="right">
-                  <Link href="/login">
-                    <Button as="logIn" inverted={!fixed} color="green">
-                      Log In
-                    </Button>
-                  </Link>
-                  <Link href="/register">
-                    <Button
-                      as="signUp"
-                      inverted={!fixed}
-                      color="orange"
-                      style={{ marginLeft: "0.5em" }}
-                    >
-                      Sign Up
-                    </Button>
-                  </Link>
-                </Menu.Item>
-              </Container>
-            </Menu>
+            <Navbar />
             <Container text>
               <Header
                 as="h1"
