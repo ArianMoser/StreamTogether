@@ -3,20 +3,21 @@ import Link from "next/link";
 import React, { Component } from "react";
 import $ from "jquery";
 import { roomFunctionByTitle, createRoomFunction } from "./PostMethods";
-
+import Navbar from "../components/Navbar";
 import {
   Button,
+  Container,
   Form,
   Grid,
-  Icon,
   Header,
+  Icon,
   Image,
   Message,
-  Segment
+  Segment,
+  Visibility
 } from "semantic-ui-react";
 
 export default class Login extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -37,7 +38,8 @@ export default class Login extends Component {
       title: "",
       description: "",
       checkPassword: false,
-      password: ""
+      password: "",
+      activeItem: "empty"
     };
   }
 
@@ -73,7 +75,7 @@ export default class Login extends Component {
   }
 
   async _handleRoomCreation(event) {
-  /*  this.setState({
+    /*  this.setState({
       title: undefined,
       description: undefined,
       checkPassword: false,
@@ -137,7 +139,7 @@ export default class Login extends Component {
         //check if db push succeded
         if (responseRoomCreation.affectedRows == "1") {
           console.log("DB push succeeded");
-        //  window.location = "./";
+          //  window.location = "./";
         } else {
           // exception during room creation db push
           // todo: add dialog
@@ -149,10 +151,10 @@ export default class Login extends Component {
     } else {
       console.log("Testpattern failed");
     }
-
   }
 
   render() {
+    const activeItem = this.props.activeItem;
     const pwField = this.state.checkPassword ? (
       <input
         value={this.state.password}
@@ -164,14 +166,35 @@ export default class Login extends Component {
     );
 
     return (
-      <div
-        style={{
-          border: "1px solid grey",
-          padding: "20px",
-          margin: "20px 0 20px 0"
-        }}
-      >
-        <h2>Create a Room</h2>
+      <OwnHeader>
+        <Visibility
+          once={false}
+          onBottomPassed={this.showFixedMenu}
+          onBottomPassedReverse={this.hideFixedMenu}
+        >
+          <Segment
+            inverted
+            color="black"
+            textAlign="center"
+            style={{ minHeight: 550, padding: "1em 0em" }}
+            vertical
+          >
+            <Navbar name={activeItem} />
+            <Container text>
+              <Header
+                as="h1"
+                content="Create a room"
+                inverted
+                style={{
+                  fontSize: "4em",
+                  fontWeight: "normal",
+                  marginBottom: 0,
+                  marginTop: "2em"
+                }}
+              />
+            </Container>
+          </Segment>
+        </Visibility>
         <p>Title:</p>
         <input value={this.state.title} onChange={this._handleTitleChange} />
         <p>Description:</p>
@@ -192,7 +215,7 @@ export default class Login extends Component {
         </div>
         <p />
         <button onClick={this._handleRoomCreation}>Create Room</button>
-      </div>
+      </OwnHeader>
     );
   }
 }
