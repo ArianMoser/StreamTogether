@@ -46,7 +46,7 @@ export default class register extends Component {
     ) {
       //Check if Passwords are equal!
       if (pw == pw2) {
-        const responSelectUsername = await userFunctionByUsername(
+        const responseSelectUsername = await userFunctionByUsername(
           "/getuserbyusername",
           username
         );
@@ -58,7 +58,7 @@ export default class register extends Component {
         );
         //Check if Username is Used!
         if (responseSelectUsername.length == "0") {
-          const responSelectEmail = await userFunctionByEmail(
+          const responseSelectEmail = await userFunctionByEmail(
             "/getuserbyemail",
             email
           );
