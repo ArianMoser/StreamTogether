@@ -54,10 +54,10 @@ export default class register extends Component {
           "Number of entries in the database with username " +
             username +
             " :" +
-            responSelectUsername.length
+            responseSelectUsername.length
         );
         //Check if Username is Used!
-        if (responSelectUsername.length == "0") {
+        if (responseSelectUsername.length == "0") {
           const responSelectEmail = await userFunctionByEmail(
             "/getuserbyemail",
             email
@@ -66,10 +66,10 @@ export default class register extends Component {
             "Number of entries in the database with email " +
               email +
               " :" +
-              responSelectEmail.length
+              responseSelectEmail.length
           );
           //Check if Email is Used!
-          if (responSelectEmail.length == "0") {
+          if (responseSelectEmail.length == "0") {
             //Send Registration
             const responseRegister = await registerFunction(
               "/register",
@@ -80,11 +80,17 @@ export default class register extends Component {
             console.log(
               "Reg. Complete | Affected Rows: " + responseRegister.affectedRows
             );
-            document.getElementById("feedback").innerHTML =
-              '<div class="ui positive message"><div class="header">Registration successful</div><p>You will be forwarded to the log-in page in a few seconds</p></div>';
-            setTimeout(continueToLogIn, 4000);
-            function continueToLogIn() {
-              window.location = "./login";
+            if (responseRegister.affectedRows == "1") {
+              // Registration completed
+              document.getElementById("feedback").innerHTML =
+                '<div class="ui positive message"><div class="header">Registration successful</div><p>You will be forwarded to the log-in page in a few seconds</p></div>';
+              setTimeout(continueToLogIn, 4000);
+              function continueToLogIn() {
+                window.location = "./login";
+              }
+            } else {
+              // exception during Registration db push
+              // todo: add dialog
             }
           } else {
             console.log("Email is Used!");

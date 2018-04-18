@@ -76,6 +76,20 @@ var call = module.exports = {
 
         });
     },
+    selectRoomByTitle: function (res, dieNutzerDaten, connection) {
+        const query = 'SELECT title FROM `room` WHERE title=' + mysql.escape(dieNutzerDaten.title) + ' ;';
+        connection.query(query, function(err, rows, fields) {
+            if(err){
+                console.log("An error ocurred performing the query.");
+                console.log(err)
+                return;
+            }
+
+            console.log("Query selectRoomByTitle succesfully executed: ", rows);
+            res.send(rows)
+
+        });
+    },
     selectVideosByRoomId: function (res, dieNutzerDaten, connection) {
         const query = 'SELECT video.id, video.title, video.description FROM room,playlist,video WHERE room.ID = playlist.room_ID AND video.ID = playlist.video_ID AND room.ID = ' + mysql.escape(dieNutzerDaten.roomId) + ' ;';
         connection.query(query, function(err, rows, fields) {
@@ -94,6 +108,22 @@ var call = module.exports = {
     insertUser: function (res, dieNutzerDaten, connection) {
         console.log(dieNutzerDaten);
         const query = 'INSERT INTO user (username, email, password)VALUES (' +  mysql.escape(dieNutzerDaten.username) +' , '+  mysql.escape(dieNutzerDaten.email) +' , '+  mysql.escape(dieNutzerDaten.password) + ' );';
+        connection.query(query, function(err, rows, fields) {
+            if(err){
+                console.log("An error ocurred performing the query.");
+                console.log(err)
+                return;
+            }
+
+            console.log("Number of records inserted: " + rows.affectedRows);
+            res.send(rows);
+
+        });
+
+    },
+    insertRoom: function (res, dieNutzerDaten, connection) {
+        console.log(dieNutzerDaten);
+        const query = 'INSERT INTO room (title, description, password)VALUES (' +  mysql.escape(dieNutzerDaten.title) +' , '+  mysql.escape(dieNutzerDaten.description) +' , '+  mysql.escape(dieNutzerDaten.password) + ' );';
         connection.query(query, function(err, rows, fields) {
             if(err){
                 console.log("An error ocurred performing the query.");

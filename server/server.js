@@ -42,7 +42,7 @@ app
         console.log(err.fatal);
       } else {
         console.log("Database CONNECTED");
-        
+
         exp.post("/register", (req, res) => {
           database.insertUser(res, req.body, connection);
         });
@@ -54,6 +54,12 @@ app
         });
         exp.post("/login", (req, res) => {
           database.selectUserByUsernameOrEmail(res, req.body, connection);
+        });
+        exp.post("/selectRoomByTitle", (req, res) => {
+          database.selectRoomByTitle(res, req.body, connection);
+        });
+        exp.post("/createRoom", (req, res) => {
+          database.insertRoom(res, req.body, connection);
         });
       }
     });
