@@ -99,7 +99,12 @@ export const registerFunction = (api, username, email, password) => {
 };
 
 export const createRoomFunction = (api, title, description, password) => {
-  const hash = password==undefined? bcrypt.hashSync(password, 11): "";
+  // var hash = (password!=undefined || password!="")? bcrypt.hashSync(password, 11): "";
+  if (password === undefined || password == ""){
+    var hash = "";
+  } else {
+    var hash = bcrypt.hashSync(password, 11);
+  }
   return new Promise((resolve, reject) => {
     $.ajax({
       url: api,

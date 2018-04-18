@@ -137,7 +137,7 @@ export default class Login extends Component {
         //check if db push succeded
         if (responseRoomCreation.affectedRows == "1") {
           console.log("DB push succeeded");
-          window.location = "./";
+        //  window.location = "./";
         } else {
           // exception during room creation db push
           // todo: add dialog
