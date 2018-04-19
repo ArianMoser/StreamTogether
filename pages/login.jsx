@@ -5,6 +5,7 @@ import $ from "jquery";
 import { userFunctionLogin } from "./PostMethods";
 const bcrypt = require("bcryptjs");
 import { bake_cookie} from 'sfcookies'
+const jwt = require('jsonwebtoken');
 
 import {
   Button,
@@ -43,7 +44,9 @@ export default class Login extends Component {
         setTimeout(continueToLogIn, 2000);
         function continueToLogIn() {
           //Set Cookie
-          bake_cookie("StreamTogether","TestPenisarihatnenkleinen123")
+          var sessiontoken = jwt.sign({ username: response[0].username , exp: Math.floor(Date.now() / 1000) + (60 * 60), }, 'shhhhh');
+          console.log(sessiontoken);
+          bake_cookie("StreamTogether",sessiontoken)
           window.location = "./index";
         }
       } else {

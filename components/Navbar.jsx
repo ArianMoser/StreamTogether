@@ -2,6 +2,7 @@ import React, { Fragment, Component } from "react";
 import Link from "next/link";
 import { Button, Container, Menu } from "semantic-ui-react";
 import { bake_cookie, read_cookie, delete_cookie } from "sfcookies";
+const jwt = require('jsonwebtoken');
 
 export default class Navbar extends Component {
   state = {};
@@ -10,17 +11,31 @@ export default class Navbar extends Component {
     super(props);
     this.logoutFunction = this.logoutFunction.bind(this);
   }
- 
+
   static get defaultProps() {
     return {
       name: "home"
     };
   }
 
+  //Checksession
+  checksession() {
+    if (read_cookie("StreamTogether").length != 0) {
+      try {
+        var decodedsession = jwt.verify(read_cookie("StreamTogether"), 'shhhhh');
+        return(decodedsession.username);
+      } catch (err) {
+        return("ErrorTokenFalse");
+      }
+    } else {
+      return("ErrorTokenFalse");
+    }
+  }
+
   componentDidMount() {
     this.setState({ activeItem: this.props.name });
-    console.log("penis" + this.props.name);
-    console.log("Cookie ist gesetzt als : " + read_cookie("StreamTogether"));
+    var answer = this.checksession();
+    console.log("User Logged In : " + answer);
   }
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
@@ -40,7 +55,7 @@ export default class Navbar extends Component {
     const activeItem = this.props.name;
     var buttonPlaceholder = "";
 
-    if (read_cookie("StreamTogether").length != 0) {
+    if (this.checksession() != "ErrorTokenFalse") {
       // TODO: Ausloggen button hiermit
       var buttonPlaceholder = (
         <span>
@@ -49,14 +64,14 @@ export default class Navbar extends Component {
               Account
             </Button>
           </Link>
-            <Button
-              as="logOut"
-              inverted={!fixed}
-              color="red"
-              style={{ marginLeft: "0.5em" }}
-              onClick={this.logoutFunction}
-            >
-              Log Out
+          <Button
+            as="logOut"
+            inverted={!fixed}
+            color="red"
+            style={{ marginLeft: "0.5em" }}
+            onClick={this.logoutFunction}
+          >
+            Log Out
             </Button>
         </span>
       );
