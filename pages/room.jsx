@@ -37,10 +37,7 @@ const HomepageHeading = () => (
 );
 
 
-
-//Nav Bar
-
-export default class DesktopContainer extends Component {
+export default class Room extends Component {
   constructor(props) {
     super(props);
     this.state = {};

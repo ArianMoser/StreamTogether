@@ -21,7 +21,7 @@ import {
 } from "semantic-ui-react";
 
 //Nav Bar
-class DesktopContainer extends Component {
+export default class Dataprivacy extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -231,5 +231,3 @@ class DesktopContainer extends Component {
     );
   }
 }
-
-export default DesktopContainer;

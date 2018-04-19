@@ -2,7 +2,7 @@ import React, { Fragment, Component } from "react";
 import Link from "next/link";
 import { Button, Container, Menu } from "semantic-ui-react";
 import { bake_cookie, read_cookie, delete_cookie } from "sfcookies";
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 export default class Navbar extends Component {
   state = {};
@@ -22,20 +22,24 @@ export default class Navbar extends Component {
   checksession() {
     if (read_cookie("StreamTogether").length != 0) {
       try {
-        var decodedsession = jwt.verify(read_cookie("StreamTogether"), 'shhhhh');
-        return(decodedsession.username);
+        var decodedsession = jwt.verify(
+          read_cookie("StreamTogether"),
+          "shhhhh"
+        );
+        return decodedsession.username;
       } catch (err) {
-        return("ErrorTokenFalse");
+        console.log("Error-Message: " + err.message);
+        return "ErrorTokenFalse";
       }
     } else {
-      return("ErrorTokenFalse");
+      return "ErrorTokenFalse";
     }
   }
 
   componentDidMount() {
     this.setState({ activeItem: this.props.name });
     var answer = this.checksession();
-    console.log("User Logged In : " + answer);
+    console.log("Current user: '" + answer + "'");
   }
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
@@ -55,6 +59,8 @@ export default class Navbar extends Component {
     const activeItem = this.props.name;
     var buttonPlaceholder = "";
 
+    console.log("Active Item: " + activeItem);
+
     if (this.checksession() != "ErrorTokenFalse") {
       // TODO: Ausloggen button hiermit
       var buttonPlaceholder = (
@@ -72,7 +78,7 @@ export default class Navbar extends Component {
             onClick={this.logoutFunction}
           >
             Log Out
-            </Button>
+          </Button>
         </span>
       );
     } else {
@@ -96,8 +102,6 @@ export default class Navbar extends Component {
       );
     }
 
-    console.log("penis1");
-    console.log(activeItem);
     //console.log("fixed" + this.state.fixed);
 
     return (
@@ -117,7 +121,7 @@ export default class Navbar extends Component {
               Start
             </Menu.Item>
           </Link>
-          <Link href="/rooms">
+          <Link href="/roomOverview">
             <Menu.Item
               name="rooms"
               active={activeItem === "rooms"}

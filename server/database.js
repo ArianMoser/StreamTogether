@@ -123,7 +123,9 @@ var call = module.exports = {
     },
     insertRoom: function (res, dieNutzerDaten, connection) {
         console.log(dieNutzerDaten);
-        const query = 'INSERT INTO room (title, description, password)VALUES (' +  mysql.escape(dieNutzerDaten.title) +' , '+  mysql.escape(dieNutzerDaten.description) +' , '+  mysql.escape(dieNutzerDaten.password) + ' );';
+        const query = 'INSERT INTO room (title, description, password, creator)VALUES ('
+        +  mysql.escape(dieNutzerDaten.title) +' , '+  mysql.escape(dieNutzerDaten.description)
+        +' , '+  mysql.escape(dieNutzerDaten.password) + ' , ' + mysql.escape(dieNutzerDaten.creator) + ' );';
         connection.query(query, function(err, rows, fields) {
             if(err){
                 console.log("An error ocurred performing the query.");

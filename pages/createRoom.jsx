@@ -16,8 +16,10 @@ import {
   Segment,
   Visibility
 } from "semantic-ui-react";
+import { read_cookie } from "sfcookies";
+const jwt = require("jsonwebtoken");
 
-export default class Login extends Component {
+export default class RoomCreator extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -39,14 +41,21 @@ export default class Login extends Component {
       description: "",
       checkPassword: false,
       password: "",
-      activeItem: "empty"
+      activeItem: "empty",
+      currentUser: ""
     };
   }
 
+  componentWillMount() {
+    //
+  }
+
   componentDidMount() {
+    var currentUserValue = this.checksession();
     this.setState({
       title: this.props.title,
-      description: this.props.description
+      description: this.props.description,
+      currentUser: currentUserValue
     });
   }
 
@@ -74,18 +83,30 @@ export default class Login extends Component {
     });
   }
 
+  checksession() {
+    if (read_cookie("StreamTogether").length != 0) {
+      try {
+        var decodedsession = jwt.verify(
+          read_cookie("StreamTogether"),
+          "shhhhh"
+        );
+        return decodedsession.username;
+      } catch (err) {
+        console.log("Error-Message: " + err.message);
+        return "ErrorTokenFalse";
+      }
+    } else {
+      return "ErrorTokenFalse";
+    }
+  }
+
   async _handleRoomCreation(event) {
-    /*  this.setState({
-      title: undefined,
-      description: undefined,
-      checkPassword: false,
-      password: undefined
-    });*/
     event.preventDefault();
 
     const title = this.state.title;
     const description = this.state.description;
     const checkPassword = this.state.checkPassword;
+    const currentUser = this.state.currentUser;
     var password = this.state.password;
 
     if (password == undefined || !checkPassword) {
@@ -102,7 +123,9 @@ export default class Login extends Component {
         "| checkPassword: " +
         checkPassword +
         "| password: " +
-        password
+        password +
+        "| currentUser: " +
+        currentUser
     );
     var titleExpression = /^[A-Za-z0-9_]{3,32}$/;
     var pwExpression = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
@@ -131,7 +154,8 @@ export default class Login extends Component {
           "/createRoom",
           title,
           description,
-          password
+          password,
+          currentUser
         );
         console.log(
           "Reg. Complete | Affected Rows: " + responseRoomCreation.affectedRows

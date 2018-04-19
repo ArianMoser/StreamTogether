@@ -98,7 +98,7 @@ export const registerFunction = (api, username, email, password) => {
   });
 };
 
-export const createRoomFunction = (api, title, description, password) => {
+export const createRoomFunction = (api, title, description, password, currentUser) => {
   // var hash = (password!=undefined || password!="")? bcrypt.hashSync(password, 11): "";
   if (password === undefined || password == ""){
     var hash = "";
@@ -114,7 +114,8 @@ export const createRoomFunction = (api, title, description, password) => {
       data: JSON.stringify({
         title: title,
         description: description,
-        password: hash
+        password: hash,
+        creator: currentUser
       }),
       success: function(res) {
         resolve(res);

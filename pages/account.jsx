@@ -28,7 +28,7 @@ import {
 } from "semantic-ui-react";
 
 //Nav Bar
-export default class DesktopContainer extends Component {
+export default class Account extends Component {
   constructor(props) {
     super(props);
     this.state = {};

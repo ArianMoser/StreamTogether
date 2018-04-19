@@ -21,7 +21,7 @@ import {
 import Navbar from "../components/Navbar";
 
 //Nav Bar
-class DesktopContainer extends Component {
+export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -189,5 +189,3 @@ class DesktopContainer extends Component {
     );
   }
 }
-
-export default DesktopContainer;
