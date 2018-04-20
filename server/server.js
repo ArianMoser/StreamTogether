@@ -49,6 +49,9 @@ app
         exp.post("/getuserbyusername", (req, res) => {
           database.selectUserByUsername(res, req.body, connection);
         });
+        exp.post("/getuserandroombyusername", (req, res) => {
+          database.selectUserAndRoomByUsername(res, req.body, connection);
+        });
         exp.post("/getuserbyemail", (req, res) => {
           database.selectUserByEmail(res, req.body, connection);
         });
@@ -63,6 +66,12 @@ app
         });
         exp.post("/createRoom", (req, res) => {
           database.insertRoom(res, req.body, connection);
+        });
+        exp.post("/updateUserPassword", (req, res) => {
+          database.updateUserPassword(res, req.body, connection);
+        });
+        exp.post("/deleteUser", (req, res) => {
+          database.deleteUserByID(res, req.body, connection);
         });
       }
     });

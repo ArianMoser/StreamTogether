@@ -151,3 +151,48 @@ export const createRoomFunction = (api, title, description, password, currentUse
     });
   });
 };
+
+//----------------------Update password----------------------//
+export const changePassword = (api, id, passwordNew) => {
+  const hashNewPassword = bcrypt.hashSync(passwordNew, 11);
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({
+        id: id,
+        passwordNew: hashNewPassword
+      }),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
+
+//----------------------Delete user----------------------//
+//todo: add password check to delete an account
+export const deleteUser = (api, id) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({
+        id: id
+      }),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};

@@ -183,7 +183,6 @@ export default class RoomCreator extends Component {
         console.log(
           "Reg. Complete | Affected Rows: " + responseRoomCreation.affectedRows
         );
-        console.log(responseRoomCreation);
         //check if db push succeded
         if (responseRoomCreation.affectedRows == "1") {
           console.log("DB push succeeded");
