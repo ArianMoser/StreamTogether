@@ -152,7 +152,29 @@ export const createRoomFunction = (api, title, description, password, currentUse
   });
 };
 
-//----------------------Update password----------------------//
+//----------------------Update roomid----------------------//
+export const changeRoomId = (api, username, roomId) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({
+        username: username,
+        roomId: roomId
+      }),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
+
+//--------------------Update password---------------------//
 export const changePassword = (api, id, passwordNew) => {
   const hashNewPassword = bcrypt.hashSync(passwordNew, 11);
   return new Promise((resolve, reject) => {

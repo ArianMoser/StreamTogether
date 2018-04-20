@@ -70,6 +70,9 @@ app
         exp.post("/updateUserPassword", (req, res) => {
           database.updateUserPassword(res, req.body, connection);
         });
+        exp.post("/updateUserRoomId", (req, res) => {
+          database.updateUserRoomId(res, req.body, connection);
+        });
         exp.post("/deleteUser", (req, res) => {
           database.deleteUserByID(res, req.body, connection);
         });

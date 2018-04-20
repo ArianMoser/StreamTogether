@@ -15,19 +15,27 @@ import PropTypes from "prop-types";
 import OwnHeader from "../components/Header";
 import YouTubeSearch from "../components/YouTubeSearch";
 import Navbar from "../components/Navbar";
-import { roomFunctionByHashedValue } from "./PostMethods";
+import { roomFunctionByHashedValue, changeRoomId } from "./PostMethods";
+import { read_cookie, delete_cookie } from "sfcookies";
+
+const jwt = require("jsonwebtoken");
+
 export default class Room extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this._updateUserRoomId = this._updateUserRoomId.bind(this);
+    this._getInformation = this._getInformation.bind(this);
   }
 
   static get defaultProps() {
     return {
       activeItem: "empty", //active item of the Navbar
+      userName: "",
       creator: "default-creator",
       description: "Default-description",
       id: "0",
+      roomId: "0",
       title: "Default-title",
       userlist: {}
     };
@@ -38,7 +46,34 @@ export default class Room extends Component {
   }
 
   componentDidMount() {
-    //
+    //this._updateUserRoomId();
+  }
+
+  async _updateUserRoomId() {
+    console.log("Update current room of current user");
+
+    const user = await this.checksession();
+    this.setState({
+      userName: ""
+    });
+    const roomId = this.state.roomId;
+
+    console.log("Username: " + user);
+    console.log("roomId:   " + roomId);
+
+    const responseUpdate = await changeRoomId(
+      "/updateUserRoomId",
+      user,
+      roomId
+    );
+    console.log(
+      "Reg. Complete | Affected Rows: " + responseUpdate.affectedRows
+    );
+    if (responseUpdate.affectedRows == "1") {
+      console.log("DB push succeded");
+    } else {
+      console.log("DB push failed");
+    }
   }
 
   async _getInformation() {
@@ -61,22 +96,40 @@ export default class Room extends Component {
       console.log("Ersteller:   " + responseRoomInformation[0].Ersteller);
       console.log("Description: " + responseRoomInformation[0].description);
       this.setState({
-        roomid: responseRoomInformation[0].ID,
+        roomId: responseRoomInformation[0].ID,
         title: responseRoomInformation[0].title,
         creator: responseRoomInformation[0].Ersteller,
         description: responseRoomInformation[0].description
       });
+       this._updateUserRoomId();
     } else {
       // exception during room creation db push
       // todo: add dialog
       console.log("DB push failed");
+      this.setState({
+        roomId: this.props.id,
+        title: this.props.title,
+        creator: this.props.creator,
+        description: this.props.description
+      });
     }
-    this.setState({
-      roomid: this.probs.id,
-      title: this.probs.title,
-      creator: this.probs.creator,
-      description: this.probs.description
-    });
+  }
+
+  checksession() {
+    if (read_cookie("StreamTogether").length != 0) {
+      try {
+        var decodedsession = jwt.verify(
+          read_cookie("StreamTogether"),
+          "shhhhh"
+        );
+        return decodedsession.username;
+      } catch (err) {
+        console.log("Error-Message: " + err.message);
+        return "ErrorTokenFalse";
+      }
+    } else {
+      return "ErrorTokenFalse";
+    }
   }
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });

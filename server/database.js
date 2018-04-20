@@ -230,6 +230,28 @@ var call = (module.exports = {
       res.send(rows);
     });
   },
+
+  updateUserRoomId: function(res, dieNutzerDaten, connection) {
+    console.log(dieNutzerDaten);
+    const query =
+      "Update `user`" +
+      " SET `room_id`=" +
+      mysql.escape(dieNutzerDaten.roomId) +
+      " WHERE `username`=" +
+      mysql.escape(dieNutzerDaten.username) +
+      " ;";
+    console.log(query);
+    connection.query(query, function(err, rows, fields) {
+      if (err) {
+        console.log("An error ocurred performing the query.");
+        console.log(err);
+        return;
+      }
+
+      console.log("Number of records inserted: " + rows.affectedRows);
+      res.send(rows);
+    });
+  },
   //-------------------------delete----------------------//
   deleteUserByID: function(res, dieNutzerDaten, connection) {
     console.log(dieNutzerDaten);

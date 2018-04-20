@@ -31,6 +31,8 @@ import {
   changePassword,
   deleteUser
 } from "./PostMethods";
+
+
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
