@@ -2,7 +2,11 @@ import OwnHeader from "../components/Header";
 import Link from "next/link";
 import React, { Component } from "react";
 import $ from "jquery";
-import { roomFunctionByTitle, createRoomFunction } from "./PostMethods";
+import {
+  roomFunctionByTitle,
+  createRoomFunction,
+  userFunctionByUsername
+} from "./PostMethods";
 import Navbar from "../components/Navbar";
 import {
   Button,
@@ -51,11 +55,12 @@ export default class RoomCreator extends Component {
   }
 
   componentDidMount() {
-    var currentUserValue = this.checksession();
+    var currentUsername = this.checksession();
+    console.log("Username: " + currentUsername);
+    var currentUserId = this._getUserId(currentUsername);
     this.setState({
       title: this.props.title,
-      description: this.props.description,
-      currentUser: currentUserValue
+      description: this.props.description
     });
   }
 
@@ -100,9 +105,27 @@ export default class RoomCreator extends Component {
     }
   }
 
+  async _getUserId(username) {
+    console.log("Passed username: " + username);
+    const response = await userFunctionByUsername(
+      "/getuserbyusername",
+      username
+    );
+    console.log(response);
+    if (response.length == "1") {
+      var currentUserId = response[0].ID;
+      console.log("Found id " + currentUserId);
+    } else {
+      console.log("Could not resolve username into id");
+      var currentUserId = "0";
+    }
+    this.setState({
+      currentUser: currentUserId
+    });
+  }
+
   async _handleRoomCreation(event) {
     event.preventDefault();
-
     const title = this.state.title;
     const description = this.state.description;
     const checkPassword = this.state.checkPassword;
@@ -142,9 +165,9 @@ export default class RoomCreator extends Component {
         title
       );
       console.log(
-        "Number of entries in the database with username " +
+        "Number of entries in the database with roomtitle '" +
           title +
-          " :" +
+          "' :" +
           responseSelectTitle.length
       );
       //check if title is already used
@@ -160,9 +183,27 @@ export default class RoomCreator extends Component {
         console.log(
           "Reg. Complete | Affected Rows: " + responseRoomCreation.affectedRows
         );
+        console.log(responseRoomCreation);
         //check if db push succeded
         if (responseRoomCreation.affectedRows == "1") {
           console.log("DB push succeeded");
+
+          //get the link to the room
+          console.log("Get the hashed value to reach the room");
+          const responseGetHashedValue = await roomFunctionByTitle(
+            "/selectRoomByTitle",
+            title
+          );
+          console.log(
+            "Number of entries in the database with roomtitle '" +
+              title +
+              "' :" +
+              responseGetHashedValue.length
+            );
+            console.log(responseGetHashedValue);
+            var hashedValue = responseGetHashedValue[0].hashedValue;
+            window.location = "./room?hv="+ hashedValue;
+
           //  window.location = "./";
         } else {
           // exception during room creation db push

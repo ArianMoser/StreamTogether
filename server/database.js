@@ -76,8 +76,26 @@ var call = module.exports = {
 
         });
     },
+    selectRoomHashedValue: function (res, dieNutzerDaten, connection) {
+        const query = 'SELECT room.ID, room.title, user.username as "Ersteller", room.description, room.password ' +
+        'FROM room, user ' +
+        'WHERE user.ID = room.creator AND ' +
+        'room.hashedValue = ' + mysql.escape(dieNutzerDaten.hashedValue) + ' ;';
+        console.log(query);
+        connection.query(query, function(err, rows, fields) {
+            if(err){
+                console.log("An error ocurred performing the query.");
+                console.log(err)
+                return;
+            }
+
+            console.log("Query selectRoomByUserId succesfully executed: ", rows);
+            res.send(rows)
+
+        });
+    },
     selectRoomByTitle: function (res, dieNutzerDaten, connection) {
-        const query = 'SELECT title FROM `room` WHERE title=' + mysql.escape(dieNutzerDaten.title) + ' ;';
+        const query = 'SELECT title, hashedValue FROM `room` WHERE title=' + mysql.escape(dieNutzerDaten.title) + ' ;';
         connection.query(query, function(err, rows, fields) {
             if(err){
                 console.log("An error ocurred performing the query.");
@@ -123,9 +141,12 @@ var call = module.exports = {
     },
     insertRoom: function (res, dieNutzerDaten, connection) {
         console.log(dieNutzerDaten);
-        const query = 'INSERT INTO room (title, description, password, creator)VALUES ('
-        +  mysql.escape(dieNutzerDaten.title) +' , '+  mysql.escape(dieNutzerDaten.description)
-        +' , '+  mysql.escape(dieNutzerDaten.password) + ' , ' + mysql.escape(dieNutzerDaten.creator) + ' );';
+        const query = 'INSERT INTO room (title, description, password, creator, hashedValue)VALUES ('
+        +  mysql.escape(dieNutzerDaten.title) + ' , '
+        +  mysql.escape(dieNutzerDaten.description) + ' , '
+        +  mysql.escape(dieNutzerDaten.password) + ' , '
+        +  mysql.escape(dieNutzerDaten.creator) + ' , '
+        +  mysql.escape(dieNutzerDaten.hashedValue) + ' );';
         connection.query(query, function(err, rows, fields) {
             if(err){
                 console.log("An error ocurred performing the query.");

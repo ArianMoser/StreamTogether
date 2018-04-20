@@ -40,6 +40,7 @@ export default class Navbar extends Component {
     this.setState({ activeItem: this.props.name });
     var answer = this.checksession();
     console.log("Current user: '" + answer + "'");
+    console.log("Active Item: " + this.props.name);
   }
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
@@ -59,8 +60,6 @@ export default class Navbar extends Component {
     const activeItem = this.props.name;
     var buttonPlaceholder = "";
 
-    console.log("Active Item: " + activeItem);
-
     if (this.checksession() != "ErrorTokenFalse") {
       // TODO: Ausloggen button hiermit
       var buttonPlaceholder = (
@@ -71,7 +70,7 @@ export default class Navbar extends Component {
             </Button>
           </Link>
           <Button
-            as="logOut"
+            as="logout"
             inverted={!fixed}
             color="red"
             style={{ marginLeft: "0.5em" }}

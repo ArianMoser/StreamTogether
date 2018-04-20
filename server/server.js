@@ -55,6 +55,9 @@ app
         exp.post("/login", (req, res) => {
           database.selectUserByUsernameOrEmail(res, req.body, connection);
         });
+        exp.post("/selectRoomInformation", (req, res) => {
+          database.selectRoomHashedValue(res, req.body, connection);
+        });
         exp.post("/selectRoomByTitle", (req, res) => {
           database.selectRoomByTitle(res, req.body, connection);
         });

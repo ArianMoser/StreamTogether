@@ -36,6 +36,23 @@ export const roomFunctionByTitle = (api, title) => {
     });
   });
 };
+export const roomFunctionByHashedValue = (api, hashedValue) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({ hashedValue: hashedValue}),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
 export const userFunctionByEmail = (api, email) => {
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -98,6 +115,8 @@ export const registerFunction = (api, username, email, password) => {
   });
 };
 
+
+//-----------------------CREATOR ROOM-------------------------//
 export const createRoomFunction = (api, title, description, password, currentUser) => {
   // var hash = (password!=undefined || password!="")? bcrypt.hashSync(password, 11): "";
   if (password === undefined || password == ""){
@@ -105,6 +124,11 @@ export const createRoomFunction = (api, title, description, password, currentUse
   } else {
     var hash = bcrypt.hashSync(password, 11);
   }
+  var hashedValue = bcrypt.hashSync(title, 11);
+  //todo: beim hashen sollten title + creatorid verwendet werden
+  // dafür muss die id in die db eingetragen werden und nicht der className
+  // des Creators
+
   return new Promise((resolve, reject) => {
     $.ajax({
       url: api,
@@ -115,7 +139,8 @@ export const createRoomFunction = (api, title, description, password, currentUse
         title: title,
         description: description,
         password: hash,
-        creator: currentUser
+        creator: currentUser,
+        hashedValue: hashedValue
       }),
       success: function(res) {
         resolve(res);
