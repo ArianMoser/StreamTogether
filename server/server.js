@@ -43,38 +43,41 @@ app
       } else {
         console.log("Database CONNECTED");
 
-        exp.post("/register", (req, res) => {
-          database.insertUser(res, req.body, connection);
+        exp.post("/createRoom", (req, res) => {
+          database.insertRoom(res, req.body, connection);
         });
-        exp.post("/getuserbyusername", (req, res) => {
-          database.selectUserByUsername(res, req.body, connection);
-        });
-        exp.post("/getuserandroombyusername", (req, res) => {
-          database.selectUserAndRoomByUsername(res, req.body, connection);
+        exp.post("/deleteUser", (req, res) => {
+          database.deleteUserByID(res, req.body, connection);
         });
         exp.post("/getuserbyemail", (req, res) => {
           database.selectUserByEmail(res, req.body, connection);
         });
+        exp.post("/getuserandroombyusername", (req, res) => {
+          database.selectUserAndRoomByUsername(res, req.body, connection);
+        });
+        exp.post("/getuserbyusername", (req, res) => {
+          database.selectUserByUsername(res, req.body, connection);
+        });
         exp.post("/login", (req, res) => {
           database.selectUserByUsernameOrEmail(res, req.body, connection);
         });
-        exp.post("/selectRoomInformation", (req, res) => {
-          database.selectRoomHashedValue(res, req.body, connection);
+        exp.post("/register", (req, res) => {
+          database.insertUser(res, req.body, connection);
+        });
+        exp.post("/selectRooms" , (req, res) => {
+          database.selectRooms(res, req.body, connection);
         });
         exp.post("/selectRoomByTitle", (req, res) => {
           database.selectRoomByTitle(res, req.body, connection);
         });
-        exp.post("/createRoom", (req, res) => {
-          database.insertRoom(res, req.body, connection);
+        exp.post("/selectRoomInformation", (req, res) => {
+          database.selectRoomHashedValue(res, req.body, connection);
         });
         exp.post("/updateUserPassword", (req, res) => {
           database.updateUserPassword(res, req.body, connection);
         });
         exp.post("/updateUserRoomId", (req, res) => {
           database.updateUserRoomId(res, req.body, connection);
-        });
-        exp.post("/deleteUser", (req, res) => {
-          database.deleteUserByID(res, req.body, connection);
         });
       }
     });

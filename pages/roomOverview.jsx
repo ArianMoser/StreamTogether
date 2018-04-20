@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import OwnHeader from "../components/Header";
 import Navbar from "../components/Navbar";
+import RoomCard from "../components/RoomCard";
 import PropTypes from "prop-types";
 import Link from "next/link";
 import {
@@ -19,7 +20,7 @@ import {
   Sidebar,
   Visibility
 } from "semantic-ui-react";
-
+import { roomFunctionShowAll } from "./PostMethods";
 
 export default class roomOverview extends Component {
   constructor(props) {
@@ -29,8 +30,29 @@ export default class roomOverview extends Component {
 
   static get defaultProps() {
     return {
-      activeItem: "rooms"
+      activeItem: "rooms",
+      rooms: {},
+      userId: "",
+      username: ""
     };
+  }
+
+  componentWillMount() {
+    this._getAllRooms();
+  }
+
+  async _getAllRooms() {
+    console.log("Loading rooms");
+    const responseGetRooms = await roomFunctionShowAll("/selectRooms");
+    console.log("Reg. Complete | Count : " + responseGetRooms.length);
+    console.log(responseGetRooms);
+    this.setState({
+      rooms: responseGetRooms
+    }).then(
+      function() {
+        console.log("Completed setState for rooms");
+      }.bind(this)
+    );
   }
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
@@ -41,6 +63,23 @@ export default class roomOverview extends Component {
     const { children } = this.props;
     const { fixed } = this.state;
     const activeItem = this.props.activeItem;
+
+    const rooms = this.state.rooms;
+    console.log(rooms);
+    var roomCardList = [];
+    if (rooms != {} && rooms != undefined) {
+      roomCardList = Object.keys(rooms).map(room => (
+        <RoomCard
+          creator={rooms[room].creator}
+          description={rooms[room].description}
+          hashedValue={rooms[room].hashedValue}
+          key={room}
+          password={rooms[room].password}
+          title={rooms[room].title}
+        />
+      ));
+      console.log(roomCardList);
+    } //end of if
 
     return (
       <OwnHeader>
@@ -94,120 +133,21 @@ export default class roomOverview extends Component {
         </Visibility>
         <Segment style={{ padding: "8em 0em" }} vertical>
           <Grid container stackable verticalAlign="middle">
-            <Grid.Row>
-              <Grid.Column width={8}>
-                <Card>
-                  <Image src="../static/minion.png" />
-                  <Card.Content>
-                    <Card.Header>Super Geile Mukke 123</Card.Header>
-                    <Card.Meta>
-                      <span className="username">Hexenmühle97</span>
-                    </Card.Meta>
-                    <Card.Description>
-                      Hier wird nur die geilste Musik auf Erden wiedergegeben :D
-                    </Card.Description>
-                  </Card.Content>
-                  <Card.Content extra>
-                    <Icon name="music" />
-                    22 active user
-                    <Button
-                      icon
-                      color="blue"
-                      labelPosition="right"
-                      floated="right"
-                    >
-                      Join
-                      <Icon name="right arrow" />
-                    </Button>
-                  </Card.Content>
-                </Card>
-              </Grid.Column>
-
-              <Grid.Column width={8}>
-                <Card>
-                  <Image src="../static/minion.png" />
-                  <Card.Content>
-                    <Card.Header>Super Geile Mukke 123</Card.Header>
-                    <Card.Meta>
-                      <span className="username">Hexenmühle97</span>
-                    </Card.Meta>
-                    <Card.Description>
-                      Hier wird nur die geilste Musik auf Erden wiedergegeben :D
-                    </Card.Description>
-                  </Card.Content>
-                  <Card.Content extra>
-                    <Icon name="music" />
-                    22 active user
-                    <Button
-                      icon
-                      color="blue"
-                      labelPosition="right"
-                      floated="right"
-                    >
-                      Join
-                      <Icon name="right arrow" />
-                    </Button>
-                  </Card.Content>
-                </Card>
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
-              <Grid.Column width={8}>
-                <Card>
-                  <Image src="../static/minion.png" />
-                  <Card.Content>
-                    <Card.Header>Super Geile Mukke 123</Card.Header>
-                    <Card.Meta>
-                      <span className="username">Hexenmühle97</span>
-                    </Card.Meta>
-                    <Card.Description>
-                      Hier wird nur die geilste Musik auf Erden wiedergegeben :D
-                    </Card.Description>
-                  </Card.Content>
-                  <Card.Content extra>
-                    <Icon name="music" />
-                    22 active user
-                    <Button
-                      icon
-                      color="blue"
-                      labelPosition="right"
-                      floated="right"
-                    >
-                      Join
-                      <Icon name="right arrow" />
-                    </Button>
-                  </Card.Content>
-                </Card>
-              </Grid.Column>
-
-              <Grid.Column width={8}>
-                <Card>
-                  <Image src="../static/minion.png" />
-                  <Card.Content>
-                    <Card.Header>Super Geile Mukke 123</Card.Header>
-                    <Card.Meta>
-                      <span className="username">Hexenmühle971</span>
-                    </Card.Meta>
-                    <Card.Description>
-                      Hier wird Alex penis gelutscht :D
-                    </Card.Description>
-                  </Card.Content>
-                  <Card.Content extra>
-                    <Icon name="music" />
-                    22 active user
-                    <Button
-                      icon
-                      color="blue"
-                      labelPosition="right"
-                      floated="right"
-                    >
-                      Join
-                      <Icon name="right arrow" />
-                    </Button>
-                  </Card.Content>
-                </Card>
-              </Grid.Column>
-            </Grid.Row>
+            {roomCardList.map(function(roomCard) {
+              console.log(roomCard);
+              if (roomCard.key % 2 == 0) {
+                console.log("even");
+                var returnValue = (
+                  <Grid.Column width={8}>{roomCard}</Grid.Column>
+                );
+              } else {
+                console.log("odd");
+                var returnValue = (
+                  <Grid.Column width={8}>{roomCard}</Grid.Column>
+                );
+              }
+              return returnValue;
+            })}
           </Grid>
         </Segment>
       </OwnHeader>

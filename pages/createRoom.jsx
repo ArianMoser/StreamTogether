@@ -3,8 +3,8 @@ import Link from "next/link";
 import React, { Component } from "react";
 import $ from "jquery";
 import {
-  roomFunctionByTitle,
   createRoomFunction,
+  roomFunctionByTitle,
   userFunctionByUsername
 } from "./PostMethods";
 import Navbar from "../components/Navbar";

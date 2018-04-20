@@ -36,7 +36,7 @@ var call = (module.exports = {
         return;
       }
 
-      console.log("Query selectUserByUsername succesfully executed: ", rows);
+      console.log("Query selectUserAndRoomByUsername succesfully executed: ", rows);
       res.send(rows);
     });
     //AUF SICHERHEIT DER EINGEGEBENEN SACHEN NOCH PRÜFEN MYSQLI STRING UND SO DIESER SCHEIß!
@@ -76,6 +76,20 @@ var call = (module.exports = {
       }
 
       console.log("Query selectUserByEmail succesfully executed: ", rows);
+      res.send(rows);
+    });
+  },
+  selectRooms: function(res, dieNutzerDaten, connection) {
+    const query =
+      "SELECT * from room ;";
+    connection.query(query, function(err, rows, fields) {
+      if (err) {
+        console.log("An error ocurred performing the query.");
+        console.log(err);
+        return;
+      }
+
+      console.log("Query selectRooms succesfully executed: ", rows);
       res.send(rows);
     });
   },
@@ -125,7 +139,7 @@ var call = (module.exports = {
         return;
       }
 
-      console.log("Query selectRoomByUserId succesfully executed: ", rows);
+      console.log("Query selectRoomHashedValue succesfully executed: ", rows);
       res.send(rows);
     });
   },
@@ -157,7 +171,7 @@ var call = (module.exports = {
         return;
       }
 
-      console.log("Query selectRoomByRoomId succesfully executed: ", rows);
+      console.log("Query selectVideosByRoomId succesfully executed: ", rows);
       res.send(rows);
     });
   },
@@ -226,7 +240,7 @@ var call = (module.exports = {
         return;
       }
 
-      console.log("Number of records inserted: " + rows.affectedRows);
+      console.log("Number of records updated: " + rows.affectedRows);
       res.send(rows);
     });
   },
@@ -248,7 +262,7 @@ var call = (module.exports = {
         return;
       }
 
-      console.log("Number of records inserted: " + rows.affectedRows);
+      console.log("Number of records updated: " + rows.affectedRows);
       res.send(rows);
     });
   },
@@ -268,7 +282,7 @@ var call = (module.exports = {
         return;
       }
 
-      console.log("Number of records inserted: " + rows.affectedRows);
+      console.log("Number of records deleted: " + rows.affectedRows);
       res.send(rows);
     });
   }
