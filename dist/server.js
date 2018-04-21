@@ -50,10 +50,7 @@ app.prepare().then(_asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(fu
                     }());
 
                     exp.get("/", function (req, res) {
-                        var query = {
-                            xzy: "abc"
-                        };
-                        return app.render(req, res, "/index", query);
+                        return app.render(req, res, "/index");
                     });
 
                     exp.get("*", function (req, res) {

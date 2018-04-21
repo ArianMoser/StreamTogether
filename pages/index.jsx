@@ -1,66 +1,148 @@
+//Imports
+import PropTypes from "prop-types";
 import React, { Component } from "react";
-import OwnHeader from "../components/Header";
 import Link from "next/link";
-import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
+import OwnHeader from "../components/Header";
+import {
+  Button,
+  Container,
+  Divider,
+  Grid,
+  Header,
+  Icon,
+  Image,
+  List,
+  Menu,
+  Responsive,
+  Segment,
+  Sidebar,
+  Visibility
+} from "semantic-ui-react";
+import TopBox from "../components/TopBox";
 
-export default class Index extends Component {
+//Nav Bar
+export default class Home extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
-    constructor(props)
-    {
-        super(props);
-        this.state={}
-    }
-
-    logging=()=>
-    {
-        console.log("hier")
-        this.setState({loggedIn:!this.state.loggedIn})
-    }
+  static get defaultProps() {
+    return {
+      activeItem: "home"
+    };
+  }
 
   render() {
+    const activeItem = this.props.activeItem;
+
     return (
-      <OwnHeader isLoggedIn={this.state.loggedIn}>
-        <Button onClick={this.logging}>Ein/Ausloggen</Button>
+      <OwnHeader activeName={activeItem}>
+        <TopBox activeItem={activeItem} layer1="Welcome on StreamTogether" />
+        <Segment style={{ padding: "8em 0em" }} vertical>
+          <Grid container stackable verticalAlign="middle">
+            <Grid.Row>
+              <Grid.Column width={8}>
+                <Header as="h1" style={{ fontSize: "2em" }}>
+                  StreamTogether step for step
+                </Header>
+                <Header as="h4" style={{ fontSize: "2em" }}>
+                  Step 1:
+                </Header>
+                <p style={{ fontSize: "1.33em" }}>
+                  <Link href="./createRoom">
+                    <Button primary size="huge">
+                      Create Room
+                      <Icon name="right arrow" />
+                    </Button>
+                  </Link>
+                </p>
+                <p style={{ fontSize: "1.33em" }}>
+                  You do not need to register to create a room.
+                </p>
+                <p style={{ fontSize: "1.33em" }}>
+                  But: Get more functions by creating your own account!
+                </p>
+              </Grid.Column>
+              <Grid.Column floated="right" width={7}>
+                <Image
+                  bordered
+                  rounded
+                  size="large"
+                  src="../static/MusicListen.jpg"
+                />
+              </Grid.Column>
+            </Grid.Row>
 
-        State: {this.state.loggedIn===true?" state eingeloggt":"state  ausgeloggt"}
+            <Grid.Row>
+              <Grid.Column width={8}>
+                <Header as="h4" style={{ fontSize: "2em" }}>
+                  Step 2:
+                </Header>
+                <p style={{ fontSize: "1.33em" }}>
+                  Share your room with others by inviting them.
+                </p>
+              </Grid.Column>
+              <Grid.Column floated="right" width={7}>
+                <Image
+                  bordered
+                  rounded
+                  size="large"
+                  src="../static/Tomorrowland2015.jpg"
+                />
+              </Grid.Column>
+            </Grid.Row>
 
-        <div className="login-form">
-          <Grid
-            textAlign="center"
-            style={{ height: "100%" }}
-            verticalAlign="middle"
-          >
-            <Grid.Column style={{ maxWidth: 450 }}>
-              <Header as="h2" color="teal" textAlign="center">
-                <Image src="./static/logo.png" /> Log-in to your account
-              </Header>
-              <Form size="large">
-                <Segment stacked>
-                  <Form.Input
-                    fluid
-                    icon="user"
-                    iconPosition="left"
-                    placeholder="E-mail address"
-                  />
-                  <Form.Input
-                    fluid
-                    icon="lock"
-                    iconPosition="left"
-                    placeholder="Password"
-                    type="password"
-                  />
-
-                  <Button color="teal" fluid size="large">
-                    Login
-                  </Button>
-                </Segment>
-              </Form>
-              <Message>
-                New to us? <a href="#">Sign Up</a>
-              </Message>
-            </Grid.Column>
+            <Grid.Row>
+              <Grid.Column width={8}>
+                <Header as="h4" style={{ fontSize: "2em" }}>
+                  Step 3:
+                </Header>
+                <p style={{ fontSize: "1.33em" }}>Watch. Videos. Together.</p>
+              </Grid.Column>
+              <Grid.Column floated="right" width={7}>
+                <Image bordered rounded size="large" src="../static/yt.png" />
+              </Grid.Column>
+            </Grid.Row>
           </Grid>
-        </div>
+        </Segment>
+
+        <Segment style={{ padding: "0em" }} vertical>
+          <Grid celled="internally" columns="equal" stackable>
+            <Grid.Row>
+              <Grid.Column textAlign="center">
+                <Header as="h4" style={{ fontSize: "2em" }}>
+                  Why do you should use StreamTogether?
+                </Header>
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row textAlign="center">
+              <Grid.Column style={{ paddingBottom: "5em", paddingTop: "5em" }}>
+                <Header as="h3" style={{ fontSize: "2em" }}>
+                  Stream with friends
+                </Header>
+              </Grid.Column>
+              <Grid.Column style={{ paddingBottom: "5em", paddingTop: "5em" }}>
+                <Header as="h3" style={{ fontSize: "2em" }}>
+                  Another reason
+                </Header>
+                <p style={{ fontSize: "1.33em" }}>
+                  <Image avatar src="../static/Tomorrowland2015.jpg" />
+                  <b>I/b> am the BOSS</b>
+                </p>
+              </Grid.Column>
+              <Grid.Column style={{ paddingBottom: "5em", paddingTop: "5em" }}>
+                <Header as="h3" style={{ fontSize: "2em" }}>
+                  And one more reason
+                </Header>
+                <p style={{ fontSize: "1.33em" }}>
+                  <Image avatar src="../static/Tomorrowland2015.jpg" />
+                  <b>I</b> am the <b>BOSS</b>
+                </p>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </Segment>
       </OwnHeader>
     );
   }
