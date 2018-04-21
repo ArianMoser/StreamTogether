@@ -14,7 +14,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import OwnHeader from "../components/Header";
 import YouTubeSearch from "../components/YouTubeSearch";
-import Navbar from "../components/Navbar";
+import TopBox from "../components/TopBox";
 import { roomFunctionByHashedValue, changeRoomId } from "./PostMethods";
 import { read_cookie, delete_cookie } from "sfcookies";
 
@@ -101,7 +101,7 @@ export default class Room extends Component {
         creator: responseRoomInformation[0].Ersteller,
         description: responseRoomInformation[0].description
       });
-       this._updateUserRoomId();
+      this._updateUserRoomId();
     } else {
       // exception during room creation db push
       // todo: add dialog
@@ -145,44 +145,7 @@ export default class Room extends Component {
 
     return (
       <OwnHeader>
-        <Visibility
-          once={false}
-          onBottomPassed={this.showFixedMenu}
-          onBottomPassedReverse={this.hideFixedMenu}
-        >
-          <Segment
-            inverted
-            color="black"
-            textAlign="center"
-            style={{ minHeight: 550, padding: "1em 0em" }}
-            vertical
-          >
-            <Navbar name={activeItem} />
-            <Container text>
-              <Header
-                as="h1"
-                content={title}
-                inverted
-                style={{
-                  fontSize: "4em",
-                  fontWeight: "normal",
-                  marginBottom: 0,
-                  marginTop: "2em"
-                }}
-              />
-              <Header
-                as="h2"
-                content={description}
-                inverted
-                style={{
-                  fontSize: "1.7em",
-                  fontWeight: "normal",
-                  marginTop: "1.5em"
-                }}
-              />
-            </Container>
-          </Segment>
-        </Visibility>
+        <TopBox activeItem={activeItem} layer1={title} layer2={description} />
         <Segment style={{ padding: "8em 0em" }} vertical>
           <Grid container stackable verticalAlign="middle">
             <List divided verticalAlign="middle">

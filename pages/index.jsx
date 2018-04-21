@@ -18,7 +18,7 @@ import {
   Sidebar,
   Visibility
 } from "semantic-ui-react";
-import Navbar from "../components/Navbar";
+import TopBox from "../components/TopBox";
 
 //Nav Bar
 export default class Home extends Component {
@@ -43,44 +43,10 @@ export default class Home extends Component {
 
     return (
       <OwnHeader activeName={activeItem}>
-        <Visibility
-          once={false}
-          onBottomPassed={this.showFixedMenu}
-          onBottomPassedReverse={this.hideFixedMenu}
-        >
-          <Segment
-            inverted
-            color="black"
-            textAlign="center"
-            style={{ minHeight: 550, padding: "1em 0em" }}
-            vertical
-          >
-            <Navbar name={activeItem} />
-            <Container text>
-              <Header
-                as="h1"
-                content="Welcome on StreamTogether"
-                inverted
-                style={{
-                  fontSize: "4em",
-                  fontWeight: "normal",
-                  marginBottom: 0,
-                  marginTop: "2em"
-                }}
-              />
-              <Header
-                as="h2"
-                content="Stream videos with your friends!"
-                inverted
-                style={{
-                  fontSize: "1.7em",
-                  fontWeight: "normal",
-                  marginTop: "1.5em"
-                }}
-              />
-            </Container>
-          </Segment>
-        </Visibility>
+        <TopBox
+          activeItem={activeItem}
+          layer1="Welcome on StreamTogether"
+        />
         <Segment style={{ padding: "8em 0em" }} vertical>
           <Grid container stackable verticalAlign="middle">
             <Grid.Row>

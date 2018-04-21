@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import Link from "next/link";
 import OwnHeader from "../components/Header";
-import Navbar from "../components/Navbar";
+import TopBox from "../components/TopBox";
 import {
   Button,
   Container,
@@ -44,34 +44,7 @@ export default class Dataprivacy extends Component {
 
     return (
       <OwnHeader>
-        <Visibility
-          once={false}
-          onBottomPassed={this.showFixedMenu}
-          onBottomPassedReverse={this.hideFixedMenu}
-        >
-          <Segment
-            inverted
-            color="black"
-            textAlign="center"
-            style={{ minHeight: 550, padding: "1em 0em" }}
-            vertical
-          >
-            <Navbar name={activeItem} />
-            <Container text>
-              <Header
-                as="h1"
-                content="Data privacy"
-                inverted
-                style={{
-                  fontSize: "4em",
-                  fontWeight: "normal",
-                  marginBottom: 0,
-                  marginTop: "3em"
-                }}
-              />
-            </Container>
-          </Segment>
-        </Visibility>
+        <TopBox activeItem={activeItem} layer1="Data privacy" />
         <Segment style={{ padding: "8em 0em" }} vertical>
           <Grid container stackable verticalAlign="middle">
             <Grid.Row>
