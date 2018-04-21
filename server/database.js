@@ -154,7 +154,7 @@ var call = (module.exports = {
   },
   selectRoomByTitle: function(res, dieNutzerDaten, connection) {
     const query =
-      "SELECT title, hashedValue FROM `room` WHERE title=" +
+      "SELECT title, hashedValue, ID FROM `room` WHERE title=" +
       mysql.escape(dieNutzerDaten.title) +
       " ;";
     connection.query(query, function(err, rows, fields) {
@@ -283,6 +283,28 @@ var call = (module.exports = {
       " WHERE `ID`=" +
       mysql.escape(dieNutzerDaten.id) +
       " ;";
+    console.log(query);
+    connection.query(query, function(err, rows, fields) {
+      if (err) {
+        console.log("An error ocurred performing the query.");
+        console.log(err);
+        return;
+      }
+
+      console.log("Number of records deleted: " + rows.affectedRows);
+      res.send(rows);
+    });
+  },
+
+  //--------------------create event drop room-------------------//
+  createEventDropRoom: function(res, dieNutzerDaten, connection) {
+    console.log(dieNutzerDaten);
+    const query =
+      "CREATE EVENT dropRoom" + mysql.escape(dieNutzerDaten.roomid) +
+      " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 HOUR"  +
+      " DO" +
+      " DELETE FROM room" +
+      " WHERE room.id=" + mysql.escape(dieNutzerDaten.roomid) + ";";
     console.log(query);
     connection.query(query, function(err, rows, fields) {
       if (err) {

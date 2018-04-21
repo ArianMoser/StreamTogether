@@ -46,6 +46,9 @@ app
         exp.post("/createRoom", (req, res) => {
           database.insertRoom(res, req.body, connection);
         });
+        exp.post("/createEventDropRoom", (req, res) => {
+          database.createEventDropRoom(res, req.body, connection);
+        });
         exp.post("/deleteUser", (req, res) => {
           database.deleteUserByID(res, req.body, connection);
         });

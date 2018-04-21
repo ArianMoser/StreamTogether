@@ -4,6 +4,7 @@ import React, { Component } from "react";
 import $ from "jquery";
 import {
   createRoomFunction,
+  dropRoomEvent,
   roomFunctionByTitle,
   userFunctionByUsername
 } from "./PostMethods";
@@ -201,9 +202,19 @@ export default class RoomCreator extends Component {
           );
           console.log(responseGetHashedValue);
           var hashedValue = responseGetHashedValue[0].hashedValue;
-          window.location = "./room?hv=" + hashedValue;
-
-          //  window.location = "./";
+          var roomid = responseGetHashedValue[0].ID;
+          // create DropEvent
+          const responseDropRoomEvent = await dropRoomEvent(
+            "createEventDropRoom",
+            roomid
+          );
+          console.log(responseDropRoomEvent);
+          if (responseDropRoomEvent.serverStatus == "2"){
+            console.log("The drop event was scheduled in 1 hour");
+          } else {
+            console.log("Error during the event creation process");
+          }
+          // window.location = "./room?hv=" + hashedValue;
         } else {
           // exception during room creation db push
           // todo: add dialog
