@@ -36,7 +36,10 @@ var call = (module.exports = {
         return;
       }
 
-      console.log("Query selectUserAndRoomByUsername succesfully executed: ", rows);
+      console.log(
+        "Query selectUserAndRoomByUsername succesfully executed: ",
+        rows
+      );
       res.send(rows);
     });
     //AUF SICHERHEIT DER EINGEGEBENEN SACHEN NOCH PRÜFEN MYSQLI STRING UND SO DIESER SCHEIß!
@@ -80,8 +83,14 @@ var call = (module.exports = {
     });
   },
   selectRooms: function(res, dieNutzerDaten, connection) {
+    /*const query =
+      "SELECT * from room ;";*/
     const query =
-      "SELECT * from room ;";
+      "SELECT room.id, room.title, room.description, room.password, room.thumbnail, room.creator, room.hashedValue, COUNT(user.ID) as 'ActiveUser'" +
+      " FROM `room`, user" +
+      " WHERE room.id = user.room_id" +
+      " GROUP BY room.ID" +
+      " ORDER BY count(user.ID) desc";
     connection.query(query, function(err, rows, fields) {
       if (err) {
         console.log("An error ocurred performing the query.");
