@@ -48,7 +48,7 @@ export default class Login extends Component {
           var sessiontoken = jwt.sign(
             {
               username: response[0].username,
-              exp: Math.floor(Date.now() / 1000) + 60 * 60
+              exp: Math.floor(Date.now() / 1000) + (60 * 60) * 24
             },
             "shhhhh"
           );

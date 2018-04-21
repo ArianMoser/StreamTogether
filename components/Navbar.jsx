@@ -68,7 +68,6 @@ export default class Navbar extends Component {
             </Button>
           </Link>
           <Button
-            as="logout"
             inverted={!fixed}
             color="red"
             style={{ marginLeft: "0.5em" }}
