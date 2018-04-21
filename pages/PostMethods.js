@@ -87,7 +87,23 @@ export const userFunctionByEmail = (api, email) => {
     });
   });
 };
-
+export const videoFunctionByRoomId = (api, roomId) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({ roomId: roomId }),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
 //----------------------Login----------------------//
 export const userFunctionLogin = (api, username) => {
   return new Promise((resolve, reject) => {
@@ -139,16 +155,12 @@ export const createRoomFunction = (
   password,
   currentUser
 ) => {
-  // var hash = (password!=undefined || password!="")? bcrypt.hashSync(password, 11): "";
   if (password === undefined || password == "") {
     var hash = "";
   } else {
     var hash = bcrypt.hashSync(password, 11);
   }
   var hashedValue = bcrypt.hashSync(title, 11);
-  //todo: beim hashen sollten title + creatorid verwendet werden
-  // dafür muss die id in die db eingetragen werden und nicht der className
-  // des Creators
 
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -229,6 +241,27 @@ export const deleteUser = (api, id) => {
       contentType: "application/json",
       data: JSON.stringify({
         id: id
+      }),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
+
+//-----------------Create Event for dropping rooms--------//
+export const dropRoomEvent = (api, roomid) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({
+        roomid: roomid
       }),
       success: function(res) {
         resolve(res);

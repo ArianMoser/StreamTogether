@@ -4,10 +4,11 @@ import React, { Component } from "react";
 import $ from "jquery";
 import {
   createRoomFunction,
+  dropRoomEvent,
   roomFunctionByTitle,
   userFunctionByUsername
 } from "./PostMethods";
-import Navbar from "../components/Navbar";
+import TopBox from "../components/TopBox";
 import {
   Button,
   Container,
@@ -41,12 +42,12 @@ export default class RoomCreator extends Component {
 
   static get defaultProps() {
     return {
-      title: "",
-      description: "",
-      checkPassword: false,
-      password: "",
       activeItem: "empty",
-      currentUser: ""
+      checkPassword: false,
+      currentUser: "",
+      description: "",
+      password: "",
+      title: ""
     };
   }
 
@@ -201,9 +202,19 @@ export default class RoomCreator extends Component {
           );
           console.log(responseGetHashedValue);
           var hashedValue = responseGetHashedValue[0].hashedValue;
+          var roomid = responseGetHashedValue[0].ID;
+          // create DropEvent
+          const responseDropRoomEvent = await dropRoomEvent(
+            "createEventDropRoom",
+            roomid
+          );
+          console.log(responseDropRoomEvent);
+          if (responseDropRoomEvent.serverStatus == "2"){
+            console.log("The drop event was scheduled in 1 hour");
+          } else {
+            console.log("Error during the event creation process");
+          }
           window.location = "./room?hv=" + hashedValue;
-
-          //  window.location = "./";
         } else {
           // exception during room creation db push
           // todo: add dialog
@@ -231,54 +242,29 @@ export default class RoomCreator extends Component {
 
     return (
       <OwnHeader>
-        <Visibility
-          once={false}
-          onBottomPassed={this.showFixedMenu}
-          onBottomPassedReverse={this.hideFixedMenu}
-        >
-          <Segment
-            inverted
-            color="black"
-            textAlign="center"
-            style={{ minHeight: 550, padding: "1em 0em" }}
-            vertical
-          >
-            <Navbar name={activeItem} />
-            <Container text>
-              <Header
-                as="h1"
-                content="Create a room"
-                inverted
-                style={{
-                  fontSize: "4em",
-                  fontWeight: "normal",
-                  marginBottom: 0,
-                  marginTop: "2em"
-                }}
-              />
-            </Container>
-          </Segment>
-        </Visibility>
-        <p>Title:</p>
-        <input value={this.state.title} onChange={this._handleTitleChange} />
-        <p>Description:</p>
-        <input
-          value={this.state.description}
-          onChange={this._handleDescriptionChange}
-        />
-        <p />
-        <input
-          type="checkbox"
-          value={this.state.checkPassword}
-          onChange={this._handlePasswordChangeCheck}
-        />
-        Password?
-        <div id="passwordField">
+        <TopBox activeItem={activeItem} layer1="Create a room" />
+        <Segment textAlign="center">
+          <p>Title:</p>
+          <input value={this.state.title} onChange={this._handleTitleChange} />
+          <p>Description:</p>
+          <input
+            value={this.state.description}
+            onChange={this._handleDescriptionChange}
+          />
           <p />
-          {pwField}
-        </div>
-        <p />
-        <button onClick={this._handleRoomCreation}>Create Room</button>
+          <input
+            type="checkbox"
+            value={this.state.checkPassword}
+            onChange={this._handlePasswordChangeCheck}
+          />
+          Password?
+          <div id="passwordField">
+            <p />
+            {pwField}
+          </div>
+          <p />
+          <button onClick={this._handleRoomCreation}>Create Room</button>
+        </Segment>
       </OwnHeader>
     );
   }

@@ -70,6 +70,7 @@ export default class roomOverview extends Component {
           key={room}
           password={rooms[room].password}
           title={rooms[room].title}
+          userNumber={rooms[room].ActiveUser}
         />
       ));
       console.log(roomCardList);

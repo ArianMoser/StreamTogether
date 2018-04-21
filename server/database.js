@@ -36,7 +36,10 @@ var call = (module.exports = {
         return;
       }
 
-      console.log("Query selectUserAndRoomByUsername succesfully executed: ", rows);
+      console.log(
+        "Query selectUserAndRoomByUsername succesfully executed: ",
+        rows
+      );
       res.send(rows);
     });
     //AUF SICHERHEIT DER EINGEGEBENEN SACHEN NOCH PRÜFEN MYSQLI STRING UND SO DIESER SCHEIß!
@@ -80,8 +83,14 @@ var call = (module.exports = {
     });
   },
   selectRooms: function(res, dieNutzerDaten, connection) {
+    /*const query =
+      "SELECT * from room ;";*/
     const query =
-      "SELECT * from room ;";
+      "SELECT room.id, room.title, room.description, room.password, room.thumbnail, room.creator, room.hashedValue, COUNT(user.ID) as 'ActiveUser'" +
+      " FROM `room`, user" +
+      " WHERE room.id = user.room_id" +
+      " GROUP BY room.ID" +
+      " ORDER BY count(user.ID) desc";
     connection.query(query, function(err, rows, fields) {
       if (err) {
         console.log("An error ocurred performing the query.");
@@ -145,7 +154,7 @@ var call = (module.exports = {
   },
   selectRoomByTitle: function(res, dieNutzerDaten, connection) {
     const query =
-      "SELECT title, hashedValue FROM `room` WHERE title=" +
+      "SELECT title, hashedValue, ID FROM `room` WHERE title=" +
       mysql.escape(dieNutzerDaten.title) +
       " ;";
     connection.query(query, function(err, rows, fields) {
@@ -161,7 +170,9 @@ var call = (module.exports = {
   },
   selectVideosByRoomId: function(res, dieNutzerDaten, connection) {
     const query =
-      "SELECT video.id, video.title, video.description FROM room,playlist,video WHERE room.ID = playlist.room_ID AND video.ID = playlist.video_ID AND room.ID = " +
+      "SELECT video.id, video.title, video.description, video.user_id" +
+      " FROM playlist,video" +
+      " WHERE video.ID = playlist.video_ID AND playlist.room_id = " +
       mysql.escape(dieNutzerDaten.roomId) +
       " ;";
     connection.query(query, function(err, rows, fields) {
@@ -170,7 +181,6 @@ var call = (module.exports = {
         console.log(err);
         return;
       }
-
       console.log("Query selectVideosByRoomId succesfully executed: ", rows);
       res.send(rows);
     });
@@ -274,6 +284,28 @@ var call = (module.exports = {
       " WHERE `ID`=" +
       mysql.escape(dieNutzerDaten.id) +
       " ;";
+    console.log(query);
+    connection.query(query, function(err, rows, fields) {
+      if (err) {
+        console.log("An error ocurred performing the query.");
+        console.log(err);
+        return;
+      }
+
+      console.log("Number of records deleted: " + rows.affectedRows);
+      res.send(rows);
+    });
+  },
+
+  //--------------------create event drop room-------------------//
+  createEventDropRoom: function(res, dieNutzerDaten, connection) {
+    console.log(dieNutzerDaten);
+    const query =
+      "CREATE EVENT dropRoom" + mysql.escape(dieNutzerDaten.roomid) +
+      " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 HOUR"  +
+      " DO" +
+      " DELETE FROM room" +
+      " WHERE room.id=" + mysql.escape(dieNutzerDaten.roomid) + ";";
     console.log(query);
     connection.query(query, function(err, rows, fields) {
       if (err) {

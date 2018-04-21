@@ -1,20 +1,60 @@
-import { Component } from 'react';
+import { Component } from "react";
+import YouTube from 'react-youtube';
 
-class YouTubePlayer extends Component {
+export default class YouTubePlayer extends Component {
   constructor(props) {
     super(props);
-
     this.state = {};
   }
 
   render() {
-    return (
-      <div>
-        <iframe width="100%" height="400px"src={"https://www.youtube.com/embed/" + this.props.videoId +
-        "?amp;showinfo=0&amp;start=" + this.props.timecode } frameborder="0" allow="autoplay; encrypted-media" allowfullscreen="allowfullscreen"></iframe>
-      </div>
-    );
-  }
-}
+    const opts = {
+        height: '390',
+        width: '640',
+        playerVars: { // https://developers.google.com/youtube/player_parameters
+          autoplay: 1
+        }
+      };
 
-export default YouTubePlayer;
+      return (
+        <YouTube
+          opts={opts}
+          onError={this._onError}
+          onPause={this._onPause}
+          onPlay={this._onPlay}
+          onReady={this._onReady}
+          onStateChange={this._onStateChanged}
+          start={this.props.timecode}
+          videoId={this.props.videoId}
+        />
+      );
+    }
+
+    _onError(event) {
+      console.log("Player error");
+      console.log(event);
+    }
+
+    _onPause(event) {
+      console.log("Player paused");
+      console.log(event);
+    }
+
+    _onPlay(event) {
+      console.log("Player started")
+      console.log(event);
+    }
+
+    _onReady(event) {
+      // access to player in all event handlers via event.target
+      console.log("Player ready");
+      console.log(event);
+      // event.target.pauseVideo();
+    }
+
+    _onStateChanged(event) {
+      console.log("Player state changed");
+      console.log("CurrentTimer:" + event.target.getCurrentTime());
+      console.log(event);
+    }
+}
