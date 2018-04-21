@@ -33,13 +33,7 @@ export default class Contact extends Component {
     };
   }
 
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name });
-  hideFixedMenu = () => this.setState({ fixed: false });
-  showFixedMenu = () => this.setState({ fixed: true });
-
   render() {
-    const { children } = this.props;
-    const { fixed } = this.state;
     const activeItem = this.props.activeItem;
 
     return (

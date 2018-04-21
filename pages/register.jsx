@@ -20,7 +20,6 @@ import {
 } from "semantic-ui-react";
 
 export default class register extends Component {
-
   async onSubmitHandler(event) {
     event.preventDefault();
 

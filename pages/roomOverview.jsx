@@ -55,13 +55,7 @@ export default class roomOverview extends Component {
     );
   }
 
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name });
-  hideFixedMenu = () => this.setState({ fixed: false });
-  showFixedMenu = () => this.setState({ fixed: true });
-
   render() {
-    const { children } = this.props;
-    const { fixed } = this.state;
     const activeItem = this.props.activeItem;
 
     const rooms = this.state.rooms;
@@ -88,7 +82,7 @@ export default class roomOverview extends Component {
           layer1="Available rooms"
           layer2="Stream videos with your friends!"
           layer3="Or just meet new friends!"
-          />
+        />
         <Segment style={{ padding: "8em 0em" }} vertical>
           <Grid container stackable verticalAlign="middle">
             {roomCardList.map(function(roomCard) {

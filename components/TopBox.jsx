@@ -10,7 +10,9 @@ import {
 export default class TopBox extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      fixed: false
+    };
   }
 
   static get defaultProps() {
@@ -22,11 +24,19 @@ export default class TopBox extends Component {
     };
   }
 
+
+  handleItemClick = (e, { name }) => this.setState({ activeItem: name });
+  hideFixedMenu = () => this.setState({ fixed: false });
+  showFixedMenu = () => this.setState({ fixed: true });
+
+
+
   render() {
     const layer1 = this.props.layer1;
     const layer2 = this.props.layer2;
     const layer3 = this.props.layer3;
     const activeItem = this.props.activeItem;
+    const fixed = this.state.fixed
 
     return (
       <Visibility
@@ -41,7 +51,7 @@ export default class TopBox extends Component {
           style={{ minHeight: 550, padding: "1em 0em" }}
           vertical
         >
-          <Navbar name={activeItem} />
+          <Navbar name={activeItem} fixed={fixed}/>
           <Container text>
             <Header
               as="h1"

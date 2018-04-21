@@ -9,7 +9,7 @@ export const userFunctionByUsername = (api, username) => {
       type: "POST",
       cache: false,
       contentType: "application/json",
-      data: JSON.stringify({ username: username}),
+      data: JSON.stringify({ username: username }),
       success: function(res) {
         resolve(res);
       },
@@ -19,7 +19,7 @@ export const userFunctionByUsername = (api, username) => {
     });
   });
 };
-export const roomFunctionShowAll = (api) => {
+export const roomFunctionShowAll = api => {
   return new Promise((resolve, reject) => {
     $.ajax({
       url: api,
@@ -43,7 +43,7 @@ export const roomFunctionByTitle = (api, title) => {
       type: "POST",
       cache: false,
       contentType: "application/json",
-      data: JSON.stringify({ title: title}),
+      data: JSON.stringify({ title: title }),
       success: function(res) {
         resolve(res);
       },
@@ -60,7 +60,7 @@ export const roomFunctionByHashedValue = (api, hashedValue) => {
       type: "POST",
       cache: false,
       contentType: "application/json",
-      data: JSON.stringify({ hashedValue: hashedValue}),
+      data: JSON.stringify({ hashedValue: hashedValue }),
       success: function(res) {
         resolve(res);
       },
@@ -77,7 +77,7 @@ export const userFunctionByEmail = (api, email) => {
       type: "POST",
       cache: false,
       contentType: "application/json",
-      data: JSON.stringify({ email: email}),
+      data: JSON.stringify({ email: email }),
       success: function(res) {
         resolve(res);
       },
@@ -96,7 +96,7 @@ export const userFunctionLogin = (api, username) => {
       type: "POST",
       cache: false,
       contentType: "application/json",
-      data: JSON.stringify({ username: username, email: username}),
+      data: JSON.stringify({ username: username, email: username }),
       success: function(res) {
         resolve(res);
       },
@@ -106,7 +106,6 @@ export const userFunctionLogin = (api, username) => {
     });
   });
 };
-
 
 //----------------------REGISTER----------------------//
 export const registerFunction = (api, username, email, password) => {
@@ -132,11 +131,16 @@ export const registerFunction = (api, username, email, password) => {
   });
 };
 
-
 //-----------------------CREATOR ROOM-------------------------//
-export const createRoomFunction = (api, title, description, password, currentUser) => {
+export const createRoomFunction = (
+  api,
+  title,
+  description,
+  password,
+  currentUser
+) => {
   // var hash = (password!=undefined || password!="")? bcrypt.hashSync(password, 11): "";
-  if (password === undefined || password == ""){
+  if (password === undefined || password == "") {
     var hash = "";
   } else {
     var hash = bcrypt.hashSync(password, 11);

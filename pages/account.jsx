@@ -253,15 +253,8 @@ export default class Account extends Component {
     }
   }
 
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name });
-  hideFixedMenu = () => this.setState({ fixed: false });
-  showFixedMenu = () => this.setState({ fixed: true });
-
   render() {
-    const { children } = this.props;
-    const { fixed } = this.state;
     const activeItem = this.props.activeItem;
-
     const username = this.state.username;
     const email = this.state.email;
     const lastRoom = this.state.lastRoom;

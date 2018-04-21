@@ -33,20 +33,12 @@ export default class Home extends Component {
     };
   }
 
-  hideFixedMenu = () => this.setState({ fixed: false });
-  showFixedMenu = () => this.setState({ fixed: true });
-
   render() {
-    const { children } = this.props;
-    const { fixed } = this.state;
     const activeItem = this.props.activeItem;
 
     return (
       <OwnHeader activeName={activeItem}>
-        <TopBox
-          activeItem={activeItem}
-          layer1="Welcome on StreamTogether"
-        />
+        <TopBox activeItem={activeItem} layer1="Welcome on StreamTogether" />
         <Segment style={{ padding: "8em 0em" }} vertical>
           <Grid container stackable verticalAlign="middle">
             <Grid.Row>

@@ -198,10 +198,10 @@ export default class RoomCreator extends Component {
               title +
               "' :" +
               responseGetHashedValue.length
-            );
-            console.log(responseGetHashedValue);
-            var hashedValue = responseGetHashedValue[0].hashedValue;
-            window.location = "./room?hv="+ hashedValue;
+          );
+          console.log(responseGetHashedValue);
+          var hashedValue = responseGetHashedValue[0].hashedValue;
+          window.location = "./room?hv=" + hashedValue;
 
           //  window.location = "./";
         } else {

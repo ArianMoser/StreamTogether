@@ -4,8 +4,8 @@ import React, { Component } from "react";
 import $ from "jquery";
 import { userFunctionLogin } from "./PostMethods";
 const bcrypt = require("bcryptjs");
-import { bake_cookie} from 'sfcookies'
-const jwt = require('jsonwebtoken');
+import { bake_cookie } from "sfcookies";
+const jwt = require("jsonwebtoken");
 
 import {
   Button,
@@ -37,16 +37,23 @@ export default class Login extends Component {
     } else {
       console.log("User found");
       if (bcrypt.compareSync(password, response[0].password)) {
-        document.getElementById("test").innerHTML = "Welcome " + response[0].username;
+        document.getElementById("test").innerHTML =
+          "Welcome " + response[0].username;
         console.log("Password correct!");
         document.getElementById("feedback").innerHTML =
           '<div class="ui positive message"><div class="header">Login successful</div><p>You will be redirected</p></div>';
         setTimeout(continueToLogIn, 2000);
         function continueToLogIn() {
           //Set Cookie
-          var sessiontoken = jwt.sign({ username: response[0].username , exp: Math.floor(Date.now() / 1000) + (60 * 60), }, 'shhhhh');
+          var sessiontoken = jwt.sign(
+            {
+              username: response[0].username,
+              exp: Math.floor(Date.now() / 1000) + 60 * 60
+            },
+            "shhhhh"
+          );
           console.log(sessiontoken);
-          bake_cookie("StreamTogether",sessiontoken)
+          bake_cookie("StreamTogether", sessiontoken);
           window.location = "./index";
         }
       } else {

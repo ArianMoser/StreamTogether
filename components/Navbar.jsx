@@ -14,7 +14,8 @@ export default class Navbar extends Component {
 
   static get defaultProps() {
     return {
-      name: "home"
+      name: "home",
+      fixed: true
     };
   }
 
@@ -44,8 +45,6 @@ export default class Navbar extends Component {
   }
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
-  hideFixedMenu = () => this.setState({ fixed: false });
-  showFixedMenu = () => this.setState({ fixed: true });
 
   logoutFunction(event) {
     if (read_cookie("StreamTogether").length != 0) {
@@ -55,8 +54,7 @@ export default class Navbar extends Component {
   }
 
   render() {
-    const { children } = this.props;
-    const { fixed } = this.state;
+    const fixed = this.props.fixed;
     const activeItem = this.props.name;
     var buttonPlaceholder = "";
 
