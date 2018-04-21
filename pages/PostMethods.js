@@ -87,7 +87,23 @@ export const userFunctionByEmail = (api, email) => {
     });
   });
 };
-
+export const videoFunctionByRoomId = (api, roomId) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({ roomId: roomId }),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
 //----------------------Login----------------------//
 export const userFunctionLogin = (api, username) => {
   return new Promise((resolve, reject) => {

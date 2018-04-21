@@ -76,6 +76,9 @@ app
         exp.post("/selectRoomInformation", (req, res) => {
           database.selectRoomHashedValue(res, req.body, connection);
         });
+        exp.post("/selectVideosByRoomId", (req, res) => {
+          database.selectVideosByRoomId(res, req.body, connection);
+        });
         exp.post("/updateUserPassword", (req, res) => {
           database.updateUserPassword(res, req.body, connection);
         });

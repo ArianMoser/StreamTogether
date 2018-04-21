@@ -170,7 +170,9 @@ var call = (module.exports = {
   },
   selectVideosByRoomId: function(res, dieNutzerDaten, connection) {
     const query =
-      "SELECT video.id, video.title, video.description FROM room,playlist,video WHERE room.ID = playlist.room_ID AND video.ID = playlist.video_ID AND room.ID = " +
+      "SELECT video.id, video.title, video.description, video.user_id" +
+      " FROM playlist,video" +
+      " WHERE video.ID = playlist.video_ID AND playlist.room_id = " +
       mysql.escape(dieNutzerDaten.roomId) +
       " ;";
     connection.query(query, function(err, rows, fields) {
@@ -179,7 +181,6 @@ var call = (module.exports = {
         console.log(err);
         return;
       }
-
       console.log("Query selectVideosByRoomId succesfully executed: ", rows);
       res.send(rows);
     });

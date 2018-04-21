@@ -42,12 +42,12 @@ export default class RoomCreator extends Component {
 
   static get defaultProps() {
     return {
-      title: "",
-      description: "",
-      checkPassword: false,
-      password: "",
       activeItem: "empty",
-      currentUser: ""
+      checkPassword: false,
+      currentUser: "",
+      description: "",
+      password: "",
+      title: ""
     };
   }
 
@@ -214,7 +214,7 @@ export default class RoomCreator extends Component {
           } else {
             console.log("Error during the event creation process");
           }
-          // window.location = "./room?hv=" + hashedValue;
+          window.location = "./room?hv=" + hashedValue;
         } else {
           // exception during room creation db push
           // todo: add dialog
