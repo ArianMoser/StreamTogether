@@ -1,10 +1,16 @@
 import { Component } from "react";
-import YouTube from 'react-youtube';
+import YouTube from "react-youtube";
 
 export default class YouTubePlayer extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this._onError = this._onError.bind(this);
+    this._onEnd = this._onEnd.bind(this);
+    this._onPause = this._onPause.bind(this);
+    this._onPlay = this._onPlay.bind(this);
+    this._onReady = this._onReady.bind(this);
+    this._onStateChanged = this._onStateChanged.bind(this);
   }
 
   componentDidUpdate(nextProps, nextState) {
@@ -18,52 +24,60 @@ export default class YouTubePlayer extends Component {
 
   render() {
     const opts = {
-        height: '390',
-        width: '640',
-        playerVars: { // https://developers.google.com/youtube/player_parameters
-          autoplay: 1
-        }
-      };
+      height: "390",
+      width: "640",
+      playerVars: {
+        // https://developers.google.com/youtube/player_parameters
+        autoplay: 1
+      }
+    };
 
-      return (
-        <YouTube
-          opts={opts}
-          onError={this._onError}
-          onPause={this._onPause}
-          onPlay={this._onPlay}
-          onReady={this._onReady}
-          onStateChange={this._onStateChanged}
-          start={this.props.timecode}
-          videoId={this.props.videoId}
-        />
-      );
-    }
+    return (
+      <YouTube
+        opts={opts}
+        onError={this._onError}
+        onEnd={this._onEnd}
+        onPause={this._onPause}
+        onPlay={this._onPlay}
+        onReady={this._onReady}
+        onStateChange={this._onStateChanged}
+        start={this.props.timecode}
+        videoId={this.props.videoId}
+      />
+    );
+  }
 
-    _onError(event) {
-    //  console.log("Player error");
+  _onError(event) {
+    console.log("Player error");
     //  console.log(event);
-    }
+  }
 
-    _onPause(event) {
+  _onEnd(event) {
+    console.log("Player end");
+    this.props.handleVideoEnd(this.props.roomId, this.props.databaseId);
+    //  console.log(event);
+  }
+
+  _onPause(event) {
     //  console.log("Player paused");
     //   console.log(event);
-    }
+  }
 
-    _onPlay(event) {
-      //console.log("Player started")
-      //console.log(event);
-    }
+  _onPlay(event) {
+    //console.log("Player started")
+    //console.log(event);
+  }
 
-    _onReady(event) {
-      // access to player in all event handlers via event.target
-      //console.log("Player ready");
-      //console.log(event);
-      // event.target.pauseVideo();
-    }
+  _onReady(event) {
+    // access to player in all event handlers via event.target
+    //console.log("Player ready");
+    //console.log(event);
+    // event.target.pauseVideo();
+  }
 
-    _onStateChanged(event) {
-      //console.log("Player state changed");
-      //console.log("CurrentTimer:" + event.target.getCurrentTime());
-      //console.log(event);
-    }
+  _onStateChanged(event) {
+    //console.log("Player state changed");
+    //console.log("CurrentTimer:" + event.target.getCurrentTime());
+    //console.log(event);
+  }
 }

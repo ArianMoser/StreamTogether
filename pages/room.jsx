@@ -131,7 +131,7 @@ export default class Room extends Component {
     }
   }
 
-  async _getVideos(roomId){
+  async _getVideos(roomId) {
     // get videos of room
     console.log("Get videos of room");
     const responseVideos = await videoFunctionByRoomId(
@@ -168,8 +168,8 @@ export default class Room extends Component {
       videos.length != "0" || videos[0] != undefined
         ? videos[0].youtube_id
         : "";
-  console.log("UserName:" + this.state.userName);
-  console.log("roomId:" + this.state.roomId);
+    console.log("UserName:" + this.state.userName);
+    console.log("roomId:" + this.state.roomId);
 
     return (
       <OwnHeader>
@@ -180,9 +180,11 @@ export default class Room extends Component {
               <YouTubeSearch
                 chosenVideoId={choosenVideoId}
                 creator={this.state.creator}
-                getVideos={(roomId) => this._getVideos(roomId)}
+                getVideos={roomId => this._getVideos(roomId)}
                 roomId={this.state.roomId}
-                userName={this.state.userName!=undefined?this.state.userName:""}
+                userName={
+                  this.state.userName != undefined ? this.state.userName : ""
+                }
                 videos={videos}
               />
             </List>

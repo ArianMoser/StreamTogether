@@ -256,6 +256,11 @@ class YouTubeSearch extends Component {
     }
   }
 
+  async _nextVideo(roomId,videoId) {
+    console.log("Next Video");
+    this._deleteVideo(roomId,videoId);
+  }
+
   /**
    * Contact the YouTube API to perform a search.
    * @param  {Object}   options  Options that will be passed to the YouTube API
@@ -283,6 +288,7 @@ class YouTubeSearch extends Component {
   render() {
     console.log("Create VideoElements");
     console.log(this.state.videos);
+    var videoPlayer = <h2>Noch kein Video ausgewählt.</h2>;
     if (
       this.state.videos[0] != undefined ||
       this.props.videos[0] != undefined
@@ -291,6 +297,16 @@ class YouTubeSearch extends Component {
         this.state.videos[0] != undefined
           ? this.state.videos
           : this.props.videos;
+      console.log("Load Video");
+      var videoPlayer = (
+        <YouTubePlayer
+          databaseId={videos[0].video_ID}
+          handleVideoEnd={(roomId,videoId) => this._nextVideo(roomId,videoId)}
+          timecode="0"
+          roomId={videos[0].room_ID}
+          videoId={videos[0].youtube_id}
+        />
+      );
       var playlist = videos.map(video => {
         console.log(video);
         return (
@@ -312,7 +328,6 @@ class YouTubeSearch extends Component {
     } else {
       var playlist = <VideoElement />;
     }
-    console.log(playlist);
 
     // Prepare list of all videos that were returned by the YouTube API
     var videoList = this.state.searchResults.map(video => {
@@ -349,18 +364,6 @@ class YouTubeSearch extends Component {
         </Table.Row>
       );
     });
-
-    if (
-      this.state.chosenVideoId == "" ||
-      this.state.chosenVideoId === undefined
-    ) {
-      var videoPlayer = <h2>Noch kein Video ausgewählt.</h2>;
-    } else {
-      console.log("Load Video");
-      var currentVideo = this.state.chosenVideoId;
-      console.log(this.state.videos);
-      var videoPlayer = <YouTubePlayer videoId={currentVideo} timecode="0" />;
-    }
 
     if (this.state.searchResults.length > 0)
       var nextPageButton = (
