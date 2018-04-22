@@ -6,13 +6,13 @@ See our result online ([Website](http://gruppe2.testsites.info/ "Our Website"))
 
 ### OFFLINE:
 
-| Step                               | Command        | Additional                          |
-| :--------------------------------- | :------------- | :---------------------------------- |
-| Installieren                       | npm install    | (Nötig)                             |
-| Development Mode starten           | npm run dev	  |	(Zum arbeiten und testen)           |
-| Alles erstellen                    | npm run build  | (ganz zum schluss wenn alles läuft) |
-| Starten mit den erstellten Dateien | npm start	  |	(später für den Server)             |
-
+| Step                                 | Command            | Additional                          |
+| :----------------------------------- | :----------------- | :---------------------------------- |
+| Installieren                         | npm install        | (Nötig)                             |
+| Development Mode starten             | npm run dev	      |	(Zum arbeiten und testen)           |
+| Alles erstellen                      | npm run build      | (ganz zum schluss wenn alles läuft) |
+| Starten mit den erstellten Dateien   | npm start	        |	(später für den Server)             |
+| Aktivieren des MYSQL event scheduler | event_scheduler=ON | (in XAMPP)                          |
 > STRG + SHIFT + F = Code ausrichten
 
  ### ONLINE:

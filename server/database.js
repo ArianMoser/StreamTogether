@@ -174,7 +174,7 @@ var call = (module.exports = {
       " FROM playlist,video" +
       " WHERE video.ID = playlist.video_ID AND playlist.room_id = " +
       mysql.escape(dieNutzerDaten.roomId) +
-      " ;";
+      " ORDER BY playlist.Upvotes DESC, Timestamp ASC;";
     connection.query(query, function(err, rows, fields) {
       if (err) {
         console.log("An error ocurred performing the query.");
@@ -404,7 +404,31 @@ var call = (module.exports = {
         return;
       }
 
-      console.log("Number of records deleted: " + rows.affectedRows);
+      console.log("Number of created events: " + rows.affectedRows);
+      res.send(rows);
+    });
+  },
+  //------------------alters the drop room event------------------//
+  updateDeleteEvent: function(res, dieNutzerDaten, connection) {
+    console.log(dieNutzerDaten);
+    const query =
+      "ALTER EVENT dropRoom" +
+      mysql.escape(dieNutzerDaten.roomid) +
+      " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 HOUR" +
+      " DO" +
+      " DELETE FROM room" +
+      " WHERE room.id=" +
+      mysql.escape(dieNutzerDaten.roomid) +
+      ";";
+    console.log(query);
+    connection.query(query, function(err, rows, fields) {
+      if (err) {
+        console.log("An error ocurred performing the query.");
+        console.log(err);
+        return;
+      }
+
+      console.log("Number of altered events: " + rows.affectedRows);
       res.send(rows);
     });
   }

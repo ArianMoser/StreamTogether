@@ -97,6 +97,9 @@ app
         exp.post("/updateUserRoomId", (req, res) => {
           database.updateUserRoomId(res, req.body, connection);
         });
+        exp.post("/updateDeleteEvent", (req, res) => {
+          database.updateDeleteEvent(res, req.body, connection);
+        });
       }
     });
 

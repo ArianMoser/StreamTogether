@@ -368,3 +368,25 @@ export const dropRoomEvent = (api, roomid) => {
     });
   });
 };
+
+//--------------Alter Event for dropping rooms-------------//
+//-----------------(resets the time)----------------------//
+export const alterRoomEvent = (api, roomid) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({
+        roomid: roomid
+      }),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+}

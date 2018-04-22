@@ -6,6 +6,7 @@ import { List, Button, Icon, Input, Grid, Table } from "semantic-ui-react";
 import VideoElement from "../components/VideoElement";
 import PropTypes from "prop-types";
 import {
+  alterRoomEvent,
   connectVideoAndRoom,
   deletePlaylist,
   insertVideo,
@@ -219,6 +220,8 @@ class YouTubeSearch extends Component {
       console.log("Couldnt create connection between video and room");
     }
     var videos = await this.props.getVideos(this.props.roomId);
+    // alters the delete room event 
+    this._alterDeleteEvent(roomId);
     console.log("Videos");
     console.log(videos);
 
@@ -259,6 +262,16 @@ class YouTubeSearch extends Component {
   async _nextVideo(roomId,videoId) {
     console.log("Next Video");
     this._deleteVideo(roomId,videoId);
+    this._alterDeleteEvent(roomId);
+  }
+
+  async _alterDeleteEvent(roomId) {
+    console.log("Alter room event");
+    const responseAlterEvent = await alterRoomEvent(
+      "/updateDeleteEvent",
+      roomId
+    );
+    console.log(responseAlterEvent);
   }
 
   /**
@@ -326,7 +339,7 @@ class YouTubeSearch extends Component {
         );
       });
     } else {
-      var playlist = <VideoElement />;
+      var playlist = <div />;
     }
 
     // Prepare list of all videos that were returned by the YouTube API
