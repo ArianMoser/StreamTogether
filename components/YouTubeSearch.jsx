@@ -3,7 +3,7 @@ import axios from "axios";
 import YouTubePlayer from "../components/YouTubePlayer";
 import MyButton from "../components/Button";
 import { List, Button, Icon, Input, Grid, Table } from "semantic-ui-react";
-import VideoElement from "../components/videoElement";
+import VideoElement from "../components/VideoElement";
 import PropTypes from "prop-types";
 import {
   connectVideoAndRoom,
@@ -265,17 +265,20 @@ class YouTubeSearch extends Component {
   }
 
   render() {
+    console.log("Create VideoElements");
     console.log(this.state.videos);
     if (this.state.videos[0] != undefined) {
       var playlist = this.state.videos.map(video => {
+        console.log(video);
         return (
           <VideoElement
-            channelId={video.channelId}
-            channelName={video.channelName}
-            videoDescription={video.videoDescription}
-            videoId={video.videoId}
-            videoThumbnailUrl={video.videoThumbnailUrl}
-            videoTitle={video.videoTitle}
+            channelId={video.channel_id}
+            channelName={video.channel_name}
+            databaseId={video.video_ID}
+            videoDescription={video.description}
+            videoId={video.youtube_id}
+            videoThumbnailUrl={video.thumbnail_url}
+            videoTitle={video.title}
           />
         );
       });
