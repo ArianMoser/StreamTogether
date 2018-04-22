@@ -327,6 +327,27 @@ export const deleteUser = (api, id) => {
   });
 };
 
+export const deletePlaylist = (api, roomId, videoId) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({
+        roomId: roomId,
+        videoId: videoId
+      }),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
+
 //-----------------Create Event for dropping rooms--------//
 export const dropRoomEvent = (api, roomid) => {
   return new Promise((resolve, reject) => {

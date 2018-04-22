@@ -16,6 +16,8 @@ export default class VideoElement extends Component {
     return {
       channelId: "default-channelId",
       channelName: "default-channelName",
+      databaseId: 0,
+      roomId:0,
       videoDescription: "default-videoDescription",
       videoId: "default-videoId",
       videoThumbnailUrl: "default-videoThumbnailUrl",
@@ -35,6 +37,9 @@ export default class VideoElement extends Component {
 
   _handleDelete() {
     console.log("Clicked delete");
+    console.log("DatabaseId:" + this.state.databaseId);
+    console.log("RoomId: " + this.state.roomId);
+    this.props.handleDelete(this.state.roomId,this.state.databaseId);
   }
 
   _handleThumbsUp() {

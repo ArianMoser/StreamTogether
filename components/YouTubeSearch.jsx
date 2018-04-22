@@ -223,12 +223,9 @@ class YouTubeSearch extends Component {
     console.log(videos);
 
     this.setState({
-      videos: videos
+      videos: videos,
+      searchResults: [] //resets youtube search results
     });
-
-    /*this.setState({
-      chosenVideoId: videoId
-    });*/
   }
 
   async _getVideos(roomId) {
@@ -241,15 +238,19 @@ class YouTubeSearch extends Component {
     return responseVideos;
   }
 
-  async _deleteVideo(videoId) {
+  async _deleteVideo(roomId, videoId) {
     console.log("Delete Video");
     const responseDeleteVideo = await deletePlaylist(
       "/deletePlaylist",
-      this.state.roomId,
+      roomId,
       videoId
     );
     if (responseDeleteVideo.affectedRows == "1") {
       console.log("Deleted Video in table playlist");
+      var videos = await this.props.getVideos(this.props.roomId);
+      this.setState({
+        videos: videos
+      });
     } else {
       console.log("Error during deleting process of video");
     }
@@ -297,6 +298,10 @@ class YouTubeSearch extends Component {
             channelId={video.channel_id}
             channelName={video.channel_name}
             databaseId={video.video_ID}
+            handleDelete={(roomId, databaseId) =>
+              this._deleteVideo(roomId, databaseId)
+            }
+            roomId={video.room_ID}
             videoDescription={video.description}
             videoId={video.youtube_id}
             videoThumbnailUrl={video.thumbnail_url}

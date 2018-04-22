@@ -55,6 +55,9 @@ app
         exp.post("/createPlaylist", (req, res) => {
           database.insertPlaylist(res, req.body, connection);
         });
+        exp.post("/deletePlaylist", (req, res) => {
+          database.deletePlaylist(res, req.body, connection);
+        });
         exp.post("/deleteUser", (req, res) => {
           database.deleteUserByID(res, req.body, connection);
         });

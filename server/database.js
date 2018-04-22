@@ -362,6 +362,28 @@ var call = (module.exports = {
     });
   },
 
+  deletePlaylist: function(res, dieNutzerDaten, connection) {
+    console.log(dieNutzerDaten);
+    const query =
+      "DELETE FROM `playlist`" +
+      " WHERE `room_ID`=" +
+      mysql.escape(dieNutzerDaten.roomId) +
+      " AND `video_ID`=" +
+      mysql.escape(dieNutzerDaten.videoId) +
+      " ;";
+    console.log(query);
+    connection.query(query, function(err, rows, fields) {
+      if (err) {
+        console.log("An error ocurred performing the query.");
+        console.log(err);
+        return;
+      }
+
+      console.log("Number of records deleted: " + rows.affectedRows);
+      res.send(rows);
+    });
+  },
+
   //--------------------create event drop room-------------------//
   createEventDropRoom: function(res, dieNutzerDaten, connection) {
     console.log(dieNutzerDaten);
