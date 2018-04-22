@@ -19,7 +19,7 @@ class MyButton extends Component {
   }
 
   componentWillMount() {
-    console.log(this.props);
+    // console.log(this.props);
   }
 
   _handleClick(event) {

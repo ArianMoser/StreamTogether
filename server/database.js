@@ -185,6 +185,23 @@ var call = (module.exports = {
       res.send(rows);
     });
   },
+  selectVideoByYoutubeId: function(res, dieNutzerDaten, connection) {
+    const query =
+      "SELECT ID" +
+      " FROM video" +
+      " WHERE video.youtube_id = " +
+      mysql.escape(dieNutzerDaten.youtubeId) +
+      " ;";
+    connection.query(query, function(err, rows, fields) {
+      if (err) {
+        console.log("An error ocurred performing the query.");
+        console.log(err);
+        return;
+      }
+      console.log("Query selectVideoByYoutubeId succesfully executed: ", rows);
+      res.send(rows);
+    });
+  },
   //----------------------INSERT----------------------//
   insertUser: function(res, dieNutzerDaten, connection) {
     console.log(dieNutzerDaten);
@@ -220,6 +237,54 @@ var call = (module.exports = {
       mysql.escape(dieNutzerDaten.creator) +
       " , " +
       mysql.escape(dieNutzerDaten.hashedValue) +
+      " );";
+    connection.query(query, function(err, rows, fields) {
+      if (err) {
+        console.log("An error ocurred performing the query.");
+        console.log(err);
+        return;
+      }
+
+      console.log("Number of records inserted: " + rows.affectedRows);
+      res.send(rows);
+    });
+  },
+  insertVideo: function(res, dieNutzerDaten, connection) {
+    console.log(dieNutzerDaten);
+    const query =
+      "INSERT INTO video (youtube_id, title, description, thumbnail_url, channel_id, channel_name, user_id)VALUES (" +
+      mysql.escape(dieNutzerDaten.videoId) +
+      " , " +
+      mysql.escape(dieNutzerDaten.videoTitle) +
+      " , " +
+      mysql.escape(dieNutzerDaten.videoDescription) +
+      " , " +
+      mysql.escape(dieNutzerDaten.videoThumbnailUrl) +
+      " , " +
+      mysql.escape(dieNutzerDaten.channelId) +
+      " , " +
+      mysql.escape(dieNutzerDaten.channelName) +
+      " , " +
+      mysql.escape(dieNutzerDaten.userName) +
+      " );";
+    connection.query(query, function(err, rows, fields) {
+      if (err) {
+        console.log("An error ocurred performing the query.");
+        console.log(err);
+        return;
+      }
+
+      console.log("Number of records inserted: " + rows.affectedRows);
+      res.send(rows);
+    });
+  },
+  insertPlaylist: function(res, dieNutzerDaten, connection) {
+    console.log(dieNutzerDaten);
+    const query =
+      "INSERT INTO playlist (room_ID, video_ID)VALUES (" +
+      mysql.escape(dieNutzerDaten.roomId) +
+      " , " +
+      mysql.escape(dieNutzerDaten.videoId) +
       " );";
     connection.query(query, function(err, rows, fields) {
       if (err) {
@@ -301,11 +366,14 @@ var call = (module.exports = {
   createEventDropRoom: function(res, dieNutzerDaten, connection) {
     console.log(dieNutzerDaten);
     const query =
-      "CREATE EVENT dropRoom" + mysql.escape(dieNutzerDaten.roomid) +
-      " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 HOUR"  +
+      "CREATE EVENT dropRoom" +
+      mysql.escape(dieNutzerDaten.roomid) +
+      " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 HOUR" +
       " DO" +
       " DELETE FROM room" +
-      " WHERE room.id=" + mysql.escape(dieNutzerDaten.roomid) + ";";
+      " WHERE room.id=" +
+      mysql.escape(dieNutzerDaten.roomid) +
+      ";";
     console.log(query);
     connection.query(query, function(err, rows, fields) {
       if (err) {

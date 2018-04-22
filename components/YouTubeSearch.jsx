@@ -4,6 +4,13 @@ import YouTubePlayer from "../components/YouTubePlayer";
 import MyButton from "../components/Button";
 import { List, Button, Icon, Input, Grid, Table } from "semantic-ui-react";
 import VideoElement from "../components/videoElement";
+import PropTypes from "prop-types";
+import {
+  connectVideoAndRoom,
+  insertVideo,
+  videoFunctionByRoomId,
+  videoFunctionByYoutubeId
+} from "../pages/PostMethods";
 
 const API_KEY = "AIzaSyCkXsSdyK3kKmUYEe9T9wf6AUli3V6Nzus";
 
@@ -31,18 +38,38 @@ class YouTubeSearch extends Component {
   static get defaultProps() {
     return {
       chosenVideoId: "",
-      chosenVideoTimecode: 0,
+      creator: 0,
+      roomId: 0,
+      userName: "",
       videos: []
     };
   }
 
-  componentWillMount() {
-    console.log(this.state);
+  static propTypes = {
+    chosenVideoId: PropTypes.string,
+    creator: PropTypes.number,
+    getVideos: PropTypes.func.isRequired,
+    roomId: PropTypes.number,
+    userName: PropTypes.string,
+    videos: PropTypes.array
+  };
+
+  componentDidMount() {
     this.setState({
       chosenVideoId: this.props.chosenVideoId,
-      chosenVideoTimecode: this.props.chosenVideoTimecode,
+      creator: this.props.creator,
+      roomId: this.props.roomId,
+      userName: this.props.userName,
       videos: this.props.videos
     });
+    this.loadVideos();
+  }
+
+  async loadVideos() {
+    var videos = await this.props.getVideos(this.props.roomId);
+    this.setState({
+      videos: videos
+    })
   }
 
   componentDidUpdate(nextProps, nextState) {
@@ -114,7 +141,26 @@ class YouTubeSearch extends Component {
     );
   }
 
-  _chooseVideo(video) {
+  async _getDatabaseId(youtubeId) {
+    const responseDatabaseId = await videoFunctionByYoutubeId(
+      "/selectVideoByYoutubeId",
+      youtubeId
+    );
+    if (responseDatabaseId.length == "1") {
+      console.log("Found a data set");
+      return responseDatabaseId[0].ID;
+    } else {
+      if (responseDatabaseId.length == "0") {
+        console.log("Couldnt find any dataset");
+        return 0;
+      } else {
+        console.log("Found multiple datasets. Working with default (0)");
+        return responseDatabaseId[0].ID;
+      }
+    }
+  }
+
+  async _chooseVideo(video) {
     var channelName = video.snippet.channelTitle;
     var channelId = video.snippet.channelId;
     var videoDescription = video.snippet.description;
@@ -133,21 +179,65 @@ class YouTubeSearch extends Component {
     };
     videoList.push(video);
 
+    console.log("Start pushing video to database");
+    //check if video is already inside of the database
+    var databaseId = await this._getDatabaseId(videoId);
+    if (databaseId == 0) {
+      // push video into database
+      const responseVideoInsertion = await insertVideo(
+        "/createVideo",
+        videoId,
+        videoTitle,
+        videoDescription,
+        videoThumbnailUrl,
+        channelId,
+        channelName,
+        this.state.userName
+      );
+      if (responseVideoInsertion.affectedRows == "1") {
+        console.log("Video inserted succesfully");
+        // Now get the database-id to connect room and video inside of playlist
+        databaseId = await this._getDatabaseId(videoId);
+      } else {
+        console.log("Couldnt insert Video into database");
+        return false;
+      } //end of else
+    } else {
+      // Video is already in the database
+      console.log("Video is already in the database");
+    } // end of else
+    // connect room and video
+    const responsePlaylistInsertion = await connectVideoAndRoom(
+      "/createPlaylist",
+      databaseId,
+      this.props.roomId
+    );
+    if (responsePlaylistInsertion.affectedRows == "1") {
+      console.log("Created connection between video and room");
+    } else {
+      console.log("Couldnt create connection between video and room");
+    }
+    var videos = await this.props.getVideos(this.props.roomId);
+    console.log("Videos");
+    console.log(videos);
+
     this.setState({
-      videos: videoList
+      videos: videos
     });
-    /*console.log("Choosen Video:");
-    console.log(video);
-    console.log("Video-title:       " + videoTitle);
-    console.log("Video-description: " + videoDescription);
-    console.log("Video-id:          " + videoId);
-    console.log("Video-Thumbnail:   " + videoThumbnailUrl);
-    console.log("Channel-id:        " + channelId);
-    console.log("Channel-Name:      " + channelName);
-*/
-    this.setState({
+
+    /*this.setState({
       chosenVideoId: videoId
-    });
+    });*/
+  }
+
+  async _getVideos(roomId) {
+    // get videos of room
+    console.log("Get videos of room");
+    const responseVideos = await videoFunctionByRoomId(
+      "/selectVideosByRoomId",
+      roomId
+    );
+    return responseVideos;
   }
 
   /**
@@ -178,14 +268,16 @@ class YouTubeSearch extends Component {
     console.log(this.state.videos);
     if (this.state.videos[0] != undefined) {
       var playlist = this.state.videos.map(video => {
-        return <VideoElement
-              channelId={video.channelId}
-              channelName={video.channelName}
-              videoDescription={video.videoDescription}
-              videoId={video.videoId}
-              videoThumbnailUrl={video.videoThumbnailUrl}
-              videoTitle={video.videoTitle}
-          />;
+        return (
+          <VideoElement
+            channelId={video.channelId}
+            channelName={video.channelName}
+            videoDescription={video.videoDescription}
+            videoId={video.videoId}
+            videoThumbnailUrl={video.videoThumbnailUrl}
+            videoTitle={video.videoTitle}
+          />
+        );
       });
     } else {
       var playlist = <VideoElement />;

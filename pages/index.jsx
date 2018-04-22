@@ -24,17 +24,11 @@ import TopBox from "../components/TopBox";
 export default class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
-  }
-
-  static get defaultProps() {
-    return {
-      activeItem: "home"
-    };
+    this.state = {activeItem: "home"};
   }
 
   render() {
-    const activeItem = this.props.activeItem;
+    const activeItem = this.state.activeItem;
 
     return (
       <OwnHeader activeName={activeItem}>

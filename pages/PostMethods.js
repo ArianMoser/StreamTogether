@@ -104,6 +104,23 @@ export const videoFunctionByRoomId = (api, roomId) => {
     });
   });
 };
+export const videoFunctionByYoutubeId = (api, youtubeId) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({ youtubeId: youtubeId }),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
 //----------------------Login----------------------//
 export const userFunctionLogin = (api, username) => {
   return new Promise((resolve, reject) => {
@@ -174,6 +191,64 @@ export const createRoomFunction = (
         password: hash,
         creator: currentUser,
         hashedValue: hashedValue
+      }),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
+
+//--------------------Insert Video-----------------------//
+export const insertVideo = (
+  api,
+  videoId,
+  videoTitle,
+  videoDescription,
+  videoThumbnailUrl,
+  channelId,
+  channelName,
+  userName
+) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({
+        videoId: videoId,
+        videoTitle: videoTitle,
+        videoDescription: videoDescription,
+        videoThumbnailUrl: videoThumbnailUrl,
+        channelId: channelId,
+        channelName: channelName,
+        userName: userName
+      }),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
+
+//---------------insert Playlist-----------------------------//
+export const connectVideoAndRoom = (api, videoId, roomId) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({
+        videoId: videoId,
+        roomId: roomId
       }),
       success: function(res) {
         resolve(res);

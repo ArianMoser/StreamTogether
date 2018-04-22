@@ -27,24 +27,21 @@ const jwt = require("jsonwebtoken");
 export default class Room extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      videos: []
-    };
-    this._updateUserRoomId = this._updateUserRoomId.bind(this);
-    this._getInformation = this._getInformation.bind(this);
-  }
 
-  static get defaultProps() {
-    return {
+    //default states
+    this.state = {
       activeItem: "empty", //active item of the Navbar
-      userName: "",
       creator: "default-creator",
       description: "Default-description",
       id: "0",
       roomId: "0",
       title: "Default-title",
-      userlist: {}
+      userName: "",
+      userlist: {},
+      videos: []
     };
+    this._updateUserRoomId = this._updateUserRoomId.bind(this);
+    this._getInformation = this._getInformation.bind(this);
   }
 
   componentWillMount() {
@@ -65,80 +62,86 @@ export default class Room extends Component {
   async _updateUserRoomId() {
     console.log("Update current room of current user");
 
-    const user = await this.checksession();
+    const user = await this.checksession(); // gets the username of current user
     this.setState({
-      userName: ""
+      userName: user
     });
     const roomId = this.state.roomId;
 
-    console.log("Username: " + user);
-    console.log("roomId:   " + roomId);
+    //console.log("Username: " + user);
+    // console.log("roomId:   " + roomId);
 
     const responseUpdate = await changeRoomId(
       "/updateUserRoomId",
       user,
       roomId
     );
-    console.log(
+    /*console.log(
       "Reg. Complete | Affected Rows: " + responseUpdate.affectedRows
-    );
+    );*/
     if (responseUpdate.affectedRows == "1") {
-      console.log("DB push succeded");
+      console.log("Changed current room of active user ");
     } else {
-      console.log("DB push failed");
+      console.log("Couldnt change current room of active user");
     }
   }
 
   async _getInformation() {
     var title = "Test-title";
-    var hashedValue = this.props.url.query.hv;
-    console.log("Tries to receive room information of the database");
-    console.log("hashedValue :" + hashedValue);
 
+    //reads hashedValue from the given url query
+    var hashedValue = this.props.url.query.hv;
+    console.log("Found hashedValue :" + hashedValue);
+
+    console.log("Tries to receive room information of the database");
+    // trys to receive more room information from the database
     const responseRoomInformation = await roomFunctionByHashedValue(
       "/selectRoomInformation",
       hashedValue
     );
-    console.log("Reg. Complete | Count : " + responseRoomInformation.length);
+    // console.log("Reg. Complete | Count : " + responseRoomInformation.length);
+
     //check if db push succeded
     if (responseRoomInformation.length == "1") {
-      console.log("DB push succeeded");
-      console.log(responseRoomInformation);
+      console.log("Request for more room information succeded");
+      /*console.log(responseRoomInformation);
       console.log("RoomId:      " + responseRoomInformation[0].ID);
       console.log("Title:       " + responseRoomInformation[0].title);
       console.log("Ersteller:   " + responseRoomInformation[0].Ersteller);
-      console.log("Description: " + responseRoomInformation[0].description);
+      console.log("Description: " + responseRoomInformation[0].description); */
+      // get videos of room
+      var videos = await this._getVideos(responseRoomInformation[0].ID);
       this.setState({
+        videos: videos
+      });
+      // saves the received room information
+      this.setState({
+        creator: responseRoomInformation[0].Ersteller,
+        description: responseRoomInformation[0].description,
         roomId: responseRoomInformation[0].ID,
         title: responseRoomInformation[0].title,
-        creator: responseRoomInformation[0].Ersteller,
-        description: responseRoomInformation[0].description
+        videos: videos
       });
+      // updates the roomId of current user
       this._updateUserRoomId();
-
-      // get videos of room
-      console.log("Get videos of room");
-      const responseVideos = await videoFunctionByRoomId(
-        "/selectVideosByRoomId",
-        responseRoomInformation[0].ID
-      );
-      console.log(responseVideos);
-      this.setState({
-        videos: responseVideos
-      });
     } else {
-      // exception during room creation db push
+      // exception during receiving room information
       // todo: add dialog
-      console.log("DB push failed");
-      this.setState({
-        roomId: this.props.id,
-        title: this.props.title,
-        creator: this.props.creator,
-        description: this.props.description
-      });
+      console.log("Cant receive room information from the database");
     }
   }
 
+  async _getVideos(roomId){
+    // get videos of room
+    console.log("Get videos of room");
+    const responseVideos = await videoFunctionByRoomId(
+      "/selectVideosByRoomId",
+      roomId
+    );
+    return responseVideos;
+  }
+
+  // reads the username out of the cookie
   checksession() {
     if (read_cookie("StreamTogether").length != 0) {
       try {
@@ -157,7 +160,7 @@ export default class Room extends Component {
   }
 
   render() {
-    const activeItem = this.props.activeItem;
+    const activeItem = this.state.activeItem;
     const title = this.state.title;
     const description = this.state.description;
     const videos = this.state.videos;
@@ -165,13 +168,23 @@ export default class Room extends Component {
       videos.length != "0" || videos[0] != undefined
         ? videos[0].youtube_id
         : "";
+  console.log("UserName:" + this.state.userName);
+  console.log("roomId:" + this.state.roomId);
+
     return (
       <OwnHeader>
         <TopBox activeItem={activeItem} layer1={title} layer2={description} />
         <Segment style={{ padding: "8em 0em" }} vertical>
           <Grid container stackable verticalAlign="middle">
             <List divided verticalAlign="middle">
-              <YouTubeSearch videos={videos} chosenVideoId={choosenVideoId} />
+              <YouTubeSearch
+                chosenVideoId={choosenVideoId}
+                creator={this.state.creator}
+                getVideos={(roomId) => this._getVideos(roomId)}
+                roomId={this.state.roomId}
+                userName={this.state.userName!=undefined?this.state.userName:""}
+                videos={videos}
+              />
             </List>
           </Grid>
         </Segment>
