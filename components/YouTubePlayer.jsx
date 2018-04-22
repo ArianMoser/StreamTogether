@@ -40,30 +40,30 @@ export default class YouTubePlayer extends Component {
     }
 
     _onError(event) {
-      console.log("Player error");
-      console.log(event);
+    //  console.log("Player error");
+    //  console.log(event);
     }
 
     _onPause(event) {
-      console.log("Player paused");
-      console.log(event);
+    //  console.log("Player paused");
+    //   console.log(event);
     }
 
     _onPlay(event) {
-      console.log("Player started")
-      console.log(event);
+      //console.log("Player started")
+      //console.log(event);
     }
 
     _onReady(event) {
       // access to player in all event handlers via event.target
-      console.log("Player ready");
-      console.log(event);
+      //console.log("Player ready");
+      //console.log(event);
       // event.target.pauseVideo();
     }
 
     _onStateChanged(event) {
-      console.log("Player state changed");
-      console.log("CurrentTimer:" + event.target.getCurrentTime());
-      console.log(event);
+      //console.log("Player state changed");
+      //console.log("CurrentTimer:" + event.target.getCurrentTime());
+      //console.log(event);
     }
 }

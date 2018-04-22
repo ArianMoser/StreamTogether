@@ -1,5 +1,6 @@
 import { Component } from "react";
 import { Button, Icon } from "semantic-ui-react";
+import * as Icons from "react-icons/lib/fa";
 
 class MyButton extends Component {
   constructor(props) {
@@ -16,19 +17,42 @@ class MyButton extends Component {
       icon: "heart"
     };
   }
-  _handleClick(event){
+
+  componentWillMount() {
+    console.log(this.props);
+  }
+
+  _handleClick(event) {
+    this.props.onClick();
     console.log("Button clicked");
   }
 
   render() {
+    var icon = <Icons.FaStar />;
+    switch (this.props.icon) {
+      case "thumps-up":
+        icon = <Icons.FaThumbsOUp />;
+        break;
+      case "thumbs-down":
+        icon = <Icons.FaThumbsODown />;
+        break;
+      case "delete":
+        icon = <Icons.FaClose />;
+        break;
+      default:
+        icon = <Icons.FaStar />;
+        break;
+    } // end of switch-case
+
     return (
       <div>
         <Button
           color={this.props.color}
           content={this.props.content}
-          icon={this.props.icon}
           onClick={this._handleClick}
-        />
+        >
+          {icon}
+        </Button>
       </div>
     );
   }

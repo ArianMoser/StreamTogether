@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
 import YouTubePlayer from "../components/YouTubePlayer";
-import LikeButton from "../components/LikeButton";
+import MyButton from "../components/Button";
 import { List, Button, Icon, Input, Grid, Table } from "semantic-ui-react";
+import VideoElement from "../components/videoElement";
 
 const API_KEY = "AIzaSyCkXsSdyK3kKmUYEe9T9wf6AUli3V6Nzus";
 
@@ -45,18 +46,20 @@ class YouTubeSearch extends Component {
   }
 
   componentDidUpdate(nextProps, nextState) {
-    console.log("Component Update (YouTubeSearch)");
+    /*  console.log("Component Update (YouTubeSearch)");
     console.log(nextProps);
     console.log(this.props);
-    console.log("Length videos" + nextProps.videos.length);
-    if (nextProps.videos.length != this.props.videos.length && this.props.videos[0] != undefined) {
-      console.log("Changing state");
+    console.log("Length videos" + nextProps.videos.length); */
+    if (
+      nextProps.videos.length != this.props.videos.length &&
+      this.props.videos[0] != undefined
+    ) {
+      // console.log("Changing state");
       this.setState({
         chosenVideoId: this.props.videos[0].youtube_id,
         videos: nextProps.videos
       });
     }
-
   }
 
   /**
@@ -119,7 +122,21 @@ class YouTubeSearch extends Component {
     var videoTitle = video.snippet.title;
     var videoId = video.id.videoId;
 
-    console.log("Choosen Video:");
+    var videoList = this.state.videos.slice();
+    var video = {
+      videoTitle: videoTitle,
+      videoDescription: videoDescription,
+      videoId: videoId,
+      videoThumbnailUrl: videoThumbnailUrl,
+      channelId: channelId,
+      channelName: channelName
+    };
+    videoList.push(video);
+
+    this.setState({
+      videos: videoList
+    });
+    /*console.log("Choosen Video:");
     console.log(video);
     console.log("Video-title:       " + videoTitle);
     console.log("Video-description: " + videoDescription);
@@ -127,7 +144,7 @@ class YouTubeSearch extends Component {
     console.log("Video-Thumbnail:   " + videoThumbnailUrl);
     console.log("Channel-id:        " + channelId);
     console.log("Channel-Name:      " + channelName);
-
+*/
     this.setState({
       chosenVideoId: videoId
     });
@@ -158,11 +175,22 @@ class YouTubeSearch extends Component {
   }
 
   render() {
-    var playlist = (
-      <Table.Row>
-        <Table.Cell />
-      </Table.Row>
-    );
+    console.log(this.state.videos);
+    if (this.state.videos[0] != undefined) {
+      var playlist = this.state.videos.map(video => {
+        return <VideoElement
+              channelId={video.channelId}
+              channelName={video.channelName}
+              videoDescription={video.videoDescription}
+              videoId={video.videoId}
+              videoThumbnailUrl={video.videoThumbnailUrl}
+              videoTitle={video.videoTitle}
+          />;
+      });
+    } else {
+      var playlist = <VideoElement />;
+    }
+    console.log(playlist);
 
     // Prepare list of all videos that were returned by the YouTube API
     var videoList = this.state.searchResults.map(video => {
@@ -182,7 +210,7 @@ class YouTubeSearch extends Component {
           </Table.Cell>
           <Table.Cell>{video.snippet.title}</Table.Cell>
           <Table.Cell width={3}>
-            <LikeButton />
+            <MyButton />
           </Table.Cell>
           <Table.Cell width={3}>
             <Button
