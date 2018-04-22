@@ -16,7 +16,8 @@ class YouTubeSearch extends Component {
       chosenVideoTimecode: 0,
       nextPageToken: "",
       query: "",
-      searchResults: []
+      searchResults: [],
+      videos: []
     };
 
     // Bind event handlers
@@ -29,8 +30,33 @@ class YouTubeSearch extends Component {
   static get defaultProps() {
     return {
       chosenVideoId: "",
-      chosenVideoTimecode: 0
+      chosenVideoTimecode: 0,
+      videos: []
     };
+  }
+
+  componentWillMount() {
+    console.log(this.state);
+    this.setState({
+      chosenVideoId: this.props.chosenVideoId,
+      chosenVideoTimecode: this.props.chosenVideoTimecode,
+      videos: this.props.videos
+    });
+  }
+
+  componentDidUpdate(nextProps, nextState) {
+    console.log("Component Update (YouTubeSearch)");
+    console.log(nextProps);
+    console.log(this.props);
+    console.log("Length videos" + nextProps.videos.length);
+    if (nextProps.videos.length != this.props.videos.length && this.props.videos[0] != undefined) {
+      console.log("Changing state");
+      this.setState({
+        chosenVideoId: this.props.videos[0].youtube_id,
+        videos: nextProps.videos
+      });
+    }
+
   }
 
   /**
@@ -174,15 +200,17 @@ class YouTubeSearch extends Component {
       );
     });
 
-    if (this.state.chosenVideoId == 0)
+    if (
+      this.state.chosenVideoId == "" ||
+      this.state.chosenVideoId === undefined
+    ) {
       var videoPlayer = <h2>Noch kein Video ausgewählt.</h2>;
-    else
-      var videoPlayer = (
-        <YouTubePlayer
-          videoId={this.state.chosenVideoId}
-          timecode={this.state.chosenVideoTimecode}
-        />
-      );
+    } else {
+      console.log("Load Video");
+      var currentVideo = this.state.chosenVideoId;
+      console.log(this.state.videos);
+      var videoPlayer = <YouTubePlayer videoId={currentVideo} timecode="0" />;
+    }
 
     if (this.state.searchResults.length > 0)
       var nextPageButton = (

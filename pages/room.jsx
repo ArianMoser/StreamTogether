@@ -15,7 +15,11 @@ import PropTypes from "prop-types";
 import OwnHeader from "../components/Header";
 import YouTubeSearch from "../components/YouTubeSearch";
 import TopBox from "../components/TopBox";
-import { roomFunctionByHashedValue, changeRoomId } from "./PostMethods";
+import {
+  roomFunctionByHashedValue,
+  changeRoomId,
+  videoFunctionByRoomId
+} from "./PostMethods";
 import { read_cookie, delete_cookie } from "sfcookies";
 
 const jwt = require("jsonwebtoken");
@@ -23,7 +27,9 @@ const jwt = require("jsonwebtoken");
 export default class Room extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      videos: []
+    };
     this._updateUserRoomId = this._updateUserRoomId.bind(this);
     this._getInformation = this._getInformation.bind(this);
   }
@@ -47,6 +53,13 @@ export default class Room extends Component {
 
   componentDidMount() {
     //this._updateUserRoomId();
+  }
+
+  componentDidUpdate(nextProps, nextState) {
+    /*  if (nextState.videos != this.state.videos) {
+      console.log("Rerendering");
+      setTimeout(this.forceUpdate(), 200);
+    } */
   }
 
   async _updateUserRoomId() {
@@ -102,6 +115,17 @@ export default class Room extends Component {
         description: responseRoomInformation[0].description
       });
       this._updateUserRoomId();
+
+      // get videos of room
+      console.log("Get videos of room");
+      const responseVideos = await videoFunctionByRoomId(
+        "/selectVideosByRoomId",
+        responseRoomInformation[0].ID
+      );
+      console.log(responseVideos);
+      this.setState({
+        videos: responseVideos
+      });
     } else {
       // exception during room creation db push
       // todo: add dialog
@@ -136,14 +160,18 @@ export default class Room extends Component {
     const activeItem = this.props.activeItem;
     const title = this.state.title;
     const description = this.state.description;
-
+    const videos = this.state.videos;
+    const choosenVideoId =
+      videos.length != "0" || videos[0] != undefined
+        ? videos[0].youtube_id
+        : "";
     return (
       <OwnHeader>
         <TopBox activeItem={activeItem} layer1={title} layer2={description} />
         <Segment style={{ padding: "8em 0em" }} vertical>
           <Grid container stackable verticalAlign="middle">
             <List divided verticalAlign="middle">
-              <YouTubeSearch />
+              <YouTubeSearch videos={videos} chosenVideoId={choosenVideoId} />
             </List>
           </Grid>
         </Segment>

@@ -53,23 +53,23 @@ See our result online ([Website](http://gruppe2.testsites.info/ "Our Website"))
 | Startseite                          | ok               |                  |
 | Login                               | ok               |                  |
 | Registrierung                       | ok               |                  |
-| Impressum                           | ok				 |  nicht notwendig |
-| Datenschutz                         | ok				 |  nicht notwendig |
+| Impressum                           | ok				       |  nicht notwendig |
+| Datenschutz                         | ok				       |  nicht notwendig |
 | Contact Us                          | ok(noch Maps?)   |                  |
 | Datenbank                           | ok               |                  |
-| Raumseite                           | -                |                  |
+| Raumseite                           | teilweise        |                  |
 | Übersicht von Räumen                | begin            |                  |
 | Konto übersicht                     | ok               |                  |
 |                                     |                  |                  |
-| Einloggen                           |                  |                  |
-| Ausloggen                           |                  |                  |
-| Raum erstellen                      |                  |                  |
-| Raum automatisiert löschen          |                  |                  |
+| Einloggen                           | ok               |                  |
+| Ausloggen                           | ok               |                  |
+| Raum erstellen                      | ok               |                  |
+| Raum automatisiert löschen          | teilweise        |                  |
 | Username auto-geb                   |                  |                  |
 | Raum umbenennen                     |                  |                  |
 | Chat                                |                  |                  |
-| Suche                               |                  |                  |
-| Api(abspielen)                      |                  |                  |
+| Suche                               | ok               |                  |
+| Api(abspielen)                      | ok               |                  |
 | Starten stoppen                     |                  |                  |
 | Liste nutzer in room                |                  |                  |
 | Playlistfunktion                    |                  |                  |

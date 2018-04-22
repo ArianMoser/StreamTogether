@@ -7,6 +7,15 @@ export default class YouTubePlayer extends Component {
     this.state = {};
   }
 
+  componentDidUpdate(nextProps, nextState) {
+    /*console.log("Component Update");
+    if (nextProps.videos != this.props.videos) {
+      console.log(nextProps);
+      console.log("Rerendering Player");
+      this.forceUpdate();
+    } */
+  }
+
   render() {
     const opts = {
         height: '390',

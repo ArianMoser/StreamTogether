@@ -170,7 +170,7 @@ var call = (module.exports = {
   },
   selectVideosByRoomId: function(res, dieNutzerDaten, connection) {
     const query =
-      "SELECT video.id, video.title, video.description, video.user_id" +
+      "SELECT *" +
       " FROM playlist,video" +
       " WHERE video.ID = playlist.video_ID AND playlist.room_id = " +
       mysql.escape(dieNutzerDaten.roomId) +
