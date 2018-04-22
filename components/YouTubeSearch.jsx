@@ -7,6 +7,7 @@ import VideoElement from "../components/VideoElement";
 import PropTypes from "prop-types";
 import {
   connectVideoAndRoom,
+  deletePlaylist,
   insertVideo,
   videoFunctionByRoomId,
   videoFunctionByYoutubeId
@@ -69,7 +70,7 @@ class YouTubeSearch extends Component {
     var videos = await this.props.getVideos(this.props.roomId);
     this.setState({
       videos: videos
-    })
+    });
   }
 
   componentDidUpdate(nextProps, nextState) {
@@ -240,6 +241,20 @@ class YouTubeSearch extends Component {
     return responseVideos;
   }
 
+  async _deleteVideo(videoId) {
+    console.log("Delete Video");
+    const responseDeleteVideo = await deletePlaylist(
+      "/deletePlaylist",
+      this.state.roomId,
+      videoId
+    );
+    if (responseDeleteVideo.affectedRows == "1") {
+      console.log("Deleted Video in table playlist");
+    } else {
+      console.log("Error during deleting process of video");
+    }
+  }
+
   /**
    * Contact the YouTube API to perform a search.
    * @param  {Object}   options  Options that will be passed to the YouTube API
@@ -267,8 +282,15 @@ class YouTubeSearch extends Component {
   render() {
     console.log("Create VideoElements");
     console.log(this.state.videos);
-    if (this.state.videos[0] != undefined) {
-      var playlist = this.state.videos.map(video => {
+    if (
+      this.state.videos[0] != undefined ||
+      this.props.videos[0] != undefined
+    ) {
+      var videos =
+        this.state.videos[0] != undefined
+          ? this.state.videos
+          : this.props.videos;
+      var playlist = videos.map(video => {
         console.log(video);
         return (
           <VideoElement
