@@ -104,6 +104,23 @@ export const videoFunctionByRoomId = (api, roomId) => {
     });
   });
 };
+export const videoFunctionByYoutubeId = (api, youtubeId) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({ youtubeId: youtubeId }),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
 //----------------------Login----------------------//
 export const userFunctionLogin = (api, username) => {
   return new Promise((resolve, reject) => {
@@ -185,6 +202,64 @@ export const createRoomFunction = (
   });
 };
 
+//--------------------Insert Video-----------------------//
+export const insertVideo = (
+  api,
+  videoId,
+  videoTitle,
+  videoDescription,
+  videoThumbnailUrl,
+  channelId,
+  channelName,
+  userName
+) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({
+        videoId: videoId,
+        videoTitle: videoTitle,
+        videoDescription: videoDescription,
+        videoThumbnailUrl: videoThumbnailUrl,
+        channelId: channelId,
+        channelName: channelName,
+        userName: userName
+      }),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
+
+//---------------insert Playlist-----------------------------//
+export const connectVideoAndRoom = (api, videoId, roomId) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({
+        videoId: videoId,
+        roomId: roomId
+      }),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
+
 //----------------------Update roomid----------------------//
 export const changeRoomId = (api, username, roomId) => {
   return new Promise((resolve, reject) => {
@@ -230,6 +305,29 @@ export const changePassword = (api, id, passwordNew) => {
   });
 };
 
+// thumbs-up/thumbs-down
+export const voteVideo = (api, roomId, videoId, voteValue) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({
+        roomId: roomId,
+        videoId: videoId,
+        voteValue: voteValue
+      }),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
+
 //----------------------Delete user----------------------//
 //todo: add password check to delete an account
 export const deleteUser = (api, id) => {
@@ -241,6 +339,27 @@ export const deleteUser = (api, id) => {
       contentType: "application/json",
       data: JSON.stringify({
         id: id
+      }),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
+
+export const deletePlaylist = (api, roomId, videoId) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({
+        roomId: roomId,
+        videoId: videoId
       }),
       success: function(res) {
         resolve(res);
@@ -272,3 +391,25 @@ export const dropRoomEvent = (api, roomid) => {
     });
   });
 };
+
+//--------------Alter Event for dropping rooms-------------//
+//-----------------(resets the time)----------------------//
+export const alterRoomEvent = (api, roomid) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({
+        roomid: roomid
+      }),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+}

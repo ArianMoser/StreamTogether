@@ -22,10 +22,19 @@ import {
 } from "semantic-ui-react";
 import { roomFunctionShowAll } from "./PostMethods";
 
+
+
 export default class roomOverview extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+  }
+
+  static propTypes = {
+    activeItem: PropTypes.string,
+    rooms: PropTypes.object,
+    userId: PropTypes.string,
+    username: PropTypes.string
   }
 
   static get defaultProps() {

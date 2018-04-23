@@ -6,13 +6,13 @@ See our result online ([Website](http://gruppe2.testsites.info/ "Our Website"))
 
 ### OFFLINE:
 
-| Step                               | Command        | Additional                          |
-| :--------------------------------- | :------------- | :---------------------------------- |
-| Installieren                       | npm install    | (Nötig)                             |
-| Development Mode starten           | npm run dev	  |	(Zum arbeiten und testen)           |
-| Alles erstellen                    | npm run build  | (ganz zum schluss wenn alles läuft) |
-| Starten mit den erstellten Dateien | npm start	  |	(später für den Server)             |
-
+| Step                                 | Command            | Additional                          |
+| :----------------------------------- | :----------------- | :---------------------------------- |
+| Installieren                         | npm install        | (Nötig)                             |
+| Development Mode starten             | npm run dev	      |	(Zum arbeiten und testen)           |
+| Alles erstellen                      | npm run build      | (ganz zum schluss wenn alles läuft) |
+| Starten mit den erstellten Dateien   | npm start	        |	(später für den Server)             |
+| Aktivieren des MYSQL event scheduler | event_scheduler=ON | (in XAMPP)                          |
 > STRG + SHIFT + F = Code ausrichten
 
  ### ONLINE:
@@ -53,23 +53,23 @@ See our result online ([Website](http://gruppe2.testsites.info/ "Our Website"))
 | Startseite                          | ok               |                  |
 | Login                               | ok               |                  |
 | Registrierung                       | ok               |                  |
-| Impressum                           | ok				 |  nicht notwendig |
-| Datenschutz                         | ok				 |  nicht notwendig |
+| Impressum                           | ok				       |  nicht notwendig |
+| Datenschutz                         | ok				       |  nicht notwendig |
 | Contact Us                          | ok(noch Maps?)   |                  |
 | Datenbank                           | ok               |                  |
-| Raumseite                           | -                |                  |
+| Raumseite                           | teilweise        |                  |
 | Übersicht von Räumen                | begin            |                  |
 | Konto übersicht                     | ok               |                  |
 |                                     |                  |                  |
-| Einloggen                           |                  |                  |
-| Ausloggen                           |                  |                  |
-| Raum erstellen                      |                  |                  |
-| Raum automatisiert löschen          |                  |                  |
+| Einloggen                           | ok               |                  |
+| Ausloggen                           | ok               |                  |
+| Raum erstellen                      | ok               |                  |
+| Raum automatisiert löschen          | teilweise        |                  |
 | Username auto-geb                   |                  |                  |
 | Raum umbenennen                     |                  |                  |
 | Chat                                |                  |                  |
-| Suche                               |                  |                  |
-| Api(abspielen)                      |                  |                  |
+| Suche                               | ok               |                  |
+| Api(abspielen)                      | ok               |                  |
 | Starten stoppen                     |                  |                  |
 | Liste nutzer in room                |                  |                  |
 | Playlistfunktion                    |                  |                  |
