@@ -11,7 +11,8 @@ import {
   deletePlaylist,
   insertVideo,
   videoFunctionByRoomId,
-  videoFunctionByYoutubeId
+  videoFunctionByYoutubeId,
+  voteVideo
 } from "../pages/PostMethods";
 
 const API_KEY = "AIzaSyCkXsSdyK3kKmUYEe9T9wf6AUli3V6Nzus";
@@ -259,9 +260,28 @@ class YouTubeSearch extends Component {
     }
   }
 
-  async _nextVideo(roomId,videoId) {
+  async _voteVideo(roomId, databaseId, voteValue){
+    console.log("Vote video");
+    const responseVoteVideo = await voteVideo(
+      "/updateUpVotes",
+      roomId,
+      databaseId,
+      voteValue
+    );
+    if (responseVoteVideo.affectedRows == "1") {
+      console.log("Video voted");
+      var videos = await this.props.getVideos(roomId);
+      this.setState({
+        videos: videos
+      });
+    } else {
+      console.log("Error during voting process");
+    }
+  }
+
+  async _nextVideo(roomId, videoId) {
     console.log("Next Video");
-    this._deleteVideo(roomId,videoId);
+    this._deleteVideo(roomId, videoId);
     this._alterDeleteEvent(roomId);
   }
 
@@ -314,7 +334,7 @@ class YouTubeSearch extends Component {
       var videoPlayer = (
         <YouTubePlayer
           databaseId={videos[0].video_ID}
-          handleVideoEnd={(roomId,videoId) => this._nextVideo(roomId,videoId)}
+          handleVideoEnd={(roomId, videoId) => this._nextVideo(roomId, videoId)}
           timecode="0"
           roomId={videos[0].room_ID}
           videoId={videos[0].youtube_id}
@@ -329,6 +349,9 @@ class YouTubeSearch extends Component {
             databaseId={video.video_ID}
             handleDelete={(roomId, databaseId) =>
               this._deleteVideo(roomId, databaseId)
+            }
+            handleVote={(roomId, databaseId, voteValue) =>
+              this._voteVideo(roomId, databaseId, voteValue)
             }
             roomId={video.room_ID}
             videoDescription={video.description}

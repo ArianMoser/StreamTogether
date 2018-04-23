@@ -341,6 +341,29 @@ var call = (module.exports = {
       res.send(rows);
     });
   },
+  updateUpVotes: function(res, dieNutzerDaten, connection) {
+    console.log(dieNutzerDaten);
+    const query =
+      "Update `playlist`" +
+      " SET `Upvotes`=`Upvotes` + " +
+      mysql.escape(dieNutzerDaten.voteValue) +
+      " WHERE `room_ID`=" +
+      mysql.escape(dieNutzerDaten.roomId) +
+      " AND `video_ID`=" +
+      mysql.escape(dieNutzerDaten.videoId) +
+      " ;";
+    console.log(query);
+    connection.query(query, function(err, rows, fields) {
+      if (err) {
+        console.log("An error ocurred performing the query.");
+        console.log(err);
+        return;
+      }
+
+      console.log("Number of records updated: " + rows.affectedRows);
+      res.send(rows);
+    });
+  },
   //-------------------------delete----------------------//
   deleteUserByID: function(res, dieNutzerDaten, connection) {
     console.log(dieNutzerDaten);

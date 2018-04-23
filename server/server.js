@@ -100,6 +100,10 @@ app
         exp.post("/updateDeleteEvent", (req, res) => {
           database.updateDeleteEvent(res, req.body, connection);
         });
+        exp.post("/updateUpVotes", (req, res) => {
+          database.updateUpVotes(res, req.body, connection);
+        });
+
       }
     });
 

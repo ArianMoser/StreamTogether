@@ -305,6 +305,29 @@ export const changePassword = (api, id, passwordNew) => {
   });
 };
 
+// thumbs-up/thumbs-down
+export const voteVideo = (api, roomId, videoId, voteValue) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({
+        roomId: roomId,
+        videoId: videoId,
+        voteValue: voteValue
+      }),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
+
 //----------------------Delete user----------------------//
 //todo: add password check to delete an account
 export const deleteUser = (api, id) => {

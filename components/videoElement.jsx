@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Button, Icon, Table } from "semantic-ui-react";
 import MyButton from "../components/Button";
+import PropTypes from "prop-types";
 
 export default class VideoElement extends Component {
   constructor(props) {
@@ -12,12 +13,26 @@ export default class VideoElement extends Component {
     this._handleStartVideo = this._handleStartVideo.bind(this);
   } //end of constructor
 
+  static propTypes = {
+    channelId: PropTypes.string,
+    channelName: PropTypes.string,
+    databaseId: PropTypes.number,
+    roomId: PropTypes.number,
+    handleDelete: PropTypes.func,
+    handleVote: PropTypes.func,
+    videoDescription: PropTypes.string,
+    videoId: PropTypes.string,
+    videoThumbnailUrl: PropTypes.string,
+    userId: PropTypes.string,
+    videoTitle: PropTypes.string
+  };
+
   static get defaultProps() {
     return {
       channelId: "default-channelId",
       channelName: "default-channelName",
       databaseId: 0,
-      roomId:0,
+      roomId: 0,
       videoDescription: "default-videoDescription",
       videoId: "default-videoId",
       videoThumbnailUrl: "default-videoThumbnailUrl",
@@ -39,15 +54,17 @@ export default class VideoElement extends Component {
     console.log("Clicked delete");
     console.log("DatabaseId:" + this.state.databaseId);
     console.log("RoomId: " + this.state.roomId);
-    this.props.handleDelete(this.state.roomId,this.state.databaseId);
+    this.props.handleDelete(this.state.roomId, this.state.databaseId);
   }
 
   _handleThumbsUp() {
     console.log("Clicked thumbsup");
+    this.props.handleVote(this.props.roomId, this.props.databaseId, 1);
   }
 
   _handleThumbsDown() {
     console.log("Clicked thumbsdown");
+    this.props.handleVote(this.props.roomId, this.props.databaseId, -1);
   }
 
   _handleStartVideo() {

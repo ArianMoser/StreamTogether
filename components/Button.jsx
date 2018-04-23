@@ -30,7 +30,7 @@ class MyButton extends Component {
   render() {
     var icon = <Icons.FaStar />;
     switch (this.props.icon) {
-      case "thumps-up":
+      case "thumbs-up":
         icon = <Icons.FaThumbsOUp />;
         break;
       case "thumbs-down":
