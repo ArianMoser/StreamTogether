@@ -2,11 +2,13 @@ import React, { Component } from "react";
 import { Button, Icon, Table } from "semantic-ui-react";
 import MyButton from "../components/Button";
 import PropTypes from "prop-types";
+import $ from "jquery";
 
 export default class VideoElement extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+
     this._handleDelete = this._handleDelete.bind(this);
     this._handleThumbsUp = this._handleThumbsUp.bind(this);
     this._handleThumbsDown = this._handleThumbsDown.bind(this);
@@ -59,11 +61,15 @@ export default class VideoElement extends Component {
 
   _handleThumbsUp() {
     console.log("Clicked thumbsup");
+    $("#thumbs-up").prop("disabled",true);
+    $("#thumbs-down").prop("disabled",false);
     this.props.handleVote(this.props.roomId, this.props.databaseId, 1);
   }
 
   _handleThumbsDown() {
     console.log("Clicked thumbsdown");
+    $("#thumbs-up").prop("disabled",true);
+    $("#thumbs-down").prop("disabled",false);
     this.props.handleVote(this.props.roomId, this.props.databaseId, -1);
   }
 
@@ -83,11 +89,13 @@ export default class VideoElement extends Component {
           <MyButton
             color="green"
             icon="thumbs-up"
+            id="thumbs-up"
             onClick={this._handleThumbsUp}
           />
           <MyButton
             color="red"
             icon="thumbs-down"
+            id="thumbs-down"
             onClick={this._handleThumbsDown}
           />
         </Table.Cell>
