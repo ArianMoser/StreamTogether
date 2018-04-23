@@ -220,8 +220,8 @@ class YouTubeSearch extends Component {
       console.log("Couldnt create connection between video and room");
     }
     var videos = await this.props.getVideos(this.props.roomId);
-    // alters the delete room event 
-    this._alterDeleteEvent(roomId);
+    // alters the delete room event
+    this._alterDeleteEvent(this.props.roomId);
     console.log("Videos");
     console.log(videos);
 
