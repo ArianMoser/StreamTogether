@@ -27,7 +27,6 @@ const jwt = require("jsonwebtoken");
 export default class Room extends Component {
   constructor(props) {
     super(props);
-
     //default states
     this.state = {
       activeItem: "empty", //active item of the Navbar
@@ -40,10 +39,9 @@ export default class Room extends Component {
       userlist: {},
       videos: []
     };
-    this._updateUserRoomId = this._updateUserRoomId.bind(this);
-    this._getInformation = this._getInformation.bind(this);
   }
 
+  //-------------------------functions of react----------------------------//
   componentWillMount() {
     this._getInformation();
   }
@@ -58,7 +56,8 @@ export default class Room extends Component {
       setTimeout(this.forceUpdate(), 200);
     } */
   }
-
+  //----------------------functions------------------------------//
+  // updates the active room of the current user in the user table
   async _updateUserRoomId() {
     console.log("Update current room of current user");
 
@@ -86,6 +85,7 @@ export default class Room extends Component {
     }
   }
 
+  // gets room information
   async _getInformation() {
     var title = "Test-title";
 
@@ -131,6 +131,7 @@ export default class Room extends Component {
     }
   }
 
+  // get videos of the room
   async _getVideos(roomId) {
     // get videos of room
     console.log("Get videos of room");
@@ -158,13 +159,13 @@ export default class Room extends Component {
       return "ErrorTokenFalse";
     }
   }
-
+  //----------------------------------Render-------------------------------//
   render() {
     const activeItem = this.state.activeItem;
     const title = this.state.title;
     const description = this.state.description;
     const videos = this.state.videos;
-    
+
     console.log("UserName:" + this.state.userName);
     console.log("roomId:" + this.state.roomId);
 

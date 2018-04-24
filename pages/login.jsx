@@ -19,6 +19,13 @@ import {
 } from "semantic-ui-react";
 
 export default class Login extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  //----------------------------event handlers---------------------------//
+  // handles the login event
   async onSubmitHandler(event) {
     event.preventDefault();
 
@@ -48,7 +55,7 @@ export default class Login extends Component {
           var sessiontoken = jwt.sign(
             {
               username: response[0].username,
-              exp: Math.floor(Date.now() / 1000) + (60 * 60) * 24
+              exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24
             },
             "shhhhh"
           );
@@ -63,7 +70,7 @@ export default class Login extends Component {
       }
     }
   }
-
+  //----------------------------------Render-------------------------------//
   render() {
     return (
       <OwnHeader useFooter={false} useHeader={false}>

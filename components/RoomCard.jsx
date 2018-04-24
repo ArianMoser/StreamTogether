@@ -34,6 +34,7 @@ export default class RoomCard extends Component {
     title: PropTypes.string
   };
 
+  //-------------------------functions of react----------------------------//
   componentWillMount() {
     this.setState({
       creator: this.props.creator,
@@ -46,11 +47,17 @@ export default class RoomCard extends Component {
     this._getUsername(this.props.creator);
   }
 
+  //----------------------------event handlers---------------------------//
+  _handleRoomJoining(event, hashed) {
+    event.preventDefault();
+    console.log("Join Room clicked");
+    console.log("Target room: " + hashed);
+    window.location = "./room?hv=" + hashed;
+  }
+
+  //----------------------functions------------------------------//
   async _getUsername(id) {
-    const responseUsername = await userFunctionById(
-      "/getUserById",
-      id
-    );
+    const responseUsername = await userFunctionById("/getUserById", id);
     console.log(responseUsername);
     if (responseUsername.length == "1") {
       this.setState({
@@ -61,13 +68,7 @@ export default class RoomCard extends Component {
     }
   }
 
-  _handleRoomJoining(event, hashed) {
-    event.preventDefault();
-    console.log("Join Room clicked");
-    console.log("Target room: " + hashed);
-    window.location = "./room?hv=" + hashed;
-  }
-
+  //----------------------------------Render-------------------------------//
   render() {
     const userName = this.state.userName;
     const description = this.state.description;

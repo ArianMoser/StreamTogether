@@ -20,13 +20,13 @@ import {
 } from "semantic-ui-react";
 import TopBox from "../components/TopBox";
 
-//Nav Bar
 export default class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = {activeItem: "home"};
+    this.state = { activeItem: "home" };
   }
 
+  //----------------------------------Render-------------------------------//
   render() {
     const activeItem = this.state.activeItem;
 

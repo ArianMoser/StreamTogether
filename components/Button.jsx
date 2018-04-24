@@ -26,25 +26,27 @@ class MyButton extends Component {
     disabled: PropTypes.bool,
     icon: PropTypes.string,
     onClick: PropTypes.func
-  }
+  };
 
-  componentWillMount(){
+  //-------------------------functions of react----------------------------//
+  componentWillMount() {
     this.setState({
       disabled: this.props.disabled
     });
   }
-
-  _setDisable(value){
+  //----------------------------event handlers---------------------------//
+  _handleClick(event) {
+    this.props.onClick();
+    console.log("Button clicked");
+  }
+  //----------------------functions------------------------------//
+  _setDisable(value) {
     this.setState({
       disabled: value
     });
   }
 
-  _handleClick(event) {
-    this.props.onClick();
-    console.log("Button clicked");
-  }
-
+  //----------------------------------Render-------------------------------//
   render() {
     var icon = <Icons.FaStar />;
     switch (this.props.icon) {

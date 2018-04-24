@@ -28,9 +28,15 @@ export default class RoomCreator extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      checkPassword: false
+      activeItem: "empty",
+      checkPassword: false,
+      currentUser: "",
+      description: "",
+      password: "",
+      title: ""
     };
 
+    //bind event handlers
     this._handleDescriptionChange = this._handleDescriptionChange.bind(this);
     this._handleTitleChange = this._handleTitleChange.bind(this);
     this._handlePasswordChangeCheck = this._handlePasswordChangeCheck.bind(
@@ -40,31 +46,14 @@ export default class RoomCreator extends Component {
     this._handleRoomCreation = this._handleRoomCreation.bind(this);
   }
 
-  static get defaultProps() {
-    return {
-      activeItem: "empty",
-      checkPassword: false,
-      currentUser: "",
-      description: "",
-      password: "",
-      title: ""
-    };
-  }
-
-  componentWillMount() {
-    //
-  }
-
+  //-------------------------functions of react----------------------------//
   componentDidMount() {
     var currentUsername = this.checksession();
     console.log("Username: " + currentUsername);
     var currentUserId = this._getUserId(currentUsername);
-    this.setState({
-      title: this.props.title,
-      description: this.props.description
-    });
   }
 
+  //----------------------------event handlers---------------------------//
   _handleDescriptionChange(event) {
     this.setState({
       description: event.target.value
@@ -89,42 +78,7 @@ export default class RoomCreator extends Component {
     });
   }
 
-  checksession() {
-    if (read_cookie("StreamTogether").length != 0) {
-      try {
-        var decodedsession = jwt.verify(
-          read_cookie("StreamTogether"),
-          "shhhhh"
-        );
-        return decodedsession.username;
-      } catch (err) {
-        console.log("Error-Message: " + err.message);
-        return "ErrorTokenFalse";
-      }
-    } else {
-      return "ErrorTokenFalse";
-    }
-  }
-
-  async _getUserId(username) {
-    console.log("Passed username: " + username);
-    const response = await userFunctionByUsername(
-      "/getuserbyusername",
-      username
-    );
-    console.log(response);
-    if (response.length == "1") {
-      var currentUserId = response[0].ID;
-      console.log("Found id " + currentUserId);
-    } else {
-      console.log("Could not resolve username into id");
-      var currentUserId = "0";
-    }
-    this.setState({
-      currentUser: currentUserId
-    });
-  }
-
+  // creates a room
   async _handleRoomCreation(event) {
     event.preventDefault();
     const title = this.state.title;
@@ -151,14 +105,15 @@ export default class RoomCreator extends Component {
         "| currentUser: " +
         currentUser
     );
+
+    // pattern for the input fields
     var titleExpression = /^[A-Za-z0-9_]{3,32}$/;
     var pwExpression = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
     //Check Regex Statements
     if (
-      (titleExpression.test(title) &&
-        (pwExpression.test(password) || !checkPassword)) ||
-      true
+      titleExpression.test(title) &&
+      (pwExpression.test(password) || !checkPassword)
     ) {
       console.log("Testpattern succeded");
       const responseSelectTitle = await roomFunctionByTitle(
@@ -209,7 +164,7 @@ export default class RoomCreator extends Component {
             roomid
           );
           console.log(responseDropRoomEvent);
-          if (responseDropRoomEvent.serverStatus == "2"){
+          if (responseDropRoomEvent.serverStatus == "2") {
             console.log("The drop event was scheduled in 1 hour");
           } else {
             console.log("Error during the event creation process");
@@ -227,9 +182,47 @@ export default class RoomCreator extends Component {
       console.log("Testpattern failed");
     }
   }
+  //----------------------functions------------------------------//
+  checksession() {
+    if (read_cookie("StreamTogether").length != 0) {
+      try {
+        var decodedsession = jwt.verify(
+          read_cookie("StreamTogether"),
+          "shhhhh"
+        );
+        return decodedsession.username;
+      } catch (err) {
+        console.log("Error-Message: " + err.message);
+        return "ErrorTokenFalse";
+      }
+    } else {
+      return "ErrorTokenFalse";
+    }
+  }
 
+  // gets the username by an id
+  async _getUserId(username) {
+    console.log("Passed username: " + username);
+    const response = await userFunctionByUsername(
+      "/getuserbyusername",
+      username
+    );
+    console.log(response);
+    if (response.length == "1") {
+      var currentUserId = response[0].ID;
+      console.log("Found id " + currentUserId);
+    } else {
+      console.log("Could not resolve username into id");
+      var currentUserId = "0";
+    }
+    this.setState({
+      currentUser: currentUserId
+    });
+  }
+
+  //----------------------------------Render-------------------------------//
   render() {
-    const activeItem = this.props.activeItem;
+    const activeItem = this.state.activeItem;
     const pwField = this.state.checkPassword ? (
       <input
         value={this.state.password}

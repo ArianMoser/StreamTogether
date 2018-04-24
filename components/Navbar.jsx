@@ -2,13 +2,14 @@ import React, { Fragment, Component } from "react";
 import Link from "next/link";
 import { Button, Container, Menu } from "semantic-ui-react";
 import { bake_cookie, read_cookie, delete_cookie } from "sfcookies";
+import PropTypes from "prop-types";
 const jwt = require("jsonwebtoken");
 
 export default class Navbar extends Component {
-  state = {};
-
   constructor(props) {
     super(props);
+    state = {};
+    //bind event handler
     this.logoutFunction = this.logoutFunction.bind(this);
   }
 
@@ -19,6 +20,23 @@ export default class Navbar extends Component {
     };
   }
 
+  static propTypes = {
+    name: PropTypes.string,
+    fixed: PropTypes.bool
+  };
+
+  //-------------------------functions of react----------------------------//
+  componentDidMount() {
+    this.setState({ activeItem: this.props.name });
+    var answer = this.checksession();
+    console.log("Current user: '" + answer + "'");
+    console.log("Active Item: " + this.props.name);
+  }
+
+  //----------------------------event handlers---------------------------//
+  handleItemClick = (e, { name }) => this.setState({ activeItem: name });
+
+  //----------------------functions------------------------------//
   //Checksession
   checksession() {
     if (read_cookie("StreamTogether").length != 0) {
@@ -36,16 +54,7 @@ export default class Navbar extends Component {
       return "ErrorTokenFalse";
     }
   }
-
-  componentDidMount() {
-    this.setState({ activeItem: this.props.name });
-    var answer = this.checksession();
-    console.log("Current user: '" + answer + "'");
-    console.log("Active Item: " + this.props.name);
-  }
-
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name });
-
+  // deletes the cookie and redirect the user to the login page
   logoutFunction(event) {
     if (read_cookie("StreamTogether").length != 0) {
       delete_cookie("StreamTogether");
@@ -53,6 +62,7 @@ export default class Navbar extends Component {
     }
   }
 
+  //----------------------------------Render-------------------------------//
   render() {
     const fixed = this.props.fixed;
     const activeItem = this.props.name;

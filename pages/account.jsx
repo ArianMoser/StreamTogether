@@ -39,19 +39,7 @@ const jwt = require("jsonwebtoken");
 export default class Account extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
-    this._changePassword = this._changePassword.bind(this);
-    this._handleOldPasswordChange = this._handleOldPasswordChange.bind(this);
-    this._handleNewPassword1Change = this._handleNewPassword1Change.bind(this);
-    this._handleNewPassword2Change = this._handleNewPassword2Change.bind(this);
-    this._handleDeleteAccountChange = this._handleDeleteAccountChange.bind(
-      this
-    );
-    this._deleteAccount = this._deleteAccount.bind(this);
-  }
-
-  static get defaultProps() {
-    return {
+    this.state = {
       activeItem: "account",
       deleteAccountCheck: false,
       email: "default-email",
@@ -63,8 +51,18 @@ export default class Account extends Component {
       userId: "",
       username: "default-username"
     };
+    // bind event handlers
+    this._changePassword = this._changePassword.bind(this);
+    this._handleOldPasswordChange = this._handleOldPasswordChange.bind(this);
+    this._handleNewPassword1Change = this._handleNewPassword1Change.bind(this);
+    this._handleNewPassword2Change = this._handleNewPassword2Change.bind(this);
+    this._handleDeleteAccountChange = this._handleDeleteAccountChange.bind(
+      this
+    );
+    this._deleteAccount = this._deleteAccount.bind(this);
   }
 
+//-------------------------functions of react----------------------------//
   componentWillMount() {
     this.setState({
       deleteAccountCheck: false
@@ -81,7 +79,7 @@ export default class Account extends Component {
       this._getInformation();
     }
   }
-
+//----------------------------event handlers---------------------------//
   _handleOldPasswordChange(event) {
     this.setState({
       oldPassword: event.target.value
@@ -106,57 +104,7 @@ export default class Account extends Component {
     });
   }
 
-  async _getInformation() {
-    var username = this.checksession();
-    await this._getUserId(username);
-    var userId = this.state.userId;
-
-    console.log("Tries to receive room information of the database");
-    console.log("Found Username: " + username);
-    const responseUserInformation = await userFunctionByUsername(
-      "/getuserandroombyusername",
-      username
-    );
-    console.log("Reg. Complete | Count : " + responseUserInformation.length);
-    if (responseUserInformation.length == "1") {
-      console.log("DB push succeeded");
-      console.log(responseUserInformation);
-      console.log("ID:     " + userId);
-      console.log("Email:  " + responseUserInformation[0].email);
-      console.log("RoomId: " + responseUserInformation[0].title);
-      this.setState({
-        userId: userId,
-        username: username,
-        email: responseUserInformation[0].email,
-        lastRoom: responseUserInformation[0].title
-      });
-    } else {
-      console.log("Error during database request");
-    }
-  }
-
-  async _getUserId(username) {
-    console.log("Passed username: " + username);
-    const response = await userFunctionByUsername(
-      "/getuserbyusername",
-      username
-    );
-    console.log(response);
-    if (response.length == "1") {
-      var hashedPassword = response[0].password;
-      var currentUserId = response[0].ID;
-      console.log("Found id " + currentUserId);
-    } else {
-      console.log("Could not resolve username into id");
-      var currentUserId = "0";
-      var hashedPassword = "";
-    }
-    this.setState({
-      hashedPassword: hashedPassword,
-      userId: currentUserId
-    });
-  }
-
+  //changes the password
   async _changePassword(event) {
     event.preventDefault();
     console.log("Handle password change");
@@ -187,12 +135,16 @@ export default class Account extends Component {
         );
         console.log(
           "Reg. Complete | Affected Rows: " +
-            responseChangePassword.affectedRows
+          responseChangePassword.affectedRows
         );
         //check if db push succeded
         if (responseChangePassword.affectedRows == "1") {
           console.log("DB push succeeded");
-          this._getInformation();
+          setTimeout(redirect(), 500);
+          function redirect() {
+            delete_cookie("StreamTogether");
+            window.location = "/login";
+          }
           //todo: dialog for successful password change
         } else {
           console.log("DB push failed");
@@ -207,6 +159,7 @@ export default class Account extends Component {
     }
   }
 
+  // deletes the account
   async _deleteAccount(event) {
     event.preventDefault();
     console.log("Delete user");
@@ -236,6 +189,57 @@ export default class Account extends Component {
     }
   }
 
+//----------------------functions------------------------------//
+  // gets the account information
+  async _getInformation() {
+    var username = this.checksession();
+    await this._getUserId(username);
+    var userId = this.state.userId;
+
+    console.log("Tries to receive room information of the database");
+    console.log("Found Username: " + username);
+    const responseUserInformation = await userFunctionByUsername(
+      "/getuserandroombyusername",
+      username
+    );
+    console.log("Reg. Complete | Count : " + responseUserInformation.length);
+    if (responseUserInformation.length == "1") {
+      console.log("DB push succeeded");
+      this.setState({
+        userId: userId,
+        username: username,
+        email: responseUserInformation[0].email,
+        lastRoom: responseUserInformation[0].title
+      });
+    } else {
+      console.log("Error during database request");
+    }
+  }
+
+  // gets the username by the userid
+  async _getUserId(username) {
+    console.log("Passed username: " + username);
+    const response = await userFunctionByUsername(
+      "/getuserbyusername",
+      username
+    );
+    console.log(response);
+    if (response.length == "1") {
+      var hashedPassword = response[0].password;
+      var currentUserId = response[0].ID;
+      console.log("Found id " + currentUserId);
+    } else {
+      console.log("Could not resolve username into id");
+      var currentUserId = "0";
+      var hashedPassword = "";
+    }
+    this.setState({
+      hashedPassword: hashedPassword,
+      userId: currentUserId
+    });
+  }
+
+
   checksession() {
     if (read_cookie("StreamTogether").length != 0) {
       try {
@@ -253,8 +257,9 @@ export default class Account extends Component {
     }
   }
 
+//----------------------------------Render-------------------------------//
   render() {
-    const activeItem = this.props.activeItem;
+    const activeItem = this.state.activeItem;
     const username = this.state.username;
     const email = this.state.email;
     const lastRoom = this.state.lastRoom;

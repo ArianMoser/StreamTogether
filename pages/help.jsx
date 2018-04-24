@@ -24,21 +24,17 @@ import {
   Statistic
 } from "semantic-ui-react";
 
-//Nav Bar
 export default class Help extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
-  }
-
-  static get defaultProps() {
-    return {
+    this.state = {
       activeItem: "help"
     };
   }
 
+  //----------------------------------Render-------------------------------//
   render() {
-    const activeItem = this.props.activeItem;
+    const activeItem = this.state.activeItem;
 
     return (
       <OwnHeader>

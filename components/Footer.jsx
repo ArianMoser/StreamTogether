@@ -1,13 +1,6 @@
 import React, { Fragment, Component } from "react";
 import Link from "next/link";
-import {
-  Container,
-Header,
-List,
-  Grid,
-  Segment,
-
-} from "semantic-ui-react";
+import { Container, Header, List, Grid, Segment } from "semantic-ui-react";
 
 export default class Footer extends Component {
   render() {

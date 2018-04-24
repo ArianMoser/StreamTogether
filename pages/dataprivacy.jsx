@@ -20,21 +20,17 @@ import {
   Visibility
 } from "semantic-ui-react";
 
-//Nav Bar
 export default class Dataprivacy extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
-  }
-
-  static get defaultProps() {
-    return {
+    this.state = {
       activeItem: "empty"
     };
   }
 
+  //----------------------------------Render-------------------------------//
   render() {
-    const activeItem = this.props.activeItem;
+    const activeItem = this.state.activeItem;
 
     return (
       <OwnHeader>

@@ -17,14 +17,14 @@ export default class VideoElement extends React.Component {
   static propTypes = {
     channelId: PropTypes.string,
     channelName: PropTypes.string,
-    databaseId: PropTypes.number,
-    roomId: PropTypes.number,
-    handleDelete: PropTypes.func,
-    handleVote: PropTypes.func,
+    databaseId: PropTypes.number.isRequired,
+    handleDelete: PropTypes.func.isRequired,
+    handleVote: PropTypes.func.isRequired,
+    roomId: PropTypes.number.isRequired,
+    userId: PropTypes.string,
     videoDescription: PropTypes.string,
     videoId: PropTypes.string,
     videoThumbnailUrl: PropTypes.string,
-    userId: PropTypes.string,
     videoTitle: PropTypes.string
   };
 
@@ -46,11 +46,7 @@ export default class VideoElement extends React.Component {
   } //end of componentWillMount
 
   componentWillUpdate(nextProps, nextState) {
-    console.log("VideoElement");
-    console.log(nextProps);
-    console.log(nextState);
     if (nextProps.videoId != this.state.videoId) {
-      console.log("Updates VideoElemen");
       this.setState(nextProps);
     }
   } //end of componentDidUpdate
@@ -86,6 +82,8 @@ export default class VideoElement extends React.Component {
 
   _handleStartVideo() {
     console.log("Clicked start video");
+    // future feature for admins
+    // start video earlier (switches the position in the queue)
   }
 
   render() {

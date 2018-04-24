@@ -20,6 +20,12 @@ import {
 } from "semantic-ui-react";
 
 export default class register extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  //----------------------------event handlers---------------------------//
   async onSubmitHandler(event) {
     event.preventDefault();
 
@@ -112,7 +118,8 @@ export default class register extends Component {
         '<div class="ui negative message"><div class="header">Error</div><p>Hack detected</p></div>';
     }
   }
-
+  
+  //----------------------------------Render-------------------------------//
   render() {
     return (
       <OwnHeader useFooter={false} useHeader={false}>

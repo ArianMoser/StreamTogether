@@ -22,34 +22,22 @@ import {
 } from "semantic-ui-react";
 import { roomFunctionShowAll } from "./PostMethods";
 
-
-
 export default class roomOverview extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
-  }
-
-  static propTypes = {
-    activeItem: PropTypes.string,
-    rooms: PropTypes.object,
-    userId: PropTypes.string,
-    username: PropTypes.string
-  }
-
-  static get defaultProps() {
-    return {
+    this.state = {
       activeItem: "rooms",
       rooms: {},
       userId: "",
       username: ""
     };
   }
-
+  //-------------------------functions of react----------------------------//
   componentWillMount() {
     this._getAllRooms();
   }
 
+  //----------------------functions------------------------------//
   async _getAllRooms() {
     console.log("Loading rooms");
     const responseGetRooms = await roomFunctionShowAll("/selectRooms");
@@ -64,12 +52,13 @@ export default class roomOverview extends Component {
     );
   }
 
+  //----------------------------------Render-------------------------------//
   render() {
-    const activeItem = this.props.activeItem;
-
+    const activeItem = this.state.activeItem;
     const rooms = this.state.rooms;
-    console.log(rooms);
     var roomCardList = [];
+    console.log(rooms);
+
     if (rooms != {} && rooms != undefined) {
       roomCardList = Object.keys(rooms).map(room => (
         <RoomCard

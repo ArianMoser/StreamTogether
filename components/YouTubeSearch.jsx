@@ -68,18 +68,7 @@ class YouTubeSearch extends Component {
     this.loadVideos();
   }
 
-  async loadVideos() {
-    var videos = await this.props.getVideos(this.props.roomId);
-    this.setState({
-      videos: videos
-    });
-  }
-
   componentDidUpdate(nextProps, nextState) {
-    /*  console.log("Component Update (YouTubeSearch)");
-    console.log(nextProps);
-    console.log(this.props);
-    console.log("Length videos" + nextProps.videos.length); */
     if (
       nextProps.videos.length != this.props.videos.length &&
       this.props.videos[0] != undefined
@@ -144,6 +133,40 @@ class YouTubeSearch extends Component {
     );
   }
 
+  /**
+   * Contact the YouTube API to perform a search.
+   * @param  {Object}   options  Options that will be passed to the YouTube API
+   * @param  {Function} callback Function that should be invoked if a search was
+   *                             successful
+   */
+  searchAPI(options, callback) {
+    var params = {
+      part: "snippet",
+      type: "video"
+    };
+    params = { ...params, ...options };
+
+    axios
+      .get("https://www.googleapis.com/youtube/v3/search", { params: params })
+      .then(function(response) {
+        console.log(response.data);
+        callback(response.data);
+      })
+      .catch(function(error) {
+        //console.error(error);
+      });
+  }
+
+  // gets the videos of the room from the database
+  async loadVideos() {
+    var videos = await this.props.getVideos(this.props.roomId);
+    this.setState({
+      videos: videos
+    });
+  }
+
+  // checks, if the video is already in the database
+  // if yes -> returns the databaseId of the video
   async _getDatabaseId(youtubeId) {
     const responseDatabaseId = await videoFunctionByYoutubeId(
       "/selectVideoByYoutubeId",
@@ -163,6 +186,9 @@ class YouTubeSearch extends Component {
     }
   }
 
+  // is called, if you chossed a video,
+  // -> pushs the video into the database
+  // -> creates connection between the video and the room (table playlist)
   async _chooseVideo(video) {
     var channelName = video.snippet.channelTitle;
     var channelId = video.snippet.channelId;
@@ -242,6 +268,7 @@ class YouTubeSearch extends Component {
     return responseVideos;
   }
 
+  // deletes connection between video and room (playlist table)
   async _deleteVideo(roomId, videoId) {
     console.log("Delete Video");
     const responseDeleteVideo = await deletePlaylist(
@@ -260,7 +287,8 @@ class YouTubeSearch extends Component {
     }
   }
 
-  async _voteVideo(roomId, databaseId, voteValue){
+  // votes for the video (inside of the playlist table)
+  async _voteVideo(roomId, databaseId, voteValue) {
     console.log("Vote video");
     const responseVoteVideo = await voteVideo(
       "/updateUpVotes",
@@ -279,12 +307,16 @@ class YouTubeSearch extends Component {
     }
   }
 
+  // gets called, if the video is connectVideoAndRoom
+  // deletes connection between video and room (playlist table)
+  // alters the delete event for the room
   async _nextVideo(roomId, videoId) {
     console.log("Next Video");
     this._deleteVideo(roomId, videoId);
     this._alterDeleteEvent(roomId);
   }
 
+  // alters the deletion event of the room
   async _alterDeleteEvent(roomId) {
     console.log("Alter room event");
     const responseAlterEvent = await alterRoomEvent(
@@ -294,30 +326,7 @@ class YouTubeSearch extends Component {
     console.log(responseAlterEvent);
   }
 
-  /**
-   * Contact the YouTube API to perform a search.
-   * @param  {Object}   options  Options that will be passed to the YouTube API
-   * @param  {Function} callback Function that should be invoked if a search was
-   *                             successful
-   */
-  searchAPI(options, callback) {
-    var params = {
-      part: "snippet",
-      type: "video"
-    };
-    params = { ...params, ...options };
-
-    axios
-      .get("https://www.googleapis.com/youtube/v3/search", { params: params })
-      .then(function(response) {
-        console.log(response.data);
-        callback(response.data);
-      })
-      .catch(function(error) {
-        //console.error(error);
-      });
-  }
-
+  //--------------------------------Render----------------------------------//
   render() {
     console.log("Create VideoElements");
     console.log(this.state.videos);
@@ -340,6 +349,8 @@ class YouTubeSearch extends Component {
           videoId={videos[0].youtube_id}
         />
       );
+      // loads the playlist
+      console.log("Loads the playlist");
       var playlist = videos.map(video => {
         console.log(video);
         return (

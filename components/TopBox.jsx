@@ -6,6 +6,7 @@ import {
   Segment,
   Visibility
 } from "semantic-ui-react";
+import PropTypes from "prop-types";
 
 export default class TopBox extends Component {
   constructor(props) {
@@ -24,12 +25,16 @@ export default class TopBox extends Component {
     };
   }
 
+  static propTypes = {
+    layer1: PropTypes.string,
+    layer2: PropTypes.string,
+    layer3: PropTypes.string,
+    activeItem: PropTypes.string
+  }
 
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name });
+
   hideFixedMenu = () => this.setState({ fixed: false });
   showFixedMenu = () => this.setState({ fixed: true });
-
-
 
   render() {
     const layer1 = this.props.layer1;
