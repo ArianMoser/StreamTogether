@@ -64,6 +64,9 @@ app
         exp.post("/getuserbyemail", (req, res) => {
           database.selectUserByEmail(res, req.body, connection);
         });
+        exp.post("/getUserById", (req, res) => {
+          database.selectUserById(res, req.body, connection);
+        });
         exp.post("/getuserandroombyusername", (req, res) => {
           database.selectUserAndRoomByUsername(res, req.body, connection);
         });

@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Button, Card, Icon, Image } from "semantic-ui-react";
+import PropTypes from "prop-types";
+import { userFunctionById } from "../pages/PostMethods";
 
 export default class RoomCard extends Component {
   constructor(props) {
@@ -13,12 +15,24 @@ export default class RoomCard extends Component {
       creator: "Default-Creator",
       description: "Default-Description",
       hashedValue: "",
+      position: 0,
       userName: "Default-User",
-      userNumber: "-1",
+      userNumber: -1,
       thumbnail: "",
       title: "Default-title"
     };
   }
+
+  static propTypes = {
+    creator: PropTypes.string,
+    description: PropTypes.string,
+    hashedValue: PropTypes.string,
+    position: PropTypes.number,
+    userName: PropTypes.string,
+    userNumber: PropTypes.number,
+    thumbnail: PropTypes.string,
+    title: PropTypes.string
+  };
 
   componentWillMount() {
     this.setState({
@@ -29,6 +43,22 @@ export default class RoomCard extends Component {
       userName: this.props.userName,
       userNumber: this.props.userNumber
     });
+    this._getUsername(this.props.creator);
+  }
+
+  async _getUsername(id) {
+    const responseUsername = await userFunctionById(
+      "/getUserById",
+      id
+    );
+    console.log(responseUsername);
+    if (responseUsername.length == "1") {
+      this.setState({
+        userName: responseUsername[0].username
+      });
+    } else {
+      console.log("Failed to resolve creator");
+    }
   }
 
   _handleRoomJoining(event, hashed) {
@@ -39,7 +69,7 @@ export default class RoomCard extends Component {
   }
 
   render() {
-    const creator = this.state.creator;
+    const userName = this.state.userName;
     const description = this.state.description;
     const hashedValue = this.state.hashedValue;
     const title = this.state.title;
@@ -51,7 +81,7 @@ export default class RoomCard extends Component {
         <Card.Content>
           <Card.Header>{title}</Card.Header>
           <Card.Meta>
-            <span className="username">{creator}</span>
+            <span className="username">{userName}</span>
           </Card.Meta>
           <Card.Description>{description}</Card.Description>
         </Card.Content>

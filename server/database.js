@@ -22,6 +22,23 @@ var call = (module.exports = {
     });
     //AUF SICHERHEIT DER EINGEGEBENEN SACHEN NOCH PRÜFEN MYSQLI STRING UND SO DIESER SCHEIß!
   },
+  selectUserById: function(res, dieNutzerDaten, connection) {
+    const query =
+      "SELECT * from user WHERE id= " +
+      mysql.escape(dieNutzerDaten.id) +
+      ";";
+    console.log(query);
+    connection.query(query, function(err, rows, fields) {
+      if (err) {
+        console.log("An error ocurred performing the query.");
+        console.log(err);
+        return;
+      }
+
+      console.log("Query selectUserByUsername succesfully executed: ", rows);
+      res.send(rows);
+    });
+  },
   selectUserAndRoomByUsername: function(res, dieNutzerDaten, connection) {
     console.log(dieNutzerDaten.username);
     const query =

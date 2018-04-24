@@ -19,6 +19,23 @@ export const userFunctionByUsername = (api, username) => {
     });
   });
 };
+export const userFunctionById = (api, id) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({ id: id }),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
 export const roomFunctionShowAll = api => {
   return new Promise((resolve, reject) => {
     $.ajax({
