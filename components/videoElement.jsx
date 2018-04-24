@@ -46,8 +46,12 @@ export default class VideoElement extends Component {
     this.setState(this.props);
   } //end of componentWillMount
 
-  componentDidUpdate(nextProps, nextState) {
+  componentWillUpdate(nextProps, nextState) {
+    console.log("VideoElement");
+    console.log(nextProps);
+    console.log(nextState);
     if (nextProps.videoId != this.state.videoId) {
+      console.log("Updates VideoElemen");
       this.setState(nextProps);
     }
   } //end of componentDidUpdate
@@ -61,15 +65,15 @@ export default class VideoElement extends Component {
 
   _handleThumbsUp() {
     console.log("Clicked thumbsup");
-    $("#thumbs-up").prop("disabled",true);
-    $("#thumbs-down").prop("disabled",false);
+    $("#thumbs-up").prop("disabled", true);
+    $("#thumbs-down").prop("disabled", false);
     this.props.handleVote(this.props.roomId, this.props.databaseId, 1);
   }
 
   _handleThumbsDown() {
     console.log("Clicked thumbsdown");
-    $("#thumbs-up").prop("disabled",true);
-    $("#thumbs-down").prop("disabled",false);
+    $("#thumbs-up").prop("disabled", true);
+    $("#thumbs-down").prop("disabled", false);
     this.props.handleVote(this.props.roomId, this.props.databaseId, -1);
   }
 
