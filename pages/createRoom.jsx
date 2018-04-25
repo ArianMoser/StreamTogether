@@ -11,12 +11,14 @@ import {
 import TopBox from "../components/TopBox";
 import {
   Button,
+  Checkbox,
   Container,
   Form,
   Grid,
   Header,
   Icon,
   Image,
+  Input,
   Message,
   Segment,
   Visibility
