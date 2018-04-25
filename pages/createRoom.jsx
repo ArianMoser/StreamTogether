@@ -107,14 +107,15 @@ export default class RoomCreator extends Component {
     );
 
     // pattern for the input fields
-    var titleExpression = /^[A-Za-z0-9_]{3,32}$/;
-    var pwExpression = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    //var titleExpression = /^[A-Za-z0-9_]{3,32}$/;
+    // var pwExpression = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
     //Check Regex Statements
-    if (
+    /*if (
       titleExpression.test(title) &&
-      (pwExpression.test(password) || !checkPassword)
-    ) {
+      (pwExpression.test(password) || !checkPassword || true)
+    )*/
+    if (password != undefined && password != "" || !checkPassword) {
       console.log("Testpattern succeded");
       const responseSelectTitle = await roomFunctionByTitle(
         "/selectRoomByTitle",

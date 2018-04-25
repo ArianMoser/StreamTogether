@@ -319,11 +319,13 @@ class YouTubeSearch extends Component {
   // alters the deletion event of the room
   async _alterDeleteEvent(roomId) {
     console.log("Alter room event");
-    const responseAlterEvent = await alterRoomEvent(
+    if (roomId != 0 && roomId != undefined){
+      const responseAlterEvent = await alterRoomEvent(
       "/updateDeleteEvent",
       roomId
-    );
-    console.log(responseAlterEvent);
+      );
+      console.log(responseAlterEvent);
+    }
   }
 
   //--------------------------------Render----------------------------------//

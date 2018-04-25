@@ -45,11 +45,7 @@ export default class roomOverview extends Component {
     console.log(responseGetRooms);
     this.setState({
       rooms: responseGetRooms
-    }).then(
-      function() {
-        console.log("Completed setState for rooms");
-      }.bind(this)
-    );
+    });
   }
 
   //----------------------------------Render-------------------------------//

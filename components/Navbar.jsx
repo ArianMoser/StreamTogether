@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 export default class Navbar extends Component {
   constructor(props) {
     super(props);
-    state = {};
+    this.state = {};
     //bind event handler
     this.logoutFunction = this.logoutFunction.bind(this);
   }
