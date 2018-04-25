@@ -11,12 +11,14 @@ import {
 import TopBox from "../components/TopBox";
 import {
   Button,
+  Checkbox,
   Container,
   Form,
   Grid,
   Header,
   Icon,
   Image,
+  Input,
   Message,
   Segment,
   Visibility
@@ -236,30 +238,29 @@ export default class RoomCreator extends Component {
 
     return (
       <OwnHeader>
-        <TopBox activeItem={activeItem} layer1="Create a room" />
-        <Segment textAlign="center">
-          <p>Title:</p>
-          <input value={this.state.title} onChange={this._handleTitleChange} />
-          <p>Description:</p>
-          <input
-            value={this.state.description}
-            onChange={this._handleDescriptionChange}
-          />
-          <p />
-          <input
-            type="checkbox"
-            value={this.state.checkPassword}
-            onChange={this._handlePasswordChangeCheck}
-          />
-          Password?
-          <div id="passwordField">
+          <TopBox activeItem={activeItem} layer1="Create a room" />
+          <Segment textAlign="center">
+            <p>Title:</p>
+
+            <Input value={this.state.title} onChange={this._handleTitleChange} />
+            <p>Description:</p>
+            <Input
+              value={this.state.description}
+              onChange={this._handleDescriptionChange}
+            />
             <p />
-            {pwField}
-          </div>
-          <p />
-          <button onClick={this._handleRoomCreation}>Create Room</button>
-        </Segment>
-      </OwnHeader>
+            Password?
+            <p />
+          <Checkbox toggle value={this.state.checkPassword} onChange={this._handlePasswordChangeCheck} />
+
+            <div id="passwordField">
+              <p />
+              {pwField}
+            </div>
+            <p />
+            <Button primary size="small" onClick={this._handleRoomCreation}>Create Room<Icon name="right arrow" /></Button>
+          </Segment>
+        </OwnHeader>
     );
   }
 }
