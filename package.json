@@ -33,7 +33,7 @@
     "babel-node": "babel-node --presets=es2017,react",
     "dev": "npm run babel-node -- ./server/server",
     "build": "babel ./server/ -s -d dist && next build",
-    "start": "next start"
+    "start": "set NODE_ENV=production&& node dist/server.js"
   },
   "author": "",
   "license": "ISC"
