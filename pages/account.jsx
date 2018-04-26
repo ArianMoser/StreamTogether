@@ -4,7 +4,8 @@ import React, { Component } from "react";
 import Link from "next/link";
 import OwnHeader from "../components/Header";
 import TopBox from "../components/TopBox";
-import { read_cookie, delete_cookie } from "sfcookies";
+import {checksession} from "../components/Util";
+// import { read_cookie, delete_cookie } from "sfcookies";
 import $ from "jquery";
 import {
   Button,
@@ -71,7 +72,7 @@ export default class Account extends Component {
 
   componentDidMount() {
     console.log("Check Cookie");
-    if (read_cookie("StreamTogether").length == 0) {
+    if (checksession() == "ErrorTokenFalse") {
       window.location = "/login";
       console.log("Coockie not found");
     } else {
@@ -192,7 +193,7 @@ export default class Account extends Component {
 //----------------------functions------------------------------//
   // gets the account information
   async _getInformation() {
-    var username = this.checksession();
+    var username = checksession();
     await this._getUserId(username);
     var userId = this.state.userId;
 
@@ -240,22 +241,6 @@ export default class Account extends Component {
   }
 
 
-  checksession() {
-    if (read_cookie("StreamTogether").length != 0) {
-      try {
-        var decodedsession = jwt.verify(
-          read_cookie("StreamTogether"),
-          "shhhhh"
-        );
-        return decodedsession.username;
-      } catch (err) {
-        console.log("Error-Message: " + err.message);
-        return "ErrorTokenFalse";
-      }
-    } else {
-      return "ErrorTokenFalse";
-    }
-  }
 
 //----------------------------------Render-------------------------------//
   render() {

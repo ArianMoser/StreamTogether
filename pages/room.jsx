@@ -20,9 +20,7 @@ import {
   roomFunctionByHashedValue,
   videoFunctionByRoomId
 } from "./PostMethods";
-import { read_cookie, delete_cookie } from "sfcookies";
-
-const jwt = require("jsonwebtoken");
+import {checksession} from "../components/Util";
 
 export default class Room extends Component {
   constructor(props) {
@@ -61,7 +59,7 @@ export default class Room extends Component {
   async _updateUserRoomId() {
     console.log("Update current room of current user");
 
-    const user = await this.checksession(); // gets the username of current user
+    const user = await checksession(); // gets the username of current user
     this.setState({
       userName: user
     });
@@ -142,23 +140,6 @@ export default class Room extends Component {
     return responseVideos;
   }
 
-  // reads the username out of the cookie
-  checksession() {
-    if (read_cookie("StreamTogether").length != 0) {
-      try {
-        var decodedsession = jwt.verify(
-          read_cookie("StreamTogether"),
-          "shhhhh"
-        );
-        return decodedsession.username;
-      } catch (err) {
-        console.log("Error-Message: " + err.message);
-        return "ErrorTokenFalse";
-      }
-    } else {
-      return "ErrorTokenFalse";
-    }
-  }
   //----------------------------------Render-------------------------------//
   render() {
     const activeItem = this.state.activeItem;

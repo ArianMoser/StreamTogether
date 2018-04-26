@@ -23,8 +23,7 @@ import {
   Segment,
   Visibility
 } from "semantic-ui-react";
-import { read_cookie } from "sfcookies";
-const jwt = require("jsonwebtoken");
+import {checksession} from "../components/Util";
 
 export default class RoomCreator extends Component {
   constructor(props) {
@@ -50,7 +49,7 @@ export default class RoomCreator extends Component {
 
   //-------------------------functions of react----------------------------//
   componentDidMount() {
-    var currentUsername = this.checksession();
+    var currentUsername = checksession();
     console.log("Username: " + currentUsername);
     var currentUserId = this._getUserId(currentUsername);
   }
@@ -186,23 +185,6 @@ export default class RoomCreator extends Component {
     }
   }
   //----------------------functions------------------------------//
-  checksession() {
-    if (read_cookie("StreamTogether").length != 0) {
-      try {
-        var decodedsession = jwt.verify(
-          read_cookie("StreamTogether"),
-          "shhhhh"
-        );
-        return decodedsession.username;
-      } catch (err) {
-        console.log("Error-Message: " + err.message);
-        return "ErrorTokenFalse";
-      }
-    } else {
-      return "ErrorTokenFalse";
-    }
-  }
-
   // gets the username by an id
   async _getUserId(username) {
     console.log("Passed username: " + username);
@@ -238,31 +220,6 @@ export default class RoomCreator extends Component {
 
     return (
       <OwnHeader>
-<<<<<<< HEAD
-          <TopBox activeItem={activeItem} layer1="Create a room" />
-          <Segment textAlign="center">
-            <p>Title:</p>
-
-            <Input value={this.state.title} onChange={this._handleTitleChange} />
-            <p>Description:</p>
-            <Input
-              value={this.state.description}
-              onChange={this._handleDescriptionChange}
-            />
-            <p />
-            Password?
-            <p />
-          <Checkbox toggle value={this.state.checkPassword} onChange={this._handlePasswordChangeCheck} />
-
-            <div id="passwordField">
-              <p />
-              {pwField}
-            </div>
-            <p />
-            <Button primary size="small" onClick={this._handleRoomCreation}>Create Room<Icon name="right arrow" /></Button>
-          </Segment>
-        </OwnHeader>
-=======
         <TopBox activeItem={activeItem} layer1="Create a room" />
         <Segment textAlign="center">
           <p><Header as='h3'>Title:</Header></p>
@@ -285,7 +242,6 @@ export default class RoomCreator extends Component {
           <Button primary content='Create room' icon='right arrow' labelPosition='right' onClick={this._handleRoomCreation} />
         </Segment>
       </OwnHeader>
->>>>>>> 9f3c519aa8822154dabf1f00cae86ecf3ec3f63a
     );
   }
 }

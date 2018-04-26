@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Button, Container, Menu } from "semantic-ui-react";
 import { bake_cookie, read_cookie, delete_cookie } from "sfcookies";
 import PropTypes from "prop-types";
-const jwt = require("jsonwebtoken");
+import {checksession} from "./Util";
 
 export default class Navbar extends Component {
   constructor(props) {
@@ -28,7 +28,7 @@ export default class Navbar extends Component {
   //-------------------------functions of react----------------------------//
   componentDidMount() {
     this.setState({ activeItem: this.props.name });
-    var answer = this.checksession();
+    var answer = checksession();
     console.log("Current user: '" + answer + "'");
     console.log("Active Item: " + this.props.name);
   }
@@ -37,23 +37,6 @@ export default class Navbar extends Component {
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
 
   //----------------------functions------------------------------//
-  //Checksession
-  checksession() {
-    if (read_cookie("StreamTogether").length != 0) {
-      try {
-        var decodedsession = jwt.verify(
-          read_cookie("StreamTogether"),
-          "shhhhh"
-        );
-        return decodedsession.username;
-      } catch (err) {
-        console.log("Error-Message: " + err.message);
-        return "ErrorTokenFalse";
-      }
-    } else {
-      return "ErrorTokenFalse";
-    }
-  }
   // deletes the cookie and redirect the user to the login page
   logoutFunction(event) {
     if (read_cookie("StreamTogether").length != 0) {
@@ -68,7 +51,7 @@ export default class Navbar extends Component {
     const activeItem = this.props.name;
     var buttonPlaceholder = "";
 
-    if (this.checksession() != "ErrorTokenFalse") {
+    if (checksession() != "ErrorTokenFalse") {
       // TODO: Ausloggen button hiermit
       var buttonPlaceholder = (
         <span>
