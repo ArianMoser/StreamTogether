@@ -1,13 +1,16 @@
 import React, { Component } from "react";
-import { Button, Card, Icon, Image } from "semantic-ui-react";
+import { Button, Card, Icon, Image, Input, Popup } from "semantic-ui-react";
 import PropTypes from "prop-types";
 import { userFunctionById } from "../pages/PostMethods";
+const bcrypt = require("bcryptjs");
 
 export default class RoomCard extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { inputPassword: "" };
     this._handleRoomJoining = this._handleRoomJoining.bind(this);
+    this._handlePasswordChange = this._handlePasswordChange.bind(this);
+    this._handlePasswordCheck = this._handlePasswordCheck.bind(this);
   }
 
   static get defaultProps() {
@@ -15,11 +18,12 @@ export default class RoomCard extends Component {
       creator: "Default-Creator",
       description: "Default-Description",
       hashedValue: "",
-      position: 0,
+      key: 0,
+      password: "Default-Password",
+      thumbnail: "Default-Thumbnail",
+      title: "Default-title",
       userName: "Default-User",
-      userNumber: -1,
-      thumbnail: "",
-      title: "Default-title"
+      userNumber: -1
     };
   }
 
@@ -27,23 +31,17 @@ export default class RoomCard extends Component {
     creator: PropTypes.string,
     description: PropTypes.string,
     hashedValue: PropTypes.string,
-    position: PropTypes.number,
-    userName: PropTypes.string,
-    userNumber: PropTypes.number,
+    key: PropTypes.number,
+    password: PropTypes.string,
     thumbnail: PropTypes.string,
-    title: PropTypes.string
+    title: PropTypes.string,
+    userName: PropTypes.string,
+    userNumber: PropTypes.number
   };
 
   //-------------------------functions of react----------------------------//
   componentWillMount() {
-    this.setState({
-      creator: this.props.creator,
-      description: this.props.description,
-      hashedValue: this.props.hashedValue,
-      title: this.props.title,
-      userName: this.props.userName,
-      userNumber: this.props.userNumber
-    });
+    this.setState(this.props);
     this._getUsername(this.props.creator);
   }
 
@@ -53,6 +51,27 @@ export default class RoomCard extends Component {
     console.log("Join Room clicked");
     console.log("Target room: " + hashed);
     window.location = "./room?hv=" + hashed;
+  }
+
+  _handlePasswordChange(event) {
+    event.preventDefault();
+    this.setState({
+      inputPassword: event.target.value
+    });
+  }
+
+  _handlePasswordCheck(event) {
+    if (event.charCode == 13) {
+      console.log("Check password");
+      if (bcrypt.compareSync(this.state.inputPassword, this.state.password)) {
+        console.log("Password correct");
+        window.location = "./room?hv=" + this.state.hashedValue;
+      } else {
+        console.log("Password wrong");
+      }
+
+      //window.location = "./room?hv=" + this.state.hashedValue;
+    }
   }
 
   //----------------------functions------------------------------//
@@ -76,6 +95,45 @@ export default class RoomCard extends Component {
     const title = this.state.title;
     const userNumber = this.state.userNumber;
 
+    var joinButton = (
+      <Button
+        icon
+        color="blue"
+        labelPosition="right"
+        floated="right"
+        onClick={e => this._handleRoomJoining(e, hashedValue)}
+        id={hashedValue}
+      >
+        Join
+        <Icon name="right arrow" />
+      </Button>
+    );
+
+    if (
+      this.state.password != "" &&
+      this.state.password != "Default-Password"
+    ) {
+      const trigger = (
+        <Button icon color="blue" labelPosition="right" floated="right">
+          Join
+          <Icon name="right arrow" />
+        </Button>
+      );
+      joinButton = (
+        <Popup wide trigger={trigger} on="click">
+          <Input
+            icon="privacy"
+            iconPosition="left"
+            id="password"
+            type="password"
+            onChange={this._handlePasswordChange}
+            onKeyPress={this._handlePasswordCheck}
+            placeholder="Password"
+          />
+        </Popup>
+      );
+    }
+
     return (
       <Card>
         <Image src="../static/minion.png" />
@@ -89,17 +147,7 @@ export default class RoomCard extends Component {
         <Card.Content extra>
           <Icon name="music" />
           {userNumber} active user
-          <Button
-            icon
-            color="blue"
-            labelPosition="right"
-            floated="right"
-            onClick={e => this._handleRoomJoining(e, hashedValue)}
-            id={hashedValue}
-          >
-            Join
-            <Icon name="right arrow" />
-          </Button>
+          {joinButton}
         </Card.Content>
       </Card>
     );

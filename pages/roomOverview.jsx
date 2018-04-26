@@ -61,8 +61,9 @@ export default class roomOverview extends Component {
           creator={rooms[room].creator}
           description={rooms[room].description}
           hashedValue={rooms[room].hashedValue}
-          position={room}
+          key={room}
           password={rooms[room].password}
+          thumbnail={rooms[room].thumbnail}
           title={rooms[room].title}
           userNumber={rooms[room].ActiveUser}
         />
