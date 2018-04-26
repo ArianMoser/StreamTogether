@@ -227,7 +227,7 @@ export default class RoomCreator extends Component {
   render() {
     const activeItem = this.state.activeItem;
     const pwField = this.state.checkPassword ? (
-      <input
+      <Input
         value={this.state.password}
         onChange={this._handlePasswordChange}
         type="password"
@@ -240,9 +240,9 @@ export default class RoomCreator extends Component {
       <OwnHeader>
         <TopBox activeItem={activeItem} layer1="Create a room" />
         <Segment textAlign="center">
-          <p>Title:</p>
+          <p><Header as='h3'>Title:</Header></p>
           <Input value={this.state.title} onChange={this._handleTitleChange} />
-          <p>Description:</p>
+          <p><Header as='h3'>Description:</Header></p>
           <Input
             value={this.state.description}
             onChange={this._handleDescriptionChange}
@@ -256,7 +256,7 @@ export default class RoomCreator extends Component {
             {pwField}
           </div>
           <p />
-          <Button content='Create room' icon='right arrow' labelPosition='right' onClick={this._handleRoomCreation} />
+          <Button primary content='Create room' icon='right arrow' labelPosition='right' onClick={this._handleRoomCreation} />
         </Segment>
       </OwnHeader>
     );
