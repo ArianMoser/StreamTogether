@@ -269,7 +269,7 @@ var call = (module.exports = {
   insertVideo: function(res, dieNutzerDaten, connection) {
     console.log(dieNutzerDaten);
     const query =
-      "INSERT INTO video (youtube_id, title, description, thumbnail_url, channel_id, channel_name, user_id)VALUES (" +
+      "INSERT INTO video (youtube_id, title, description, thumbnail_url, channel_id, channel_name)VALUES (" +
       mysql.escape(dieNutzerDaten.videoId) +
       " , " +
       mysql.escape(dieNutzerDaten.videoTitle) +
@@ -281,8 +281,6 @@ var call = (module.exports = {
       mysql.escape(dieNutzerDaten.channelId) +
       " , " +
       mysql.escape(dieNutzerDaten.channelName) +
-      " , " +
-      mysql.escape(dieNutzerDaten.userName) +
       " );";
     connection.query(query, function(err, rows, fields) {
       if (err) {
