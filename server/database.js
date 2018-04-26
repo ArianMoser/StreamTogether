@@ -281,8 +281,6 @@ var call = (module.exports = {
       mysql.escape(dieNutzerDaten.channelId) +
       " , " +
       mysql.escape(dieNutzerDaten.channelName) +
-      " , " +
-      mysql.escape(dieNutzerDaten.userName) +
       " );";
     connection.query(query, function(err, rows, fields) {
       if (err) {
