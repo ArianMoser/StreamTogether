@@ -25,7 +25,10 @@ import {
 import { read_cookie, delete_cookie } from "sfcookies";
 import Chat from "../components/Chat";
 
-
+const divStyle = {
+  color: 'blue',
+  backgroundImage: 'url(../pics/download.jpg)'
+};
 
 const jwt = require("jsonwebtoken");
 
