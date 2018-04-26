@@ -10,8 +10,35 @@ const server = http.createServer(exp);
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
+const io = require('socket.io')();
 
-//Datenbankverbindung aufbauen
+
+//Open connection to websocket for chat
+const port = 8000;
+io.listen(port);
+console.log('listening on port ', port);
+
+var chatUsers = new Map();
+//send the client every <interval> second a message
+io.on('connection', (client) => {
+  console.log("USER IS CONNECTED");//debug
+//  client.on("registerToChat", (payload) => {
+//    if(chatUsers.has(payload.roomId)){
+//      chatUsers.set(payload.roomId, [client]);
+//    } else {
+        //chatUsers.set(payload.roomId, [...chatUsers.get(payload.roomId),...client]);
+//      }
+//    console.log(chatUsers.get("$2a$11$t8D4btL2Kh5i/"));
+//  })
+
+  client.on("sendMessage", (message) => {
+    console.log(message);
+   io.emit("sendMessageBack", {message});
+    console.log("hallo");
+  })
+});
+
+//Open connection to database
 const connection = mysql.createConnection({
   host: "localhost",
   user: "root",

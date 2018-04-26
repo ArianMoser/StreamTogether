@@ -4,6 +4,8 @@ import {
   Grid,
   Header,
   List,
+  Icon,
+  Input,
   Menu,
   Responsive,
   Segment,
@@ -20,7 +22,12 @@ import {
   roomFunctionByHashedValue,
   videoFunctionByRoomId
 } from "./PostMethods";
-import {checksession} from "../components/Util";
+import { read_cookie, delete_cookie } from "sfcookies";
+import Chat from "../components/Chat";
+
+
+
+const jwt = require("jsonwebtoken");
 
 export default class Room extends Component {
   constructor(props) {
@@ -37,6 +44,8 @@ export default class Room extends Component {
       userlist: {},
       videos: []
     };
+
+
   }
 
   //-------------------------functions of react----------------------------//
@@ -59,7 +68,7 @@ export default class Room extends Component {
   async _updateUserRoomId() {
     console.log("Update current room of current user");
 
-    const user = await checksession(); // gets the username of current user
+    const user = await this.checksession(); // gets the username of current user
     this.setState({
       userName: user
     });
@@ -90,7 +99,7 @@ export default class Room extends Component {
     //reads hashedValue from the given url query
     var hashedValue = this.props.url.query.hv;
     console.log("Found hashedValue :" + hashedValue);
-
+    this.setState({hv: hashedValue});
     console.log("Tries to receive room information of the database");
     // trys to receive more room information from the database
     const responseRoomInformation = await roomFunctionByHashedValue(
@@ -140,6 +149,23 @@ export default class Room extends Component {
     return responseVideos;
   }
 
+  // reads the username out of the cookie
+  checksession() {
+    if (read_cookie("StreamTogether").length != 0) {
+      try {
+        var decodedsession = jwt.verify(
+          read_cookie("StreamTogether"),
+          "shhhhh"
+        );
+        return decodedsession.username;
+      } catch (err) {
+        console.log("Error-Message: " + err.message);
+        return "ErrorTokenFalse";
+      }
+    } else {
+      return "ErrorTokenFalse";
+    }
+  }
   //----------------------------------Render-------------------------------//
   render() {
     const activeItem = this.state.activeItem;
@@ -155,6 +181,7 @@ export default class Room extends Component {
         <TopBox activeItem={activeItem} layer1={title} layer2={description} />
         <Segment style={{ padding: "8em 0em" }} vertical>
           <Grid container stackable verticalAlign="middle">
+          <Grid.Row>
             <List divided verticalAlign="middle">
               <YouTubeSearch
                 creator={this.state.creator}
@@ -166,7 +193,9 @@ export default class Room extends Component {
                 videos={videos}
               />
             </List>
-          </Grid>
+          </Grid.Row>
+            <Chat hv={this.state.hv}/>
+        </Grid>
         </Segment>
       </OwnHeader>
     );
