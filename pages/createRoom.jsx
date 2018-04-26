@@ -11,12 +11,14 @@ import {
 import TopBox from "../components/TopBox";
 import {
   Button,
+  Checkbox,
   Container,
   Form,
   Grid,
   Header,
   Icon,
   Image,
+  Input,
   Message,
   Segment,
   Visibility
@@ -231,7 +233,7 @@ export default class RoomCreator extends Component {
         type="password"
       />
     ) : (
-      <div>empty</div>
+      <div></div>
     );
 
     return (
@@ -239,25 +241,22 @@ export default class RoomCreator extends Component {
         <TopBox activeItem={activeItem} layer1="Create a room" />
         <Segment textAlign="center">
           <p>Title:</p>
-          <input value={this.state.title} onChange={this._handleTitleChange} />
+          <Input value={this.state.title} onChange={this._handleTitleChange} />
           <p>Description:</p>
-          <input
+          <Input
             value={this.state.description}
             onChange={this._handleDescriptionChange}
           />
           <p />
-          <input
-            type="checkbox"
-            value={this.state.checkPassword}
-            onChange={this._handlePasswordChangeCheck}
-          />
           Password?
+          <p />
+          <Checkbox toggle type="checkbox" value={this.state.checkPassword} onChange={this._handlePasswordChangeCheck} />
           <div id="passwordField">
             <p />
             {pwField}
           </div>
           <p />
-          <button onClick={this._handleRoomCreation}>Create Room</button>
+          <Button content='Create room' icon='right arrow' labelPosition='right' onClick={this._handleRoomCreation} />
         </Segment>
       </OwnHeader>
     );
