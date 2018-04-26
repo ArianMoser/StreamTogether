@@ -242,6 +242,7 @@ export default class RoomCreator extends Component {
         <Segment textAlign="center">
           <p><Header as='h3'>Title:</Header></p>
           <Input value={this.state.title} onChange={this._handleTitleChange} />
+          <p />
           <p><Header as='h3'>Description:</Header></p>
           <Input
             value={this.state.description}
