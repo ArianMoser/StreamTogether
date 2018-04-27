@@ -47,42 +47,48 @@ io.on("connection", client => {
     var hashedValue = messageReceived.hashedValue;
     var messageUserlist = [];
     var message = {
-      content:
-        messageReceived.username +
-        " is connected on " +
-        messageReceived.hashedValue,
-      userlist: [username],
+      content: messageReceived.username + " is connected",
       username: "server",
       timeStamp: Math.floor(Date.now() / 1000)
     };
     var roomAlreadyExists = false;
-    if (rooms.length != "0"){
-      rooms.map((room) => {
+    if (rooms.length != "0") {
+      rooms.map(room => {
         if (room.hashedValue == hashedValue) {
           roomAlreadyExists = true;
           console.log("Room already exists");
           var userlist = room.userlist;
           var userAlreadyJoined = false;
           if (userlist.length != "0") {
-            userlist.map((user) => {
+            userlist.map(user => {
               if (user == username) {
                 userAlreadyJoined = true;
                 console.log("User already inside of the userlist");
               }
             }); // end of iteration over userlist
-          }//end of if
+          } //end of if
           if (userAlreadyJoined == false) {
             userlist.push(username);
             room.userlist = userlist;
-          }
+          } //end of if
           messageUserlist = userlist;
-        } //end of if */
+        } else {
+          // remove user from userlist of other rooms
+          console.log("Removing user from list");
+          var userlist = room.userlist;
+          if (userlist.length != "0") {
+            room.userlist = userlist.filter(user => {
+              return user !== username;
+            }); // removing user from other rooms
+            console.log(room);
+          } //end of if
+        }
       }); // end of iteration over rooms
-    }//end of if
+    } //end of if
     if (roomAlreadyExists == false) {
       rooms.push({ hashedValue: hashedValue, userlist: [username] });
     }
-    io.emit("sendMessageBack", { message: message, userlist:messageUserlist });
+    io.emit("sendMessageBack", { message: message, userlist: messageUserlist });
   });
 
   //  client.on("registerToChat", (payload) => {
@@ -98,16 +104,16 @@ io.on("connection", client => {
     console.log("Received message");
     console.log(message);
     var userlist = [];
-    if (rooms.length != "0"){
-      rooms.map((room) => {
+    if (rooms.length != "0") {
+      rooms.map(room => {
         console.log(room);
         var userInRoom = false;
-        if (room.userlist.length != "0"){
+        if (room.userlist.length != "0") {
           room.userlist.map(user => {
             console.log(user);
             if (user == message.username) {
-              userInRoom = true
-            }//end of if
+              userInRoom = true;
+            } //end of if
           }); // end of iteration userlist
         } //end of if
         if (userInRoom == true) {

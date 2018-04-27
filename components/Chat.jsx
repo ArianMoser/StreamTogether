@@ -167,33 +167,31 @@ export default class Chat extends Component {
       var chat = this.state.chat;
       var username = this.state.username;
       chatTextElement = chat.map(function(chatElement, index) {
-        if (chatElement.username != username) {
-          console.log("unequal");
-          return (
-            <List.Item>
-              <List.Content key={index}>
-                {" "}
-                <List.Header>
-                  {chatElement.username} ({chatElement.beautifulTime}) :
-                </List.Header>{" "}
-                {chatElement.message}{" "}
-              </List.Content>
-            </List.Item>
-          );
+        var style = { textAlign: "left" };
+        if (chatElement.username == username) {
+          //the current user
+          style = { textAlign: "right" };
         } else {
-          console.log("equal");
-          return (
-            <List.Item>
-              <List.Content key={index} style={{ textAlign: "right" }}>
-                {" "}
-                <List.Header>
-                  {chatElement.username} ({chatElement.beautifulTime}) :
-                </List.Header>{" "}
-                {chatElement.message}{" "}
-              </List.Content>
-            </List.Item>
-          );
-        } //end of else
+          if (chatElement.username == "server") {
+            // server information
+            style = { textAlign: "center" };
+          } else {
+            //other user
+            style = { textAlign: "left" };
+          } //end of else
+        } //end of if
+
+        return (
+          <List.Item>
+            <List.Content key={index} style={style}>
+              {" "}
+              <List.Header>
+                {chatElement.username} ({chatElement.beautifulTime}) :
+              </List.Header>{" "}
+              {chatElement.message}{" "}
+            </List.Content>
+          </List.Item>
+        );
       });
     }
 
