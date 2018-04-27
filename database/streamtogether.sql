@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 26. Apr 2018 um 18:17
+-- Erstellungszeit: 27. Apr 2018 um 15:59
 -- Server-Version: 10.1.31-MariaDB
 -- PHP-Version: 5.6.34
 
@@ -68,7 +68,11 @@ CREATE TABLE `room` (
 --
 
 INSERT INTO `room` (`ID`, `hashedValue`, `title`, `description`, `password`, `thumbnail`, `creator`, `CreationDate`) VALUES
-(32, '$2a$11$7FYUeQzV0T66GS7S7YLRt.DKEtdKeiaL816f93xihU.4wsY/.dLnG', 'Hadawd2', 'gasdfawda', '', 'room_default.png', 11, '2018-04-26 15:57:22.774853');
+(0, '', NULL, NULL, '', 'room_default.png', 11, '0000-00-00 00:00:00.000000'),
+(32, '$2a$11$7FYUeQzV0T66GS7S7YLRt.DKEtdKeiaL816f93xihU.4wsY/.dLnG', 'Hadawd2', 'gasdfawda', '', 'room_default.png', 11, '2018-04-26 15:57:22.774853'),
+(34, '$2a$11$ehlO6SRvKuFoXAjD0dU3M.8krIB9g0wZJ1KtCvBdxjTEtEfapc9jy', '1', '1', '', 'room_default.png', 11, '2018-04-27 13:42:23.841649'),
+(35, '$2a$11$cZo/8uBG3xeaBw65MfHCjupb1WbwWz4Jq63fiIWDZzwKnwaSDGpyu', '11', '11', '', 'room_default.png', 11, '2018-04-27 13:43:25.576970'),
+(36, '$2a$11$LOkQX4/OodXFnlx1YibeFua1FFs46rGI/dWs1YWP3c5gSKqxli61C', '111', '', '', 'room_default.png', 11, '2018-04-27 13:52:05.532699');
 
 -- --------------------------------------------------------
 
@@ -81,21 +85,23 @@ CREATE TABLE `user` (
   `username` varchar(500) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `email` varchar(500) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `password` varchar(200) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `room_id` int(11) DEFAULT '1'
+  `current_room_id` int(11) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Table for all users ';
 
 --
 -- Daten für Tabelle `user`
 --
 
-INSERT INTO `user` (`ID`, `username`, `email`, `password`, `room_id`) VALUES
+INSERT INTO `user` (`ID`, `username`, `email`, `password`, `current_room_id`) VALUES
 (2, 'test', 'test', '$2a$11$vfbVtZJTu939uig4I10HveA/fL.zOmk1U5wTW/k9wPx3ZEPtT03t.', NULL),
 (3, 'test123', 'test123', '$2a$11$ITRzdbT0FlLK9qcvF1uYceAo9iDgEKp9FD8/PVrI4aKfXErkUjkai', NULL),
 (5, '2', '2', '$2a$11$KdvYVEGu/sDOSKUekKBFb.Mgmb8SicvJtpfqD8Z9zTugKKVb0XgoS', NULL),
 (6, '12', '12', '$2a$11$EQAnKaSQYwaFhmzw1qioze97S/g6mS22.AoFZNn7j.TQbpFiuvd.K', NULL),
 (7, '13', '13', '$2a$11$OvRuUUza9I/VV35Ircr6cuKqrUfWtFkf4TS29hon/Kj1dpzZiLElW', NULL),
 (8, '123', 'test@test.de', '$2a$11$Sj/6h2UEQy5ljwVkqtZahOev27XrKN/eulSmoUfw2BSJuhWXYrlO2', NULL),
-(11, '1', '1@1.de', '$2a$11$OrcNLHTZ4JZ2HZVTbX9/xOW1kno.5RMBrQ3T1Q0TrVpOK3OhkDviO', 32);
+(11, '1', '1@1.de', '$2a$11$OrcNLHTZ4JZ2HZVTbX9/xOW1kno.5RMBrQ3T1Q0TrVpOK3OhkDviO', 36),
+(13, 'peter', 'd@d.de', '$2a$11$MKyfPguQsBsKgkIf/n11C..TMre4YsRFJ0ZuNgTMKxXkrpBcxdk0G', 0),
+(14, 'll', 'll@ll.de', '$2a$11$mn/MDm7iTpIGQhlw6qWbC.BXRP2Bi/aZQU.04fjd3u6bujXJEfXRS', 0);
 
 -- --------------------------------------------------------
 
@@ -147,7 +153,7 @@ ALTER TABLE `room`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`ID`),
-  ADD KEY `room-id` (`room_id`);
+  ADD KEY `room-id` (`current_room_id`);
 
 --
 -- Indizes für die Tabelle `video`
@@ -163,13 +169,13 @@ ALTER TABLE `video`
 -- AUTO_INCREMENT für Tabelle `room`
 --
 ALTER TABLE `room`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT für Tabelle `user`
 --
 ALTER TABLE `user`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT für Tabelle `video`
@@ -198,13 +204,17 @@ ALTER TABLE `room`
 -- Constraints der Tabelle `user`
 --
 ALTER TABLE `user`
-  ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`room_id`) REFERENCES `room` (`ID`) ON DELETE SET NULL ON UPDATE SET NULL;
+  ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`current_room_id`) REFERENCES `room` (`ID`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 DELIMITER $$
 --
 -- Ereignisse
 --
-CREATE DEFINER=`root`@`localhost` EVENT `dropRoom32` ON SCHEDULE AT '2018-04-26 19:04:53' ON COMPLETION NOT PRESERVE ENABLE DO DELETE FROM room WHERE room.id=32$$
+CREATE DEFINER=`root`@`localhost` EVENT `dropRoom35` ON SCHEDULE AT '2018-04-27 16:43:25' ON COMPLETION NOT PRESERVE ENABLE DO DELETE FROM room WHERE room.id=35$$
+
+CREATE DEFINER=`root`@`localhost` EVENT `dropRoom36` ON SCHEDULE AT '2018-04-27 16:52:05' ON COMPLETION NOT PRESERVE ENABLE DO DELETE FROM room WHERE room.id=36$$
+
+CREATE DEFINER=`root`@`localhost` EVENT `dropRoom34` ON SCHEDULE AT '2018-04-27 16:42:23' ON COMPLETION NOT PRESERVE ENABLE DO DELETE FROM room WHERE room.id=34$$
 
 DELIMITER ;
 COMMIT;
