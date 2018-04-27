@@ -44,9 +44,11 @@ export default class Chat extends Component {
 
   _send() {
     //console.log("Kiebling");
+    var timeStamp = Math.floor(Date.now() / 1000);
     socket.emit("sendMessage", {
       content: this.state.message,
-      username: this.state.username
+      username: this.state.username,
+      timeStamp: timeStamp
     });
     this.setState({ message: "" });
     this._refreshChatText();
@@ -60,13 +62,26 @@ export default class Chat extends Component {
       if (message.length != 0) {
         console.log(message.message.content);
       }
-      //console.log(chatText);
+      console.log(message);
       var chat = this.state.chat;
-      chat.push({
-        username: message.message.username,
-        message: message.message.content
-      });
-      this.setState({ chat: chat });
+      console.log(chat);
+      if (chat != [] && chat.length != "0") {
+        if (chat[chat.length-1].timeStamp != message.message.timeStamp){
+          chat.push({
+            username: message.message.username,
+            message: message.message.content,
+            timeStamp: message.message.timeStamp
+          });
+          this.setState({ chat: chat });
+        }
+      } else {
+        chat.push({
+          username: message.message.username,
+          message: message.message.content,
+          timeStamp: message.message.timeStamp
+        });
+        this.setState({ chat: chat });
+      }
 
       //  console.log("chatText:" );
     });
@@ -99,7 +114,9 @@ export default class Chat extends Component {
           <List.Item>
             <List.Content key={index}>
               {" "}
-              <List.Header>{chatElement.username} :</List.Header>{" "}
+              <List.Header>
+                {chatElement.username} ({chatElement.timeStamp}) :
+              </List.Header>{" "}
               {chatElement.message}{" "}
             </List.Content>
           </List.Item>
@@ -116,11 +133,11 @@ export default class Chat extends Component {
               <p />
               This is the username: {this.state.username}
             </p>
-<Sidebar.Pushable as={Segment}>
-            <div style={divStyle}>
-              <List celled>{chatTextElement}</List>
-            </div>
-</Sidebar.Pushable>
+            <Sidebar.Pushable as={Segment}>
+              <div style={divStyle}>
+                <List celled>{chatTextElement}</List>
+              </div>
+            </Sidebar.Pushable>
             <Input
               id="chat"
               focus
