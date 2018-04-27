@@ -51,7 +51,7 @@ export default class Chat extends Component {
     //socket.emit("registerToChat", {username: this.state.username, roomId: this.props.hv});
     //console.log("roomId:");
     //console.log(this.props.hv);
-      window.addEventListener("beforeunload", ev => {
+    window.addEventListener("beforeunload", ev => {
       ev.preventDefault();
       socket.emit("leaveRoom", {
         username: this.state.username
@@ -179,17 +179,17 @@ export default class Chat extends Component {
       var chat = this.state.chat;
       var username = this.state.username;
       chatTextElement = chat.map(function(chatElement, index) {
-        var style = { textAlign: "left" };
+        var style = { textAlign: "left", overflow: scroll };
         if (chatElement.username == username) {
           //the current user
-          style = { textAlign: "right" };
+          style = { textAlign: "right", overflow: scroll };
         } else {
           if (chatElement.username == "server") {
             // server information
-            style = { textAlign: "center" };
+            style = { textAlign: "center", overflow: scroll };
           } else {
             //other user
-            style = { textAlign: "left" };
+            style = { textAlign: "left", overflow: scroll };
           } //end of else
         } //end of if
         return (

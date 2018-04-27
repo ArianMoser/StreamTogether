@@ -21,56 +21,21 @@ var rooms = [];
 //send the client every <interval> second a message
 io.on("connection", client => {
   // user is connected
-  console.log("USER IS CONNECTED"); //debug
-  /*  var message = {
-    content: "User is connected",
-    username: "server",
-    timeStamp: Math.floor(Date.now() / 1000)
-  };
-  io.emit("sendMessageBack", { message }); */
 
   // user is disconnected
   client.on("disconnect", event => {
-    console.log("User is disconnected");
-    console.log(event);
+    // default disconnect event
     var message = {
       content: "User is disconnected",
       username: "server",
       timeStamp: Math.floor(Date.now() / 1000)
     };
-    /*if (rooms.length != "0"){
-      rooms.map(room => {
-        // remove user from userlist of other rooms
-        console.log("Removing user from list");
-        var userlist = room.userlist;
-        if (userlist.length != "0") {
-          var countUser = room.userlist.length;
-          room.userlist = userlist.filter(user => {
-            return user !== username;
-          }); // removing user from other rooms
-          if (countUser != room.userlist.length) {
-            console.log("User removed from list");
-            //message room that the user disconnected
-            var messageDisconnect = {
-              content: messageReceived.username + " is disconnected",
-              username: "server",
-              timeStamp: Math.floor(Date.now() / 1000)
-            };
-            io.emit("sendMessageBack", {
-              message: messageDisconnect,
-              userlist: room.userlist
-            });
-          } //end of if
-          console.log(room);
-        } //end of if
-      })
-    } // end of if */
     io.emit("sendMessageBack", { message });
   });
 
   client.on("leaveRoom", messageReceived => {
+    // user will leave the room (disconnect or switch page)
     console.log("User will disconnect");
-    console.log(messageReceived.username);
     var username = messageReceived.username;
     if (rooms.length != "0") {
       rooms.map(room => {
@@ -79,12 +44,9 @@ io.on("connection", client => {
         var userlist = room.userlist;
         if (userlist.length != "0") {
           var countUser = room.userlist.length;
-          console.log(countUser);
           room.userlist = userlist.filter(user => {
-            console.log(user + "|" + username);
             return user !== username;
           }); // removing user from other rooms
-          console.log(room.userlist.length);
           if (countUser != room.userlist.length) {
             console.log("User removed from list");
             //message room that the user disconnected
@@ -161,7 +123,7 @@ io.on("connection", client => {
             } //end of if
             console.log(room);
           } //end of if
-        }
+        } //end of else
       }); // end of iteration over rooms
     } //end of if
     if (roomAlreadyExists == false) {
@@ -170,26 +132,14 @@ io.on("connection", client => {
     io.emit("sendMessageBack", { message: message, userlist: messageUserlist });
   });
 
-  //  client.on("registerToChat", (payload) => {
-  //    if(chatUsers.has(payload.roomId)){
-  //      chatUsers.set(payload.roomId, [client]);
-  //    } else {
-  //chatUsers.set(payload.roomId, [...chatUsers.get(payload.roomId),...client]);
-  //      }
-  //    console.log(chatUsers.get("$2a$11$t8D4btL2Kh5i/"));
-  //  })
-
   client.on("sendMessage", message => {
     console.log("Received message");
-    console.log(message);
     var userlist = [];
     if (rooms.length != "0") {
       rooms.map(room => {
-        console.log(room);
         var userInRoom = false;
         if (room.userlist.length != "0") {
           room.userlist.map(user => {
-            console.log(user);
             if (user == message.username) {
               userInRoom = true;
             } //end of if
@@ -201,7 +151,6 @@ io.on("connection", client => {
       }); // end of iteration room
     } //end of if
     io.emit("sendMessageBack", { message: message, userlist: userlist });
-    console.log("hallo");
   });
 });
 
