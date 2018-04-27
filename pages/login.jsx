@@ -4,7 +4,8 @@ import React, { Component } from "react";
 import $ from "jquery";
 import { userFunctionLogin } from "./PostMethods";
 const bcrypt = require("bcryptjs");
-import { bake_cookie } from "sfcookies";
+import { bake_cookie} from "sfcookies";
+import {checksession} from "../components/Util";
 const jwt = require("jsonwebtoken");
 
 import {
@@ -22,6 +23,13 @@ export default class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+  }
+
+  componentDidMount() {
+    if (checksession() != "ErrorTokenFalse")
+    {
+      window.location = "/";
+    }
   }
 
   //----------------------------event handlers---------------------------//

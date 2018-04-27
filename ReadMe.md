@@ -53,7 +53,6 @@ See our result online ([Website](http://gruppe2.testsites.info/ "Our Website"))
 * Warining rausfliegen
 * Temp Benutzer implementieren
 * akuteller Raum wo man drinnen ist, soll hervorgehoben werden
-* Zugriff auf login verweigern, falls schon eingelogt
 * Websocket sync
 * Bug fixes
 * Code clean
@@ -62,8 +61,6 @@ See our result online ([Website](http://gruppe2.testsites.info/ "Our Website"))
 * Search mit Buttons durchswitchen
 * Tabelle fürs akutelle Video
 * Privilegien(Admin/Nicht Admin)
-* List akuteller User im Raum
-* (Chat)
 
 |Thema:                               | Status           |
 | -----------------------------------:| :--------------: |
@@ -82,13 +79,13 @@ See our result online ([Website](http://gruppe2.testsites.info/ "Our Website"))
 | Ausloggen                           | ok               |
 | Raum erstellen                      | ok               |
 | Raum automatisiert löschen          | ok        |
-| (Username auto-geb)                   |                  |
-| Chat                                |                  |
+| (Username auto-geb)                 |                  |
+| Chat                                | ok                 |
 | Suche                               | ok               |
 | Api(abspielen)                      | ok               |
 | Starten stoppen                     |                  |
-| Liste nutzer in room                |                  |
-| Playlistfunktion                    | teils                 |
-| (VoteSystem)                        | teils                 |
+| Liste nutzer in room                | ok                 |
+| Playlistfunktion                    | ok                 |
+| VoteSystem                        | teils                 |
 | Invite Funktion                     |                  |
 | Avatar hochladen/ändern             |                  |
