@@ -44,24 +44,6 @@ See our result online ([Website](http://gruppe2.testsites.info/ "Our Website"))
 * WICHTIG:    SSL, Sicherer Zugang
 * Websockets: für Chat (Websockets chat example), für die Synchronisation zwischen den Räumen auch hilfreich
 
-* Raum ID nicht vorhanden DANN zugriff verweigen
-* Einheitliches Typverfahren
-* Coderichtlinien
-* Proptypes defenieren
-* öfter Voten muss raus
-* Funktionen auslagern
-* Warining rausfliegen
-* Temp Benutzer implementieren
-* akuteller Raum wo man drinnen ist, soll hervorgehoben werden
-* Websocket sync
-* Bug fixes
-* Code clean
-* Front-End Playlist Scrollbar
-* Bilder upload
-* Search mit Buttons durchswitchen
-* Tabelle fürs akutelle Video
-* Privilegien(Admin/Nicht Admin)
-
 |Thema:                               | Status           |
 | -----------------------------------:| :--------------: |
 | Startseite                          | ok               |
