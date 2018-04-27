@@ -106,6 +106,7 @@ var call = (module.exports = {
       "SELECT room.id, room.title, room.description, room.password, room.thumbnail, room.creator, room.hashedValue, COUNT(user.ID) as 'ActiveUser'" +
       " FROM `room`, user" +
       " WHERE room.id = user.current_room_id" +
+      " AND room.id >= 1 " +
       " GROUP BY room.ID" +
       " ORDER BY count(user.ID) desc";
     connection.query(query, function(err, rows, fields) {

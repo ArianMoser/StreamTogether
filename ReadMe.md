@@ -45,7 +45,6 @@ See our result online ([Website](http://gruppe2.testsites.info/ "Our Website"))
 * Websockets: für Chat (Websockets chat example), für die Synchronisation zwischen den Räumen auch hilfreich
 
 * Raum ID nicht vorhanden DANN zugriff verweigen
-* Fremdschlüssel und so hinzufügen
 * Einheitliches Typverfahren
 * Coderichtlinien
 * Proptypes defenieren
@@ -54,20 +53,17 @@ See our result online ([Website](http://gruppe2.testsites.info/ "Our Website"))
 * Warining rausfliegen
 * Temp Benutzer implementieren
 * akuteller Raum wo man drinnen ist, soll hervorgehoben werden
-* Raum Password Abfrage auf der Raum Overview Seite
 * Zugriff auf login verweigern, falls schon eingelogt
 * Websocket sync
 * Bug fixes
 * Code clean
-* Sachen aus der youtube Search auf der Seite
 * Front-End Playlist Scrollbar
-* Front-End Create Room
 * Bilder upload
 * Search mit Buttons durchswitchen
 * Tabelle fürs akutelle Video
 * Privilegien(Admin/Nicht Admin)
 * List akuteller User im Raum
-* Chat
+* (Chat)
 
 |Thema:                               | Status           |
 | -----------------------------------:| :--------------: |

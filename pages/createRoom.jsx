@@ -23,7 +23,7 @@ import {
   Segment,
   Visibility
 } from "semantic-ui-react";
-import {checksession} from "../components/Util";
+import { checksession } from "../components/Util";
 
 export default class RoomCreator extends Component {
   constructor(props) {
@@ -116,7 +116,7 @@ export default class RoomCreator extends Component {
       titleExpression.test(title) &&
       (pwExpression.test(password) || !checkPassword || true)
     )*/
-    if (password != undefined && password != "" || !checkPassword) {
+    if ((password != undefined && password != "") || !checkPassword) {
       console.log("Testpattern succeded");
       const responseSelectTitle = await roomFunctionByTitle(
         "/selectRoomByTitle",
@@ -171,14 +171,18 @@ export default class RoomCreator extends Component {
           } else {
             console.log("Error during the event creation process");
           }
+          document.getElementById("feedback").innerHTML =
+              '<div class="ui positive message"><div class="header">Room created</div><p>You will be redirect</p></div>';
           window.location = "./room?hv=" + hashedValue;
         } else {
-          // exception during room creation db push
-          // todo: add dialog
           console.log("DB push failed");
+          document.getElementById("feedback").innerHTML =
+            '<div class="ui negative message"><div class="header">Room not created</div><p>Internal Error - DB push</p></div>';
         }
       } else {
         console.log("A room with this title already exists");
+        document.getElementById("feedback").innerHTML =
+          '<div class="ui negative message"><div class="header">Room not created</div><p>A room with this title already exists</p></div>';
       }
     } else {
       console.log("Testpattern failed");
@@ -215,17 +219,21 @@ export default class RoomCreator extends Component {
         type="password"
       />
     ) : (
-      <div></div>
+      <div />
     );
 
     return (
       <OwnHeader>
         <TopBox activeItem={activeItem} layer1="Create a room" />
         <Segment textAlign="center">
-          <p><Header as='h3'>Title:</Header></p>
+          <p>
+            <Header as="h3">Title:</Header>
+          </p>
           <Input value={this.state.title} onChange={this._handleTitleChange} />
           <p />
-          <p><Header as='h3'>Description:</Header></p>
+          <p>
+            <Header as="h3">Description:</Header>
+          </p>
           <Input
             value={this.state.description}
             onChange={this._handleDescriptionChange}
@@ -233,13 +241,25 @@ export default class RoomCreator extends Component {
           <p />
           Password?
           <p />
-          <Checkbox toggle type="checkbox" value={this.state.checkPassword} onChange={this._handlePasswordChangeCheck} />
+          <Checkbox
+            toggle
+            type="checkbox"
+            value={this.state.checkPassword}
+            onChange={this._handlePasswordChangeCheck}
+          />
           <div id="passwordField">
             <p />
             {pwField}
           </div>
           <p />
-          <Button primary content='Create room' icon='right arrow' labelPosition='right' onClick={this._handleRoomCreation} />
+          <Button
+            primary
+            content="Create room"
+            icon="right arrow"
+            labelPosition="right"
+            onClick={this._handleRoomCreation}
+          />
+          <div id="feedback" />
         </Segment>
       </OwnHeader>
     );

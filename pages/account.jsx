@@ -5,7 +5,7 @@ import Link from "next/link";
 import OwnHeader from "../components/Header";
 import TopBox from "../components/TopBox";
 import { checksession } from "../components/Util";
-// import { read_cookie, delete_cookie } from "sfcookies";
+import { read_cookie, delete_cookie } from "sfcookies";
 import $ from "jquery";
 import {
   Button,
@@ -15,6 +15,7 @@ import {
   Header,
   Icon,
   Image,
+  Label,
   List,
   Menu,
   Responsive,
@@ -76,7 +77,7 @@ export default class Account extends Component {
     console.log("Check Cookie");
     if (checksession() == "ErrorTokenFalse") {
       window.location = "/login";
-      console.log("Coockie not found");
+      console.log("Cookie not found");
     } else {
       $("OwnHeader").show();
       this._getInformation();
@@ -112,53 +113,60 @@ export default class Account extends Component {
     event.preventDefault();
     console.log("Handle password change");
 
+    var pwExpression = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
     const oldPassword = this.state.oldPassword;
     const newPassword1 = this.state.newPassword1;
     const newPassword2 = this.state.newPassword2;
     const userId = this.state.userId;
 
-    console.log("oldPassword:  " + oldPassword);
-    console.log("newPassword1: " + newPassword1);
-    console.log("newPassword2: " + newPassword2);
-    console.log("userid:       " + userId);
+    if (pwExpression.test(newPassword1) && pwExpression.test(newPassword2)) {
+      console.log("oldPassword:  " + oldPassword);
+      console.log("newPassword1: " + newPassword1);
+      console.log("newPassword2: " + newPassword2);
+      console.log("userid:       " + userId);
 
-    //todo: checkPasswordPattern
-    if (newPassword1 == newPassword2) {
-      console.log("Passwords are equal. Continues ... ");
-      //check oldPassword
-      if (
-        bcrypt.compareSync(oldPassword, this.state.hashedPassword) &&
-        this.state.hashedPassword != ""
-      ) {
-        console.log("Password accepted");
-        const responseChangePassword = await changePassword(
-          "/updateUserPassword",
-          userId,
-          newPassword2
-        );
-        console.log(
-          "Reg. Complete | Affected Rows: " +
-            responseChangePassword.affectedRows
-        );
-        //check if db push succeded
-        if (responseChangePassword.affectedRows == "1") {
-          console.log("DB push succeeded");
-          setTimeout(redirect(), 500);
-          function redirect() {
-            delete_cookie("StreamTogether");
-            window.location = "/login";
+      if (newPassword1 == newPassword2) {
+        console.log("Passwords are equal. Continues ... ");
+        //check oldPassword
+        if (
+          bcrypt.compareSync(oldPassword, this.state.hashedPassword) &&
+          this.state.hashedPassword != ""
+        ) {
+          console.log("Password accepted");
+          const responseChangePassword = await changePassword(
+            "/updateUserPassword",
+            userId,
+            newPassword2
+          );
+          console.log(
+            "Reg. Complete | Affected Rows: " +
+              responseChangePassword.affectedRows
+          );
+          //check if db push succeded
+          if (responseChangePassword.affectedRows == "1") {
+            document.getElementById("feedback_password").innerHTML =
+              '<div class="ui positive message"><div class="header">Password changed</div><p>Your password has been changed successfully</p></div>';
+            console.log("DB push succeeded");
+          } else {
+            document.getElementById("feedback_password").innerHTML =
+              '<div class="ui negative message"><div class="header">Error</div><p>Internal Error</p></div>';
+            console.log("DB push failed");
           }
-          //todo: dialog for successful password change
         } else {
-          console.log("DB push failed");
+          document.getElementById("feedback_password").innerHTML =
+            '<div class="ui negative message"><div class="header">Password not correct</div><p>Old password not correct</p></div>';
+          console.log("Password wrong");
         }
       } else {
-        console.log("Password wrong");
-        //todo: dialog for wrong password
+        document.getElementById("feedback_password").innerHTML =
+          '<div class="ui negative message"><div class="header">Password not equal</div><p>Please try again</p></div>';
+        console.log("Exception: 'Passwords are not equal'");
       }
     } else {
-      //todo: Dialog password are not equal ()
-      console.log("Exception: 'Passwords are not equal'");
+      document.getElementById("feedback_password").innerHTML =
+        '<div class="ui negative message"><div class="header">New password not accepted</div><p>Please try another password</p></div>';
+      console.log("Pattern Error!");
     }
   }
 
@@ -178,17 +186,14 @@ export default class Account extends Component {
         "Reg. Complete | Affected Rows: " + responseDeleteAccount.affectedRows
       );
       if (responseDeleteAccount.affectedRows == "1") {
-        //todo: dialog, that the account has been deleted successfully
         console.log("Deletion completed");
         delete_cookie("StreamTogether");
         window.location = "/login";
       } else {
         console.log("Deletion failed");
-        //todo: dialog is missing
       }
     } else {
       console.log("Delete Account check failed");
-      //todo: user muss angezeigt werden, dass er erst die checkbox anklicken muss
     }
   }
 
@@ -213,10 +218,9 @@ export default class Account extends Component {
       console.log("Get room name");
       console.log(responseUserInformation);
       console.log(responseUserInformation[0].current_room_id);
-      var currentRoomId =
-        !responseUserInformation[0].current_room_id
-          ? ""
-          : responseUserInformation[0].current_room_id;
+      var currentRoomId = !responseUserInformation[0].current_room_id
+        ? ""
+        : responseUserInformation[0].current_room_id;
       const responseRoomInformation = await roomFunctionById(
         "/selectRoomById",
         currentRoomId
@@ -273,8 +277,6 @@ export default class Account extends Component {
 
     /*--------------------Panel----------------------------*/
     //todo: image dynamisch aus der db holen
-    //todo: Account info überarbeiten, dass man auch sieht was angezeigt wird
-    // vor allem beim lastRoom sollte ein Label oder so davor
     const panes = [
       {
         menuItem: "Info",
@@ -288,6 +290,7 @@ export default class Account extends Component {
                 </Grid.Column>
                 <Grid.Column width={12}>
                   <Grid.Row>
+                  
                     <Input
                       icon="users"
                       iconPosition="left"
@@ -296,6 +299,7 @@ export default class Account extends Component {
                       value={username}
                       id="username"
                     />
+                    <Label pointing='left'>Username</Label>
                   </Grid.Row>
                   <Grid.Row>
                     <Input
@@ -306,6 +310,7 @@ export default class Account extends Component {
                       value={email}
                       id="email"
                     />
+                    <Label pointing='left'>E-Mail</Label>
                   </Grid.Row>
                   <Grid.Row>
                     <Input
@@ -316,6 +321,7 @@ export default class Account extends Component {
                       value={lastRoom}
                       id="lastRoom"
                     />
+                    <Label pointing='left'>Current Room</Label>
                   </Grid.Row>
                 </Grid.Column>
               </Grid.Row>
@@ -356,6 +362,8 @@ export default class Account extends Component {
                         icon="privacy"
                         iconPosition="left"
                         id="newPassword"
+                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                        title="At least: 1 uppercase letter, 1 lowercase letter, 1 digit & min. 8 characters"
                         type="password"
                         onChange={this._handleNewPassword1Change}
                         placeholder="New password"
@@ -367,13 +375,15 @@ export default class Account extends Component {
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>
-                <Grid.Column width={5}>
+                <Grid.Column width={4}>
                   <Popup
                     trigger={
                       <Input
                         icon="privacy"
                         iconPosition="left"
                         id="repeatNewPassword"
+                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                        title="At least: 1 uppercase letter, 1 lowercase letter, 1 digit & min. 8 characters"
                         type="password"
                         onChange={this._handleNewPassword2Change}
                         placeholder="Repeat new password"
@@ -390,6 +400,9 @@ export default class Account extends Component {
                     labelPosition="right"
                     onClick={this._changePassword}
                   />
+                </Grid.Column>
+                <Grid.Column width={8}>
+                  <div id="feedback_password" />
                 </Grid.Column>
               </Grid.Row>
             </Grid>
