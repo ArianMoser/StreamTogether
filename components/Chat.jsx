@@ -29,11 +29,11 @@ export default class Chat extends Component {
     // Set initial state
     this.state = {
       chat: [],
-      history: [],
       hv: "",
       message: "",
       timestamp: "no timestamp yet",
-      username: "default-username"
+      username: "default-username",
+      userlist: []
     };
 
     // bind event handlers
@@ -51,6 +51,12 @@ export default class Chat extends Component {
     //socket.emit("registerToChat", {username: this.state.username, roomId: this.props.hv});
     //console.log("roomId:");
     //console.log(this.props.hv);
+      window.addEventListener("beforeunload", ev => {
+      ev.preventDefault();
+      socket.emit("leaveRoom", {
+        username: this.state.username
+      });
+    });
     this._authentificateOnServer();
   }
 
@@ -69,6 +75,12 @@ export default class Chat extends Component {
     this.props.hv != undefined && this.props.hv != ""
       ? this.setState({ hv: this.props.hv })
       : this.setState({ hv: "" });
+  }
+
+  componentWillUnmount() {
+    socket.emit("leaveRoom", {
+      username: this.state.username
+    });
   }
 
   //----------------------------event handlers---------------------------//
@@ -131,7 +143,7 @@ export default class Chat extends Component {
               username: message.message.username,
               timeStamp: message.message.timeStamp
             });
-            this.setState({ chat: chat });
+            this.setState({ chat: chat, userlist: message.userlist });
           }
         } else {
           chat.push({
@@ -140,7 +152,7 @@ export default class Chat extends Component {
             username: message.message.username,
             timeStamp: message.message.timeStamp
           });
-          this.setState({ chat: chat });
+          this.setState({ chat: chat, userlist: message.userlist });
         } //end of else
       } //end of if
     }); // end of socket.on
@@ -180,7 +192,6 @@ export default class Chat extends Component {
             style = { textAlign: "left" };
           } //end of else
         } //end of if
-
         return (
           <List.Item>
             <List.Content key={index} style={style}>
@@ -193,14 +204,25 @@ export default class Chat extends Component {
           </List.Item>
         );
       });
-    }
+    } // end of chatText
+
+    var userlistElement = <div />;
+    console.log("Creating userlist");
+    if (this.state.userlist != [] && this.state.userlist != undefined) {
+      console.log(this.state.userlist);
+      userlistElement = this.state.userlist.map(user => {
+        console.log("User");
+        console.log({ user });
+        return <span>{user}|</span>;
+      });
+    } //end of if
 
     return (
       <Grid>
         <Grid.Row>
           <div className="App">
             <p className="App-intro">
-              This is the timer value: {this.state.timestamp}
+              This is the Userlist: {userlistElement}
               <p />
               This is the username: {this.state.username}
             </p>

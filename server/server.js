@@ -30,14 +30,79 @@ io.on("connection", client => {
   io.emit("sendMessageBack", { message }); */
 
   // user is disconnected
-  client.on("disconnect", () => {
+  client.on("disconnect", event => {
     console.log("User is disconnected");
+    console.log(event);
     var message = {
       content: "User is disconnected",
       username: "server",
       timeStamp: Math.floor(Date.now() / 1000)
     };
+    /*if (rooms.length != "0"){
+      rooms.map(room => {
+        // remove user from userlist of other rooms
+        console.log("Removing user from list");
+        var userlist = room.userlist;
+        if (userlist.length != "0") {
+          var countUser = room.userlist.length;
+          room.userlist = userlist.filter(user => {
+            return user !== username;
+          }); // removing user from other rooms
+          if (countUser != room.userlist.length) {
+            console.log("User removed from list");
+            //message room that the user disconnected
+            var messageDisconnect = {
+              content: messageReceived.username + " is disconnected",
+              username: "server",
+              timeStamp: Math.floor(Date.now() / 1000)
+            };
+            io.emit("sendMessageBack", {
+              message: messageDisconnect,
+              userlist: room.userlist
+            });
+          } //end of if
+          console.log(room);
+        } //end of if
+      })
+    } // end of if */
     io.emit("sendMessageBack", { message });
+  });
+
+  client.on("leaveRoom", messageReceived => {
+    console.log("User will disconnect");
+    console.log(messageReceived.username);
+    var username = messageReceived.username;
+    if (rooms.length != "0") {
+      rooms.map(room => {
+        // remove user from userlist of other rooms
+        console.log("Removing user from list");
+        var userlist = room.userlist;
+        if (userlist.length != "0") {
+          var countUser = room.userlist.length;
+          console.log(countUser);
+          room.userlist = userlist.filter(user => {
+            console.log(user + "|" + username);
+            return user !== username;
+          }); // removing user from other rooms
+          console.log(room.userlist.length);
+          if (countUser != room.userlist.length) {
+            console.log("User removed from list");
+            //message room that the user disconnected
+            var messageDisconnect = {
+              content: messageReceived.username + " is disconnected",
+              username: "server",
+              timeStamp: Math.floor(Date.now() / 1000)
+            };
+            console.log(room.userlist);
+            io.emit("sendMessageBack", {
+              message: messageDisconnect,
+              userlist: room.userlist
+            });
+          } //end of if
+          console.log(room);
+        } //end of if
+      });
+    } // end of if
   });
 
   // user authentification
@@ -77,9 +142,23 @@ io.on("connection", client => {
           console.log("Removing user from list");
           var userlist = room.userlist;
           if (userlist.length != "0") {
+            var countUser = room.userlist.length;
             room.userlist = userlist.filter(user => {
               return user !== username;
             }); // removing user from other rooms
+            if (countUser != room.userlist.length) {
+              console.log("User removed from list");
+              //message room that the user disconnected
+              var messageDisconnect = {
+                content: messageReceived.username + " is disconnected",
+                username: "server",
+                timeStamp: Math.floor(Date.now() / 1000)
+              };
+              io.emit("sendMessageBack", {
+                message: messageDisconnect,
+                userlist: room.userlist
+              });
+            } //end of if
             console.log(room);
           } //end of if
         }
