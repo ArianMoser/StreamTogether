@@ -109,14 +109,25 @@ export default class Chat extends Component {
   _refreshChatText() {
     socket.on("sendMessageBack", message => {
       if (message.length != 0) {
-        console.log(message.message.content);
+        console.log(message);
       } // end of if
-      console.log(message);
-      var chat = this.state.chat;
-      console.log(chat);
-      var beautifulTime = this.getTime(message.message.timeStamp);
-      if (chat != [] && chat.length != "0") {
-        if (chat[chat.length - 1].timeStamp != message.message.timeStamp) {
+      var userInList = false;
+      message.userlist.map(user => {
+        user == this.state.username ? (userInList = true) : null;
+      });
+      if (userList == true) {
+        var beautifulTime = this.getTime(message.message.timeStamp);
+        if (chat != [] && chat.length != "0") {
+          if (chat[chat.length - 1].timeStamp != message.message.timeStamp) {
+            chat.push({
+              beautifulTime: beautifulTime,
+              message: message.message.content,
+              username: message.message.username,
+              timeStamp: message.message.timeStamp
+            });
+            this.setState({ chat: chat });
+          }
+        } else {
           chat.push({
             beautifulTime: beautifulTime,
             message: message.message.content,
@@ -124,18 +135,10 @@ export default class Chat extends Component {
             timeStamp: message.message.timeStamp
           });
           this.setState({ chat: chat });
-        }
-      } else {
-        chat.push({
-          beautifulTime: beautifulTime,
-          message: message.message.content,
-          username: message.message.username,
-          timeStamp: message.message.timeStamp
-        });
-        this.setState({ chat: chat });
-      }
-    });
-  }
+        } //end of else
+      } //end of if
+    }); // end of socket.on
+  } // end of _refreshChatText
 
   getTime(timeStamp) {
     var date = new Date(timeStamp * 1000);

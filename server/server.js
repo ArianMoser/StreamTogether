@@ -17,7 +17,7 @@ const port = 8000;
 io.listen(port);
 console.log("listening on port ", port);
 
-var chatUsers = new Map();
+var rooms = [];
 //send the client every <interval> second a message
 io.on("connection", client => {
   // user is connected
@@ -41,15 +41,44 @@ io.on("connection", client => {
   });
 
   // user authentification
-  client.on("authentificate", message => {
+  client.on("authentificate", messageReceived => {
     console.log("User tries to authentificate");
-    console.log("Username:" + message.username);
-    console.log("hashedValue:" + message.hashedValue);
+    var username = messageReceived.username;
+    var hashedValue = messageReceived.hashedValue;
     var message = {
-      content: message.username + " is connected on " + message.hashedValue,
+      content:
+        messageReceived.username +
+        " is connected on " +
+        messageReceived.hashedValue,
+      userlist: [username],
       username: "server",
       timeStamp: Math.floor(Date.now() / 1000)
     };
+    var roomAlreadyExists = false;
+    if (rooms != []){
+      rooms.map((room) => {
+        console.log(room);
+      /*  if (room.hashedValue == hashedValue) {
+          roomAlreadyExists = true;
+          console.log("Room already exists");
+          var userlist = room.userlist;
+          var userAlreadyJoined = false;
+          userlist.map((user) => {
+            if (user == username) {
+              userAlreadyJoined = true;
+              console.log("User already inside of the userlist");
+            }
+          }); // end of iteration over userlist
+          if (userAlreadyJoined == false) {
+            room.userlist = userlist.push(username);
+          }
+          message.userlist = userlist;
+        } //end of if */
+      }); // end of iteration over rooms
+    }//end of if
+    if (roomAlreadyExists == false) {
+      rooms = rooms.push({ hashedValue: hashedValue, userlist: [username] });
+    }
     io.emit("sendMessageBack", { message });
   });
 
@@ -63,8 +92,18 @@ io.on("connection", client => {
   //  })
 
   client.on("sendMessage", message => {
-    console.log(message);
-    io.emit("sendMessageBack", { message });
+    var userlist = [];
+    rooms.map((room) => {
+      console.log(room);
+      /*var userInRoom = false;
+      room.userlist(user => {
+        user == message.username ? (userInRoom = true) : null;
+      }); // end of iteration userlist
+      if (userInRoom == true) {
+        userlist = room.userlist;
+      } */
+    }); // end of iteration room
+    io.emit("sendMessageBack", { message: message, userlist: userlist });
     console.log("hallo");
   });
 });
