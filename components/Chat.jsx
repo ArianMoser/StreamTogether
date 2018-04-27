@@ -29,11 +29,11 @@ export default class Chat extends Component {
     // Set initial state
     this.state = {
       chat: [],
-      history: [],
       hv: "",
       message: "",
       timestamp: "no timestamp yet",
-      username: "default-username"
+      username: "default-username",
+      userlist: []
     };
 
     // bind event handlers
@@ -51,6 +51,12 @@ export default class Chat extends Component {
     //socket.emit("registerToChat", {username: this.state.username, roomId: this.props.hv});
     //console.log("roomId:");
     //console.log(this.props.hv);
+      window.addEventListener("beforeunload", ev => {
+      ev.preventDefault();
+      socket.emit("leaveRoom", {
+        username: this.state.username
+      });
+    });
     this._authentificateOnServer();
   }
 
@@ -69,6 +75,12 @@ export default class Chat extends Component {
     this.props.hv != undefined && this.props.hv != ""
       ? this.setState({ hv: this.props.hv })
       : this.setState({ hv: "" });
+  }
+
+  componentWillUnmount() {
+    socket.emit("leaveRoom", {
+      username: this.state.username
+    });
   }
 
   //----------------------------event handlers---------------------------//
@@ -108,34 +120,43 @@ export default class Chat extends Component {
 
   _refreshChatText() {
     socket.on("sendMessageBack", message => {
+      var userInList = false;
       if (message.length != 0) {
-        console.log(message.message.content);
+        console.log(message);
+        if (message.userlist.length != "0") {
+          message.userlist.map(user => {
+            user == this.state.username ? (userInList = true) : null;
+          });
+        } // end of if
       } // end of if
-      console.log(message);
-      var chat = this.state.chat;
-      console.log(chat);
-      var beautifulTime = this.getTime(message.message.timeStamp);
-      if (chat != [] && chat.length != "0") {
-        if (chat[chat.length - 1].timeStamp != message.message.timeStamp) {
+
+      if (userInList == true) {
+        console.log("User in Userlist");
+        var beautifulTime = this.getTime(message.message.timeStamp);
+        var chat = this.state.chat;
+        console.log(chat);
+        if (chat != [] && chat.length != "0") {
+          if (chat[chat.length - 1].timeStamp != message.message.timeStamp) {
+            chat.push({
+              beautifulTime: beautifulTime,
+              message: message.message.content,
+              username: message.message.username,
+              timeStamp: message.message.timeStamp
+            });
+            this.setState({ chat: chat, userlist: message.userlist });
+          }
+        } else {
           chat.push({
             beautifulTime: beautifulTime,
             message: message.message.content,
             username: message.message.username,
             timeStamp: message.message.timeStamp
           });
-          this.setState({ chat: chat });
-        }
-      } else {
-        chat.push({
-          beautifulTime: beautifulTime,
-          message: message.message.content,
-          username: message.message.username,
-          timeStamp: message.message.timeStamp
-        });
-        this.setState({ chat: chat });
-      }
-    });
-  }
+          this.setState({ chat: chat, userlist: message.userlist });
+        } //end of else
+      } //end of if
+    }); // end of socket.on
+  } // end of _refreshChatText
 
   getTime(timeStamp) {
     var date = new Date(timeStamp * 1000);
@@ -158,42 +179,50 @@ export default class Chat extends Component {
       var chat = this.state.chat;
       var username = this.state.username;
       chatTextElement = chat.map(function(chatElement, index) {
-        if (chatElement.username != username) {
-          console.log("unequal");
-          return (
-            <List.Item>
-              <List.Content key={index}>
-                {" "}
-                <List.Header>
-                  {chatElement.username} ({chatElement.beautifulTime}) :
-                </List.Header>{" "}
-                {chatElement.message}{" "}
-              </List.Content>
-            </List.Item>
-          );
+        var style = { textAlign: "left" };
+        if (chatElement.username == username) {
+          //the current user
+          style = { textAlign: "right" };
         } else {
-          console.log("equal");
-          return (
-            <List.Item>
-              <List.Content key={index} style={{ textAlign: "right" }}>
-                {" "}
-                <List.Header>
-                  {chatElement.username} ({chatElement.beautifulTime}) :
-                </List.Header>{" "}
-                {chatElement.message}{" "}
-              </List.Content>
-            </List.Item>
-          );
-        } //end of else
+          if (chatElement.username == "server") {
+            // server information
+            style = { textAlign: "center" };
+          } else {
+            //other user
+            style = { textAlign: "left" };
+          } //end of else
+        } //end of if
+        return (
+          <List.Item>
+            <List.Content key={index} style={style}>
+              {" "}
+              <List.Header>
+                {chatElement.username} ({chatElement.beautifulTime}) :
+              </List.Header>{" "}
+              {chatElement.message}{" "}
+            </List.Content>
+          </List.Item>
+        );
       });
-    }
+    } // end of chatText
+
+    var userlistElement = <div />;
+    console.log("Creating userlist");
+    if (this.state.userlist != [] && this.state.userlist != undefined) {
+      console.log(this.state.userlist);
+      userlistElement = this.state.userlist.map(user => {
+        console.log("User");
+        console.log({ user });
+        return <span>{user}|</span>;
+      });
+    } //end of if
 
     return (
       <Grid>
         <Grid.Row>
           <div className="App">
             <p className="App-intro">
-              This is the timer value: {this.state.timestamp}
+              This is the Userlist: {userlistElement}
               <p />
               This is the username: {this.state.username}
             </p>

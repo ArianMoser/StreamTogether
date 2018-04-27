@@ -17,7 +17,7 @@ const port = 8000;
 io.listen(port);
 console.log("listening on port ", port);
 
-var chatUsers = new Map();
+var rooms = [];
 //send the client every <interval> second a message
 io.on("connection", client => {
   // user is connected
@@ -30,27 +30,144 @@ io.on("connection", client => {
   io.emit("sendMessageBack", { message }); */
 
   // user is disconnected
-  client.on("disconnect", () => {
+  client.on("disconnect", event => {
     console.log("User is disconnected");
+    console.log(event);
     var message = {
       content: "User is disconnected",
       username: "server",
       timeStamp: Math.floor(Date.now() / 1000)
     };
+    /*if (rooms.length != "0"){
+      rooms.map(room => {
+        // remove user from userlist of other rooms
+        console.log("Removing user from list");
+        var userlist = room.userlist;
+        if (userlist.length != "0") {
+          var countUser = room.userlist.length;
+          room.userlist = userlist.filter(user => {
+            return user !== username;
+          }); // removing user from other rooms
+          if (countUser != room.userlist.length) {
+            console.log("User removed from list");
+            //message room that the user disconnected
+            var messageDisconnect = {
+              content: messageReceived.username + " is disconnected",
+              username: "server",
+              timeStamp: Math.floor(Date.now() / 1000)
+            };
+            io.emit("sendMessageBack", {
+              message: messageDisconnect,
+              userlist: room.userlist
+            });
+          } //end of if
+          console.log(room);
+        } //end of if
+      })
+    } // end of if */
     io.emit("sendMessageBack", { message });
   });
 
+  client.on("leaveRoom", messageReceived => {
+    console.log("User will disconnect");
+    console.log(messageReceived.username);
+    var username = messageReceived.username;
+    if (rooms.length != "0") {
+      rooms.map(room => {
+        // remove user from userlist of other rooms
+        console.log("Removing user from list");
+        var userlist = room.userlist;
+        if (userlist.length != "0") {
+          var countUser = room.userlist.length;
+          console.log(countUser);
+          room.userlist = userlist.filter(user => {
+            console.log(user + "|" + username);
+            return user !== username;
+          }); // removing user from other rooms
+          console.log(room.userlist.length);
+          if (countUser != room.userlist.length) {
+            console.log("User removed from list");
+            //message room that the user disconnected
+            var messageDisconnect = {
+              content: messageReceived.username + " is disconnected",
+              username: "server",
+              timeStamp: Math.floor(Date.now() / 1000)
+            };
+            console.log(room.userlist);
+            io.emit("sendMessageBack", {
+              message: messageDisconnect,
+              userlist: room.userlist
+            });
+          } //end of if
+          console.log(room);
+        } //end of if
+      });
+    } // end of if
+  });
+
   // user authentification
-  client.on("authentificate", message => {
+  client.on("authentificate", messageReceived => {
     console.log("User tries to authentificate");
-    console.log("Username:" + message.username);
-    console.log("hashedValue:" + message.hashedValue);
+    var username = messageReceived.username;
+    var hashedValue = messageReceived.hashedValue;
+    var messageUserlist = [];
     var message = {
-      content: message.username + " is connected on " + message.hashedValue,
+      content: messageReceived.username + " is connected",
       username: "server",
       timeStamp: Math.floor(Date.now() / 1000)
     };
-    io.emit("sendMessageBack", { message });
+    var roomAlreadyExists = false;
+    if (rooms.length != "0") {
+      rooms.map(room => {
+        if (room.hashedValue == hashedValue) {
+          roomAlreadyExists = true;
+          console.log("Room already exists");
+          var userlist = room.userlist;
+          var userAlreadyJoined = false;
+          if (userlist.length != "0") {
+            userlist.map(user => {
+              if (user == username) {
+                userAlreadyJoined = true;
+                console.log("User already inside of the userlist");
+              }
+            }); // end of iteration over userlist
+          } //end of if
+          if (userAlreadyJoined == false) {
+            userlist.push(username);
+            room.userlist = userlist;
+          } //end of if
+          messageUserlist = userlist;
+        } else {
+          // remove user from userlist of other rooms
+          console.log("Removing user from list");
+          var userlist = room.userlist;
+          if (userlist.length != "0") {
+            var countUser = room.userlist.length;
+            room.userlist = userlist.filter(user => {
+              return user !== username;
+            }); // removing user from other rooms
+            if (countUser != room.userlist.length) {
+              console.log("User removed from list");
+              //message room that the user disconnected
+              var messageDisconnect = {
+                content: messageReceived.username + " is disconnected",
+                username: "server",
+                timeStamp: Math.floor(Date.now() / 1000)
+              };
+              io.emit("sendMessageBack", {
+                message: messageDisconnect,
+                userlist: room.userlist
+              });
+            } //end of if
+            console.log(room);
+          } //end of if
+        }
+      }); // end of iteration over rooms
+    } //end of if
+    if (roomAlreadyExists == false) {
+      rooms.push({ hashedValue: hashedValue, userlist: [username] });
+    }
+    io.emit("sendMessageBack", { message: message, userlist: messageUserlist });
   });
 
   //  client.on("registerToChat", (payload) => {
@@ -63,8 +180,27 @@ io.on("connection", client => {
   //  })
 
   client.on("sendMessage", message => {
+    console.log("Received message");
     console.log(message);
-    io.emit("sendMessageBack", { message });
+    var userlist = [];
+    if (rooms.length != "0") {
+      rooms.map(room => {
+        console.log(room);
+        var userInRoom = false;
+        if (room.userlist.length != "0") {
+          room.userlist.map(user => {
+            console.log(user);
+            if (user == message.username) {
+              userInRoom = true;
+            } //end of if
+          }); // end of iteration userlist
+        } //end of if
+        if (userInRoom == true) {
+          userlist = room.userlist;
+        } // end of if
+      }); // end of iteration room
+    } //end of if
+    io.emit("sendMessageBack", { message: message, userlist: userlist });
     console.log("hallo");
   });
 });
