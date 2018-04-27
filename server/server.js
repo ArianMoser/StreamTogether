@@ -109,6 +109,9 @@ app
         exp.post("/selectRooms" , (req, res) => {
           database.selectRooms(res, req.body, connection);
         });
+        exp.post("/selectRoomById" , (req, res) => {
+          database.selectRoomById(res, req.body, connection);
+        });
         exp.post("/selectRoomByTitle", (req, res) => {
           database.selectRoomByTitle(res, req.body, connection);
         });

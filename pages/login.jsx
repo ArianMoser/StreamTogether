@@ -35,7 +35,7 @@ export default class Login extends Component {
     console.log("Username : " + username);
     console.log("Passwort : " + password);
 
-    const response = await userFunctionLogin("/login", username);
+    const response = await userFunctionLogin("/login", username, username);
     console.log(response);
     if (response.length == "0") {
       console.log("No user found");

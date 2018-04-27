@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import Link from "next/link";
 import OwnHeader from "../components/Header";
 import TopBox from "../components/TopBox";
-import {checksession} from "../components/Util";
+import { checksession } from "../components/Util";
 // import { read_cookie, delete_cookie } from "sfcookies";
 import $ from "jquery";
 import {
@@ -28,9 +28,11 @@ import {
   Checkbox
 } from "semantic-ui-react";
 import {
-  userFunctionByUsername,
   changePassword,
-  deleteUser
+  deleteUser,
+  userFunctionLogin,
+  userFunctionByUsername,
+  roomFunctionById
 } from "./PostMethods";
 
 const bcrypt = require("bcryptjs");
@@ -63,7 +65,7 @@ export default class Account extends Component {
     this._deleteAccount = this._deleteAccount.bind(this);
   }
 
-//-------------------------functions of react----------------------------//
+  //-------------------------functions of react----------------------------//
   componentWillMount() {
     this.setState({
       deleteAccountCheck: false
@@ -80,7 +82,7 @@ export default class Account extends Component {
       this._getInformation();
     }
   }
-//----------------------------event handlers---------------------------//
+  //----------------------------event handlers---------------------------//
   _handleOldPasswordChange(event) {
     this.setState({
       oldPassword: event.target.value
@@ -136,7 +138,7 @@ export default class Account extends Component {
         );
         console.log(
           "Reg. Complete | Affected Rows: " +
-          responseChangePassword.affectedRows
+            responseChangePassword.affectedRows
         );
         //check if db push succeded
         if (responseChangePassword.affectedRows == "1") {
@@ -190,7 +192,7 @@ export default class Account extends Component {
     }
   }
 
-//----------------------functions------------------------------//
+  //----------------------functions------------------------------//
   // gets the account information
   async _getInformation() {
     var username = checksession();
@@ -199,19 +201,41 @@ export default class Account extends Component {
 
     console.log("Tries to receive room information of the database");
     console.log("Found Username: " + username);
-    const responseUserInformation = await userFunctionByUsername(
-      "/getuserandroombyusername",
+    const responseUserInformation = await userFunctionLogin(
+      "/login",
+      username,
       username
     );
+    console.log(responseUserInformation);
     console.log("Reg. Complete | Count : " + responseUserInformation.length);
     if (responseUserInformation.length == "1") {
       console.log("DB push succeeded");
-      this.setState({
-        userId: userId,
-        username: username,
-        email: responseUserInformation[0].email,
-        lastRoom: responseUserInformation[0].title
-      });
+      console.log("Get room name");
+      console.log(responseUserInformation);
+      console.log(responseUserInformation[0].current_room_id);
+      var currentRoomId =
+        !responseUserInformation[0].current_room_id
+          ? ""
+          : responseUserInformation[0].current_room_id;
+      const responseRoomInformation = await roomFunctionById(
+        "/selectRoomById",
+        currentRoomId
+      );
+      if (responseRoomInformation.length == "1") {
+        this.setState({
+          userId: userId,
+          username: username,
+          email: responseUserInformation[0].email,
+          lastRoom: responseRoomInformation[0].title
+        });
+      } else {
+        this.setState({
+          userId: userId,
+          username: username,
+          email: responseUserInformation[0].email,
+          lastRoom: "Currently not in a room"
+        });
+      }
     } else {
       console.log("Error during database request");
     }
@@ -240,9 +264,7 @@ export default class Account extends Component {
     });
   }
 
-
-
-//----------------------------------Render-------------------------------//
+  //----------------------------------Render-------------------------------//
   render() {
     const activeItem = this.state.activeItem;
     const username = this.state.username;

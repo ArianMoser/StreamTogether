@@ -74,6 +74,24 @@ export const roomFunctionShowAll = api => {
   });
 };
 //----------------------GETROOMDATA----------------------//
+export const roomFunctionById = (api, roomId) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({roomId: roomId}),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
+//----------------------GETROOMDATA----------------------//
 export const roomFunctionByTitle = (api, title) => {
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -146,14 +164,14 @@ export const videoFunctionByYoutubeId = (api, youtubeId) => {
   });
 };
 //----------------------Login----------------------//
-export const userFunctionLogin = (api, username) => {
+export const userFunctionLogin = (api, username, email) => {
   return new Promise((resolve, reject) => {
     $.ajax({
       url: api,
       type: "POST",
       cache: false,
       contentType: "application/json",
-      data: JSON.stringify({ username: username, email: username }),
+      data: JSON.stringify({ username: username, email: email }),
       success: function(res) {
         resolve(res);
       },

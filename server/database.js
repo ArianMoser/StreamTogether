@@ -44,7 +44,7 @@ var call = (module.exports = {
     const query =
       "SELECT * from user,room WHERE username= " +
       mysql.escape(dieNutzerDaten.username) +
-      " AND room.ID = user.room_id;";
+      " AND room.ID = user.current_room_id;";
     console.log(query);
     connection.query(query, function(err, rows, fields) {
       if (err) {
@@ -105,7 +105,7 @@ var call = (module.exports = {
     const query =
       "SELECT room.id, room.title, room.description, room.password, room.thumbnail, room.creator, room.hashedValue, COUNT(user.ID) as 'ActiveUser'" +
       " FROM `room`, user" +
-      " WHERE room.id = user.room_id" +
+      " WHERE room.id = user.current_room_id" +
       " GROUP BY room.ID" +
       " ORDER BY count(user.ID) desc";
     connection.query(query, function(err, rows, fields) {
@@ -121,7 +121,7 @@ var call = (module.exports = {
   },
   selectRoomById: function(res, dieNutzerDaten, connection) {
     const query =
-      "SELECT * from room WHERE ID= " + mysql.escape(dieNutzerDaten.id) + " ;";
+      "SELECT * from room WHERE ID= " + mysql.escape(dieNutzerDaten.roomId) + " ;";
     connection.query(query, function(err, rows, fields) {
       if (err) {
         console.log("An error ocurred performing the query.");
@@ -135,7 +135,7 @@ var call = (module.exports = {
   },
   selectRoomByUserId: function(res, dieNutzerDaten, connection) {
     const query =
-      'SELECT room.ID, room.title, user.username as "Ersteller", room.description, room.password FROM room, user WHERE user.room_id = room.ID AND user.ID = ' +
+      'SELECT room.ID, room.title, user.username as "Ersteller", room.description, room.password FROM room, user WHERE user.current_room_id = room.ID AND user.ID = ' +
       mysql.escape(dieNutzerDaten.userId) +
       " ;";
     connection.query(query, function(err, rows, fields) {
@@ -339,7 +339,7 @@ var call = (module.exports = {
     console.log(dieNutzerDaten);
     const query =
       "Update `user`" +
-      " SET `room_id`=" +
+      " SET `current_room_id`=" +
       mysql.escape(dieNutzerDaten.roomId) +
       " WHERE `username`=" +
       mysql.escape(dieNutzerDaten.username) +
