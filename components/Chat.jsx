@@ -108,15 +108,21 @@ export default class Chat extends Component {
 
   _refreshChatText() {
     socket.on("sendMessageBack", message => {
+      var userInList = false;
       if (message.length != 0) {
         console.log(message);
+        if (message.userlist.length != "0") {
+          message.userlist.map(user => {
+            user == this.state.username ? (userInList = true) : null;
+          });
+        } // end of if
       } // end of if
-      var userInList = false;
-      message.userlist.map(user => {
-        user == this.state.username ? (userInList = true) : null;
-      });
-      if (userList == true) {
+
+      if (userInList == true) {
+        console.log("User in Userlist");
         var beautifulTime = this.getTime(message.message.timeStamp);
+        var chat = this.state.chat;
+        console.log(chat);
         if (chat != [] && chat.length != "0") {
           if (chat[chat.length - 1].timeStamp != message.message.timeStamp) {
             chat.push({

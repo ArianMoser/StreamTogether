@@ -45,6 +45,7 @@ io.on("connection", client => {
     console.log("User tries to authentificate");
     var username = messageReceived.username;
     var hashedValue = messageReceived.hashedValue;
+    var messageUserlist = [];
     var message = {
       content:
         messageReceived.username +
@@ -55,31 +56,33 @@ io.on("connection", client => {
       timeStamp: Math.floor(Date.now() / 1000)
     };
     var roomAlreadyExists = false;
-    if (rooms != []){
+    if (rooms.length != "0"){
       rooms.map((room) => {
-        console.log(room);
-      /*  if (room.hashedValue == hashedValue) {
+        if (room.hashedValue == hashedValue) {
           roomAlreadyExists = true;
           console.log("Room already exists");
           var userlist = room.userlist;
           var userAlreadyJoined = false;
-          userlist.map((user) => {
-            if (user == username) {
-              userAlreadyJoined = true;
-              console.log("User already inside of the userlist");
-            }
-          }); // end of iteration over userlist
+          if (userlist.length != "0") {
+            userlist.map((user) => {
+              if (user == username) {
+                userAlreadyJoined = true;
+                console.log("User already inside of the userlist");
+              }
+            }); // end of iteration over userlist
+          }//end of if
           if (userAlreadyJoined == false) {
-            room.userlist = userlist.push(username);
+            userlist.push(username);
+            room.userlist = userlist;
           }
-          message.userlist = userlist;
+          messageUserlist = userlist;
         } //end of if */
       }); // end of iteration over rooms
     }//end of if
     if (roomAlreadyExists == false) {
-      rooms = rooms.push({ hashedValue: hashedValue, userlist: [username] });
+      rooms.push({ hashedValue: hashedValue, userlist: [username] });
     }
-    io.emit("sendMessageBack", { message });
+    io.emit("sendMessageBack", { message: message, userlist:messageUserlist });
   });
 
   //  client.on("registerToChat", (payload) => {
@@ -92,17 +95,26 @@ io.on("connection", client => {
   //  })
 
   client.on("sendMessage", message => {
+    console.log("Received message");
+    console.log(message);
     var userlist = [];
-    rooms.map((room) => {
-      console.log(room);
-      /*var userInRoom = false;
-      room.userlist(user => {
-        user == message.username ? (userInRoom = true) : null;
-      }); // end of iteration userlist
-      if (userInRoom == true) {
-        userlist = room.userlist;
-      } */
-    }); // end of iteration room
+    if (rooms.length != "0"){
+      rooms.map((room) => {
+        console.log(room);
+        var userInRoom = false;
+        if (room.userlist.length != "0"){
+          room.userlist.map(user => {
+            console.log(user);
+            if (user == message.username) {
+              userInRoom = true
+            }//end of if
+          }); // end of iteration userlist
+        } //end of if
+        if (userInRoom == true) {
+          userlist = room.userlist;
+        } // end of if
+      }); // end of iteration room
+    } //end of if
     io.emit("sendMessageBack", { message: message, userlist: userlist });
     console.log("hallo");
   });
