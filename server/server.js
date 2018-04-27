@@ -10,32 +10,63 @@ const server = http.createServer(exp);
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
-const io = require('socket.io')();
-
+const io = require("socket.io")();
 
 //Open connection to websocket for chat
 const port = 8000;
 io.listen(port);
-console.log('listening on port ', port);
+console.log("listening on port ", port);
 
 var chatUsers = new Map();
 //send the client every <interval> second a message
-io.on('connection', (client) => {
-  console.log("USER IS CONNECTED");//debug
-//  client.on("registerToChat", (payload) => {
-//    if(chatUsers.has(payload.roomId)){
-//      chatUsers.set(payload.roomId, [client]);
-//    } else {
-        //chatUsers.set(payload.roomId, [...chatUsers.get(payload.roomId),...client]);
-//      }
-//    console.log(chatUsers.get("$2a$11$t8D4btL2Kh5i/"));
-//  })
+io.on("connection", client => {
+  // user is connected
+  console.log("USER IS CONNECTED"); //debug
+  /*  var message = {
+    content: "User is connected",
+    username: "server",
+    timeStamp: Math.floor(Date.now() / 1000)
+  };
+  io.emit("sendMessageBack", { message }); */
 
-  client.on("sendMessage", (message) => {
+  // user is disconnected
+  client.on("disconnect", () => {
+    console.log("User is disconnected");
+    var message = {
+      content: "User is disconnected",
+      username: "server",
+      timeStamp: Math.floor(Date.now() / 1000)
+    };
+    io.emit("sendMessageBack", { message });
+  });
+
+  // user authentification
+  client.on("authentificate", message => {
+    console.log("User tries to authentificate");
+    console.log("Username:" + message.username);
+    console.log("hashedValue:" + message.hashedValue);
+    var message = {
+      content: message.username + " is connected on " + message.hashedValue,
+      username: "server",
+      timeStamp: Math.floor(Date.now() / 1000)
+    };
+    io.emit("sendMessageBack", { message });
+  });
+
+  //  client.on("registerToChat", (payload) => {
+  //    if(chatUsers.has(payload.roomId)){
+  //      chatUsers.set(payload.roomId, [client]);
+  //    } else {
+  //chatUsers.set(payload.roomId, [...chatUsers.get(payload.roomId),...client]);
+  //      }
+  //    console.log(chatUsers.get("$2a$11$t8D4btL2Kh5i/"));
+  //  })
+
+  client.on("sendMessage", message => {
     console.log(message);
-   io.emit("sendMessageBack", {message});
+    io.emit("sendMessageBack", { message });
     console.log("hallo");
-  })
+  });
 });
 
 //Open connection to database
@@ -106,10 +137,10 @@ app
         exp.post("/register", (req, res) => {
           database.insertUser(res, req.body, connection);
         });
-        exp.post("/selectRooms" , (req, res) => {
+        exp.post("/selectRooms", (req, res) => {
           database.selectRooms(res, req.body, connection);
         });
-        exp.post("/selectRoomById" , (req, res) => {
+        exp.post("/selectRoomById", (req, res) => {
           database.selectRoomById(res, req.body, connection);
         });
         exp.post("/selectRoomByTitle", (req, res) => {
@@ -136,7 +167,6 @@ app
         exp.post("/updateUpVotes", (req, res) => {
           database.updateUpVotes(res, req.body, connection);
         });
-
       }
     });
 
