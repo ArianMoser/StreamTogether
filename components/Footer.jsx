@@ -31,12 +31,6 @@ export default class Footer extends Component {
                   </Link>
                 </List>
               </Grid.Column>
-              <Grid.Column width={7}>
-                <Header as="h4" inverted>
-                  Footer Header
-                </Header>
-                <p>Bla Bla BLAAA Bla Bla Bla Bla BLaaaa MIMIMIMIM</p>
-              </Grid.Column>
             </Grid.Row>
           </Grid>
         </Container>

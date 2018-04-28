@@ -25,11 +25,9 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeItem: "home",
+      activeItem: "home"
     };
   }
-
-
 
   checkLogIn() {
     if (checksession() == "ErrorTokenFalse") {
@@ -63,10 +61,10 @@ export default class Home extends Component {
                   </Button>
                 </p>
                 <p style={{ fontSize: "1.33em" }}>
-                  You do not need to register to create a room.
+                  You need to register to create a room.
                 </p>
                 <p style={{ fontSize: "1.33em" }}>
-                  But: Get more functions by creating your own account!
+                  But: You can join a <a href="./roomOverview"> room </a>without being log in.
                 </p>
               </Grid.Column>
               <Grid.Column floated="right" width={7}>
