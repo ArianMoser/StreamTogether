@@ -22,12 +22,29 @@ var call = (module.exports = {
     });
     //AUF SICHERHEIT DER EINGEGEBENEN SACHEN NOCH PRÜFEN MYSQLI STRING UND SO DIESER SCHEIß!
   },
+  selectUserById: function(res, dieNutzerDaten, connection) {
+    const query =
+      "SELECT * from user WHERE id= " +
+      mysql.escape(dieNutzerDaten.id) +
+      ";";
+    console.log(query);
+    connection.query(query, function(err, rows, fields) {
+      if (err) {
+        console.log("An error ocurred performing the query.");
+        console.log(err);
+        return;
+      }
+
+      console.log("Query selectUserByUsername succesfully executed: ", rows);
+      res.send(rows);
+    });
+  },
   selectUserAndRoomByUsername: function(res, dieNutzerDaten, connection) {
     console.log(dieNutzerDaten.username);
     const query =
       "SELECT * from user,room WHERE username= " +
       mysql.escape(dieNutzerDaten.username) +
-      " AND room.ID = user.room_id;";
+      " AND room.ID = user.current_room_id;";
     console.log(query);
     connection.query(query, function(err, rows, fields) {
       if (err) {
@@ -42,7 +59,6 @@ var call = (module.exports = {
       );
       res.send(rows);
     });
-    //AUF SICHERHEIT DER EINGEGEBENEN SACHEN NOCH PRÜFEN MYSQLI STRING UND SO DIESER SCHEIß!
   },
   selectUserByUsernameOrEmail: function(res, dieNutzerDaten, connection) {
     console.log(dieNutzerDaten);
@@ -88,7 +104,8 @@ var call = (module.exports = {
     const query =
       "SELECT room.id, room.title, room.description, room.password, room.thumbnail, room.creator, room.hashedValue, COUNT(user.ID) as 'ActiveUser'" +
       " FROM `room`, user" +
-      " WHERE room.id = user.room_id" +
+      " WHERE room.id = user.current_room_id" +
+      " AND room.id >= 1 " +
       " GROUP BY room.ID" +
       " ORDER BY count(user.ID) desc";
     connection.query(query, function(err, rows, fields) {
@@ -104,7 +121,7 @@ var call = (module.exports = {
   },
   selectRoomById: function(res, dieNutzerDaten, connection) {
     const query =
-      "SELECT * from room WHERE ID= " + mysql.escape(dieNutzerDaten.id) + " ;";
+      "SELECT * from room WHERE ID= " + mysql.escape(dieNutzerDaten.roomId) + " ;";
     connection.query(query, function(err, rows, fields) {
       if (err) {
         console.log("An error ocurred performing the query.");
@@ -118,7 +135,7 @@ var call = (module.exports = {
   },
   selectRoomByUserId: function(res, dieNutzerDaten, connection) {
     const query =
-      'SELECT room.ID, room.title, user.username as "Ersteller", room.description, room.password FROM room, user WHERE user.room_id = room.ID AND user.ID = ' +
+      'SELECT room.ID, room.title, user.username as "Ersteller", room.description, room.password FROM room, user WHERE user.current_room_id = room.ID AND user.ID = ' +
       mysql.escape(dieNutzerDaten.userId) +
       " ;";
     connection.query(query, function(err, rows, fields) {
@@ -252,7 +269,7 @@ var call = (module.exports = {
   insertVideo: function(res, dieNutzerDaten, connection) {
     console.log(dieNutzerDaten);
     const query =
-      "INSERT INTO video (youtube_id, title, description, thumbnail_url, channel_id, channel_name, user_id)VALUES (" +
+      "INSERT INTO video (youtube_id, title, description, thumbnail_url, channel_id, channel_name)VALUES (" +
       mysql.escape(dieNutzerDaten.videoId) +
       " , " +
       mysql.escape(dieNutzerDaten.videoTitle) +
@@ -264,8 +281,6 @@ var call = (module.exports = {
       mysql.escape(dieNutzerDaten.channelId) +
       " , " +
       mysql.escape(dieNutzerDaten.channelName) +
-      " , " +
-      mysql.escape(dieNutzerDaten.userName) +
       " );";
     connection.query(query, function(err, rows, fields) {
       if (err) {
@@ -324,7 +339,7 @@ var call = (module.exports = {
     console.log(dieNutzerDaten);
     const query =
       "Update `user`" +
-      " SET `room_id`=" +
+      " SET `current_room_id`=" +
       mysql.escape(dieNutzerDaten.roomId) +
       " WHERE `username`=" +
       mysql.escape(dieNutzerDaten.username) +

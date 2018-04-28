@@ -1,13 +1,6 @@
 import React, { Fragment, Component } from "react";
 import Link from "next/link";
-import {
-  Container,
-Header,
-List,
-  Grid,
-  Segment,
-
-} from "semantic-ui-react";
+import { Container, Header, List, Grid, Segment } from "semantic-ui-react";
 
 export default class Footer extends Component {
   render() {
@@ -37,12 +30,6 @@ export default class Footer extends Component {
                     <List.Item as="a">Help</List.Item>
                   </Link>
                 </List>
-              </Grid.Column>
-              <Grid.Column width={7}>
-                <Header as="h4" inverted>
-                  Footer Header
-                </Header>
-                <p>Bla Bla BLAAA Bla Bla Bla Bla BLaaaa MIMIMIMIM</p>
               </Grid.Column>
             </Grid.Row>
           </Grid>

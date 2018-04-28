@@ -11,26 +11,33 @@ import {
 import TopBox from "../components/TopBox";
 import {
   Button,
+  Checkbox,
   Container,
   Form,
   Grid,
   Header,
   Icon,
   Image,
+  Input,
   Message,
   Segment,
   Visibility
 } from "semantic-ui-react";
-import { read_cookie } from "sfcookies";
-const jwt = require("jsonwebtoken");
+import { checksession } from "../components/Util";
 
 export default class RoomCreator extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      checkPassword: false
+      activeItem: "empty",
+      checkPassword: false,
+      currentUser: "",
+      description: "",
+      password: "",
+      title: ""
     };
 
+    //bind event handlers
     this._handleDescriptionChange = this._handleDescriptionChange.bind(this);
     this._handleTitleChange = this._handleTitleChange.bind(this);
     this._handlePasswordChangeCheck = this._handlePasswordChangeCheck.bind(
@@ -40,31 +47,19 @@ export default class RoomCreator extends Component {
     this._handleRoomCreation = this._handleRoomCreation.bind(this);
   }
 
-  static get defaultProps() {
-    return {
-      activeItem: "empty",
-      checkPassword: false,
-      currentUser: "",
-      description: "",
-      password: "",
-      title: ""
-    };
-  }
-
-  componentWillMount() {
-    //
-  }
-
+  //-------------------------functions of react----------------------------//
   componentDidMount() {
-    var currentUsername = this.checksession();
+    var currentUsername = checksession();
     console.log("Username: " + currentUsername);
     var currentUserId = this._getUserId(currentUsername);
-    this.setState({
-      title: this.props.title,
-      description: this.props.description
-    });
+    //When user is already loged in...
+    if (checksession() == "ErrorTokenFalse") {
+      window.location = "/index";
+      window.alert("pls log in");
+    }
   }
 
+  //----------------------------event handlers---------------------------//
   _handleDescriptionChange(event) {
     this.setState({
       description: event.target.value
@@ -89,42 +84,7 @@ export default class RoomCreator extends Component {
     });
   }
 
-  checksession() {
-    if (read_cookie("StreamTogether").length != 0) {
-      try {
-        var decodedsession = jwt.verify(
-          read_cookie("StreamTogether"),
-          "shhhhh"
-        );
-        return decodedsession.username;
-      } catch (err) {
-        console.log("Error-Message: " + err.message);
-        return "ErrorTokenFalse";
-      }
-    } else {
-      return "ErrorTokenFalse";
-    }
-  }
-
-  async _getUserId(username) {
-    console.log("Passed username: " + username);
-    const response = await userFunctionByUsername(
-      "/getuserbyusername",
-      username
-    );
-    console.log(response);
-    if (response.length == "1") {
-      var currentUserId = response[0].ID;
-      console.log("Found id " + currentUserId);
-    } else {
-      console.log("Could not resolve username into id");
-      var currentUserId = "0";
-    }
-    this.setState({
-      currentUser: currentUserId
-    });
-  }
-
+  // creates a room
   async _handleRoomCreation(event) {
     event.preventDefault();
     const title = this.state.title;
@@ -151,15 +111,17 @@ export default class RoomCreator extends Component {
         "| currentUser: " +
         currentUser
     );
-    var titleExpression = /^[A-Za-z0-9_]{3,32}$/;
-    var pwExpression = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+    // pattern for the input fields
+    //var titleExpression = /^[A-Za-z0-9_]{3,32}$/;
+    // var pwExpression = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
     //Check Regex Statements
-    if (
-      (titleExpression.test(title) &&
-        (pwExpression.test(password) || !checkPassword)) ||
-      true
-    ) {
+    /*if (
+      titleExpression.test(title) &&
+      (pwExpression.test(password) || !checkPassword || true)
+    )*/
+    if ((password != undefined && password != "") || !checkPassword) {
       console.log("Testpattern succeded");
       const responseSelectTitle = await roomFunctionByTitle(
         "/selectRoomByTitle",
@@ -209,61 +171,100 @@ export default class RoomCreator extends Component {
             roomid
           );
           console.log(responseDropRoomEvent);
-          if (responseDropRoomEvent.serverStatus == "2"){
+          if (responseDropRoomEvent.serverStatus == "2") {
             console.log("The drop event was scheduled in 1 hour");
           } else {
             console.log("Error during the event creation process");
           }
+          document.getElementById("feedback").innerHTML =
+            '<div class="ui positive message"><div class="header">Room created</div><p>Forwarding...</p></div>';
           window.location = "./room?hv=" + hashedValue;
         } else {
-          // exception during room creation db push
-          // todo: add dialog
           console.log("DB push failed");
+          document.getElementById("feedback").innerHTML =
+            '<div class="ui negative message"><div class="header">Room not created</div><p>Internal Error - DB push</p></div>';
         }
       } else {
         console.log("A room with this title already exists");
+        document.getElementById("feedback").innerHTML =
+          '<div class="ui negative message"><div class="header">Room not created</div><p>A room with this title already exists</p></div>';
       }
     } else {
       console.log("Testpattern failed");
     }
   }
+  //----------------------functions------------------------------//
+  // gets the username by an id
+  async _getUserId(username) {
+    console.log("Passed username: " + username);
+    const response = await userFunctionByUsername(
+      "/getuserbyusername",
+      username
+    );
+    console.log(response);
+    if (response.length == "1") {
+      var currentUserId = response[0].ID;
+      console.log("Found id " + currentUserId);
+    } else {
+      console.log("Could not resolve username into id");
+      var currentUserId = "0";
+    }
+    this.setState({
+      currentUser: currentUserId
+    });
+  }
 
+  //----------------------------------Render-------------------------------//
   render() {
-    const activeItem = this.props.activeItem;
+    const activeItem = this.state.activeItem;
     const pwField = this.state.checkPassword ? (
-      <input
+      <Input
         value={this.state.password}
         onChange={this._handlePasswordChange}
         type="password"
       />
     ) : (
-      <div>empty</div>
+      <div />
     );
 
     return (
       <OwnHeader>
         <TopBox activeItem={activeItem} layer1="Create a room" />
         <Segment textAlign="center">
-          <p>Title:</p>
-          <input value={this.state.title} onChange={this._handleTitleChange} />
-          <p>Description:</p>
-          <input
+          <p>
+            <Header as="h3">Title:</Header>
+          </p>
+          <Input value={this.state.title} onChange={this._handleTitleChange} />
+          <p />
+          <p>
+            <Header as="h3">Description:</Header>
+          </p>
+          <Input
             value={this.state.description}
             onChange={this._handleDescriptionChange}
           />
           <p />
-          <input
+          Password?
+          <p />
+          <Checkbox
+            toggle
             type="checkbox"
             value={this.state.checkPassword}
             onChange={this._handlePasswordChangeCheck}
           />
-          Password?
           <div id="passwordField">
             <p />
             {pwField}
           </div>
           <p />
-          <button onClick={this._handleRoomCreation}>Create Room</button>
+          <Button
+            primary
+            content="Create room"
+            icon="right arrow"
+            labelPosition="right"
+            onClick={this._handleRoomCreation}
+          />
+          <div id="feedback" />
         </Segment>
       </OwnHeader>
     );

@@ -13,20 +13,41 @@ import {
   Image,
   List,
   Menu,
+  Popup,
   Responsive,
   Segment,
   Sidebar,
   Visibility
 } from "semantic-ui-react";
 import TopBox from "../components/TopBox";
+import { checksession } from "../components/Util";
 
-//Nav Bar
 export default class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = {activeItem: "home"};
+    this.state = {
+      activeItem: "home"
+    };
   }
 
+  checkLogIn() {
+    if (checksession() == "ErrorTokenFalse") {
+      window.alert("pls log in");
+    } else {
+      window.location = "./createRoom";
+    }
+  }
+ componentDidMount(){
+  if (checksession() == "ErrorTokenFalse") {
+    document.getElementById("createRoomButton").innerHTML = '<form action="/login"><button type="submit" class="ui primary button">Create room</button></form>';
+} else {
+  document.getElementById("createRoomButton").innerHTML = '<form action="/createRoom"><button type="submit" class="ui primary button">Create room</button></form>';
+
+}
+
+
+}
+  //----------------------------------Render-------------------------------//
   render() {
     const activeItem = this.state.activeItem;
 
@@ -43,19 +64,17 @@ export default class Home extends Component {
                 <Header as="h4" style={{ fontSize: "2em" }}>
                   Step 1:
                 </Header>
-                <p style={{ fontSize: "1.33em" }}>
-                  <Link href="./createRoom">
-                    <Button primary size="huge">
-                      Create Room
-                      <Icon name="right arrow" />
-                    </Button>
-                  </Link>
+                <p style={{ fontSize: "1.33em" }} id="createRoomButton">
+                  <Button primary size="huge" onClick={this.checkLogIn}>
+                    Create Room
+                    <Icon name="right arrow" />
+                  </Button>
                 </p>
                 <p style={{ fontSize: "1.33em" }}>
-                  You do not need to register to create a room.
+                  You need to register to create a room.
                 </p>
                 <p style={{ fontSize: "1.33em" }}>
-                  But: Get more functions by creating your own account!
+                  But: You can join a <a href="./roomOverview"> room </a>without being log in.
                 </p>
               </Grid.Column>
               <Grid.Column floated="right" width={7}>

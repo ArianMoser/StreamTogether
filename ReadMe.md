@@ -12,7 +12,7 @@ See our result online ([Website](http://gruppe2.testsites.info/ "Our Website"))
 | Development Mode starten             | npm run dev	      |	(Zum arbeiten und testen)           |
 | Alles erstellen                      | npm run build      | (ganz zum schluss wenn alles läuft) |
 | Starten mit den erstellten Dateien   | npm start	        |	(später für den Server)             |
-| Aktivieren des MYSQL event scheduler | event_scheduler=ON | (in XAMPP)                          |
+| Aktivieren des MYSQL event scheduler | SET GLOBAL event_scheduler="ON" | (in XAMPP)                          |
 > STRG + SHIFT + F = Code ausrichten
 
  ### ONLINE:
@@ -22,8 +22,9 @@ See our result online ([Website](http://gruppe2.testsites.info/ "Our Website"))
 
 1. Switch to home directory (home/alex/Web-Projekt/StreamTogether/)
 2. git pull
-3. npm run build  
-4. pm2 start npm -- start
+3. npm run build 
+4. Change "start" in package.json to "export NODE_ENV=production&&node ./dist/server.js"
+5. pm2 start npm -- start
 
 
 
@@ -43,36 +44,30 @@ See our result online ([Website](http://gruppe2.testsites.info/ "Our Website"))
 * WICHTIG:    SSL, Sicherer Zugang
 * Websockets: für Chat (Websockets chat example), für die Synchronisation zwischen den Räumen auch hilfreich
 
-* Alex:TODO:
-* Anzeigen für den Benutzer erstellen.
-* Cookie setzen
-
-
-|Thema:                               | Frontend         | Backend          |
-| -----------------------------------:| :--------------: | :--------------: |
-| Startseite                          | ok               |                  |
-| Login                               | ok               |                  |
-| Registrierung                       | ok               |                  |
-| Impressum                           | ok				       |  nicht notwendig |
-| Datenschutz                         | ok				       |  nicht notwendig |
-| Contact Us                          | ok(noch Maps?)   |                  |
-| Datenbank                           | ok               |                  |
-| Raumseite                           | teilweise        |                  |
-| Übersicht von Räumen                | begin            |                  |
-| Konto übersicht                     | ok               |                  |
-|                                     |                  |                  |
-| Einloggen                           | ok               |                  |
-| Ausloggen                           | ok               |                  |
-| Raum erstellen                      | ok               |                  |
-| Raum automatisiert löschen          | teilweise        |                  |
-| Username auto-geb                   |                  |                  |
-| Raum umbenennen                     |                  |                  |
-| Chat                                |                  |                  |
-| Suche                               | ok               |                  |
-| Api(abspielen)                      | ok               |                  |
-| Starten stoppen                     |                  |                  |
-| Liste nutzer in room                |                  |                  |
-| Playlistfunktion                    |                  |                  |
-| (VoteSystem)                        |                  |                  |
-| Invite Funktion                     |                  |                  |
-| Avatar hochladen/ändern             |                  |                  |
+|Thema:                               | Status           |
+| -----------------------------------:| :--------------: |
+| Startseite                          | ok               |
+| Login                               | ok               |
+| Registrierung                       | ok               |
+| Impressum                           | ok				 |
+| Datenschutz                         | ok				 |
+| Contact Us                          | ok  |
+| Datenbank                           | ok               |
+| Raumseite                           | verbessern       |
+| Übersicht von Räumen                | 3 nebeneinander  |
+| Konto übersicht                     | ok               |
+|                                     |                  |
+| Einloggen                           | ok               |
+| Ausloggen                           | ok               |
+| Raum erstellen                      | ok               |
+| Raum automatisiert löschen          | ok        |
+| (Username auto-geb)                 |                  |
+| Chat                                | ok                 |
+| Suche                               | ok               |
+| Api(abspielen)                      | ok               |
+| Starten stoppen                     |                  |
+| Liste nutzer in room                | ok                 |
+| Playlistfunktion                    | ok                 |
+| VoteSystem                        | teils                 |
+| Invite Funktion                     |                  |
+| Avatar hochladen/ändern             |                  |

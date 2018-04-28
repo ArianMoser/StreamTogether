@@ -1,5 +1,6 @@
 import { Component } from "react";
 import YouTube from "react-youtube";
+import PropTypes from "prop-types";
 
 export default class YouTubePlayer extends Component {
   constructor(props) {
@@ -11,6 +12,23 @@ export default class YouTubePlayer extends Component {
     this._onPlay = this._onPlay.bind(this);
     this._onReady = this._onReady.bind(this);
     this._onStateChanged = this._onStateChanged.bind(this);
+  }
+
+  static propTypes = {
+    databaseId: PropTypes.number,
+    handleVideoEnd: PropTypes.func,
+    timecode: PropTypes.string,
+    roomId: PropTypes.number,
+    videoId: PropTypes.string
+  };
+
+  static get defaultProps() {
+    return {
+      databaseId: 0,
+      timecode: 0,
+      roomId: 0,
+      videoId: ""
+    };
   }
 
   componentDidUpdate(nextProps, nextState) {

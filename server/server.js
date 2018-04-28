@@ -10,8 +10,151 @@ const server = http.createServer(exp);
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
+const io = require("socket.io")();
 
-//Datenbankverbindung aufbauen
+//Open connection to websocket for chat
+const port = 8000;
+io.listen(port);
+console.log("listening on port ", port);
+
+var rooms = [];
+//send the client every <interval> second a message
+io.on("connection", client => {
+  // user is connected
+
+  // user is disconnected
+  client.on("disconnect", event => {
+    // default disconnect event
+    var message = {
+      content: "User is disconnected",
+      username: "server",
+      timeStamp: Math.floor(Date.now() / 1000)
+    };
+    io.emit("sendMessageBack", { message });
+  });
+
+  client.on("leaveRoom", messageReceived => {
+    // user will leave the room (disconnect or switch page)
+    console.log("User will disconnect");
+    var username = messageReceived.username;
+    if (rooms.length != "0") {
+      rooms.map(room => {
+        // remove user from userlist of other rooms
+        console.log("Removing user from list");
+        var userlist = room.userlist;
+        if (userlist.length != "0") {
+          var countUser = room.userlist.length;
+          room.userlist = userlist.filter(user => {
+            return user !== username;
+          }); // removing user from other rooms
+          if (countUser != room.userlist.length) {
+            console.log("User removed from list");
+            //message room that the user disconnected
+            var messageDisconnect = {
+              content: messageReceived.username + " is disconnected",
+              username: "server",
+              timeStamp: Math.floor(Date.now() / 1000)
+            };
+            console.log(room.userlist);
+            io.emit("sendMessageBack", {
+              message: messageDisconnect,
+              userlist: room.userlist
+            });
+          } //end of if
+          console.log(room);
+        } //end of if
+      });
+    } // end of if
+  });
+
+  // user authentification
+  client.on("authentificate", messageReceived => {
+    console.log("User tries to authentificate");
+    var username = messageReceived.username;
+    var hashedValue = messageReceived.hashedValue;
+    var messageUserlist = [];
+    var message = {
+      content: messageReceived.username + " is connected",
+      username: "server",
+      timeStamp: Math.floor(Date.now() / 1000)
+    };
+    var roomAlreadyExists = false;
+    if (rooms.length != "0") {
+      rooms.map(room => {
+        if (room.hashedValue == hashedValue) {
+          roomAlreadyExists = true;
+          console.log("Room already exists");
+          var userlist = room.userlist;
+          var userAlreadyJoined = false;
+          if (userlist.length != "0") {
+            userlist.map(user => {
+              if (user == username) {
+                userAlreadyJoined = true;
+                console.log("User already inside of the userlist");
+              }
+            }); // end of iteration over userlist
+          } //end of if
+          if (userAlreadyJoined == false) {
+            userlist.push(username);
+            room.userlist = userlist;
+          } //end of if
+          messageUserlist = userlist;
+        } else {
+          // remove user from userlist of other rooms
+          console.log("Removing user from list");
+          var userlist = room.userlist;
+          if (userlist.length != "0") {
+            var countUser = room.userlist.length;
+            room.userlist = userlist.filter(user => {
+              return user !== username;
+            }); // removing user from other rooms
+            if (countUser != room.userlist.length) {
+              console.log("User removed from list");
+              //message room that the user disconnected
+              var messageDisconnect = {
+                content: messageReceived.username + " is disconnected",
+                username: "server",
+                timeStamp: Math.floor(Date.now() / 1000)
+              };
+              io.emit("sendMessageBack", {
+                message: messageDisconnect,
+                userlist: room.userlist
+              });
+            } //end of if
+            console.log(room);
+          } //end of if
+        } //end of else
+      }); // end of iteration over rooms
+    } //end of if
+    if (roomAlreadyExists == false) {
+      rooms.push({ hashedValue: hashedValue, userlist: [username] });
+    }
+    io.emit("sendMessageBack", { message: message, userlist: messageUserlist });
+  });
+
+  client.on("sendMessage", message => {
+    console.log("Received message");
+    var userlist = [];
+    if (rooms.length != "0") {
+      rooms.map(room => {
+        var userInRoom = false;
+        if (room.userlist.length != "0") {
+          room.userlist.map(user => {
+            if (user == message.username) {
+              userInRoom = true;
+            } //end of if
+          }); // end of iteration userlist
+        } //end of if
+        if (userInRoom == true) {
+          userlist = room.userlist;
+        } // end of if
+      }); // end of iteration room
+    } //end of if
+    io.emit("sendMessageBack", { message: message, userlist: userlist });
+  });
+});
+
+//Open connection to database
 const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -64,6 +207,9 @@ app
         exp.post("/getuserbyemail", (req, res) => {
           database.selectUserByEmail(res, req.body, connection);
         });
+        exp.post("/getUserById", (req, res) => {
+          database.selectUserById(res, req.body, connection);
+        });
         exp.post("/getuserandroombyusername", (req, res) => {
           database.selectUserAndRoomByUsername(res, req.body, connection);
         });
@@ -76,8 +222,11 @@ app
         exp.post("/register", (req, res) => {
           database.insertUser(res, req.body, connection);
         });
-        exp.post("/selectRooms" , (req, res) => {
+        exp.post("/selectRooms", (req, res) => {
           database.selectRooms(res, req.body, connection);
+        });
+        exp.post("/selectRoomById", (req, res) => {
+          database.selectRoomById(res, req.body, connection);
         });
         exp.post("/selectRoomByTitle", (req, res) => {
           database.selectRoomByTitle(res, req.body, connection);
@@ -103,7 +252,6 @@ app
         exp.post("/updateUpVotes", (req, res) => {
           database.updateUpVotes(res, req.body, connection);
         });
-
       }
     });
 

@@ -14,18 +14,21 @@
     "babel-preset-es2017": "^6.24.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
-    "express": "^4.16.3",
+    "express": "^4.15.2",
     "file-loader": "^1.1.11",
     "jsonwebtoken": "^8.2.1",
     "mysql": "^2.15.0",
     "next": "^5.0.0",
-    "react": "^16.2.0",
+    "react": "^16.3.2",
+    "react-copy-to-clipboard": "^5.0.1",
     "react-dom": "^16.2.0",
     "react-icons": "^2.2.7",
     "react-youtube": "^7.6.0",
     "semantic-ui-css": "^2.3.1",
     "semantic-ui-react": "^0.79.0",
     "sfcookies": "^1.0.2",
+    "socket.io": "^1.7.4",
+    "socket.io-client": "^2.1.0",
     "url-loader": "^1.0.1",
     "youtube-search-api-with-axios": "^2.0.0"
   },
@@ -33,7 +36,7 @@
     "babel-node": "babel-node --presets=es2017,react",
     "dev": "npm run babel-node -- ./server/server",
     "build": "babel ./server/ -s -d dist && next build",
-    "start": "next start"
+    "start": "set NODE_ENV=production&& node dist/server.js"
   },
   "author": "",
   "license": "ISC"

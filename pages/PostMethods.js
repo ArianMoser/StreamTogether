@@ -19,57 +19,7 @@ export const userFunctionByUsername = (api, username) => {
     });
   });
 };
-export const roomFunctionShowAll = api => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: api,
-      type: "POST",
-      cache: false,
-      contentType: "application/json",
-      data: JSON.stringify({}),
-      success: function(res) {
-        resolve(res);
-      },
-      error: function(xhr, status, err) {
-        reject(err);
-      }
-    });
-  });
-};
-export const roomFunctionByTitle = (api, title) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: api,
-      type: "POST",
-      cache: false,
-      contentType: "application/json",
-      data: JSON.stringify({ title: title }),
-      success: function(res) {
-        resolve(res);
-      },
-      error: function(xhr, status, err) {
-        reject(err);
-      }
-    });
-  });
-};
-export const roomFunctionByHashedValue = (api, hashedValue) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: api,
-      type: "POST",
-      cache: false,
-      contentType: "application/json",
-      data: JSON.stringify({ hashedValue: hashedValue }),
-      success: function(res) {
-        resolve(res);
-      },
-      error: function(xhr, status, err) {
-        reject(err);
-      }
-    });
-  });
-};
+//----------------------GETUSERDATA----------------------//
 export const userFunctionByEmail = (api, email) => {
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -87,6 +37,97 @@ export const userFunctionByEmail = (api, email) => {
     });
   });
 };
+//----------------------GETUSERDATA----------------------//
+export const userFunctionById = (api, id) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({ id: id }),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
+//----------------------GETROOMDATA----------------------//
+export const roomFunctionShowAll = api => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({}),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
+//----------------------GETROOMDATA----------------------//
+export const roomFunctionById = (api, roomId) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({roomId: roomId}),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
+//----------------------GETROOMDATA----------------------//
+export const roomFunctionByTitle = (api, title) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({ title: title }),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
+//----------------------GETROOMDATA----------------------//
+export const roomFunctionByHashedValue = (api, hashedValue) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({ hashedValue: hashedValue }),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
+//----------------------GETVIDEODATA----------------------//
 export const videoFunctionByRoomId = (api, roomId) => {
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -104,6 +145,7 @@ export const videoFunctionByRoomId = (api, roomId) => {
     });
   });
 };
+//----------------------GETVIDEODATA----------------------//
 export const videoFunctionByYoutubeId = (api, youtubeId) => {
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -122,14 +164,14 @@ export const videoFunctionByYoutubeId = (api, youtubeId) => {
   });
 };
 //----------------------Login----------------------//
-export const userFunctionLogin = (api, username) => {
+export const userFunctionLogin = (api, username, email) => {
   return new Promise((resolve, reject) => {
     $.ajax({
       url: api,
       type: "POST",
       cache: false,
       contentType: "application/json",
-      data: JSON.stringify({ username: username, email: username }),
+      data: JSON.stringify({ username: username, email: email }),
       success: function(res) {
         resolve(res);
       },
@@ -304,8 +346,7 @@ export const changePassword = (api, id, passwordNew) => {
     });
   });
 };
-
-// thumbs-up/thumbs-down
+//----------------------thumbs-up/thumbs-down----------------------//
 export const voteVideo = (api, roomId, videoId, voteValue) => {
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -349,7 +390,7 @@ export const deleteUser = (api, id) => {
     });
   });
 };
-
+//----------------------Delete playlist----------------------//
 export const deletePlaylist = (api, roomId, videoId) => {
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -412,4 +453,4 @@ export const alterRoomEvent = (api, roomid) => {
       }
     });
   });
-}
+};

@@ -1,6 +1,7 @@
 import { Component } from "react";
 import { Button, Icon } from "semantic-ui-react";
 import * as Icons from "react-icons/lib/fa";
+import PropTypes from "prop-types";
 
 class MyButton extends Component {
   constructor(props) {
@@ -14,19 +15,38 @@ class MyButton extends Component {
     return {
       color: "red",
       content: "",
+      disabled: false,
       icon: "heart"
     };
   }
 
-  componentWillMount() {
-    // console.log(this.props);
-  }
+  static propTypes = {
+    color: PropTypes.string,
+    content: PropTypes.string,
+    disabled: PropTypes.bool,
+    icon: PropTypes.string,
+    onClick: PropTypes.func
+  };
 
+  //-------------------------functions of react----------------------------//
+  componentWillMount() {
+    this.setState({
+      disabled: this.props.disabled
+    });
+  }
+  //----------------------------event handlers---------------------------//
   _handleClick(event) {
     this.props.onClick();
     console.log("Button clicked");
   }
+  //----------------------functions------------------------------//
+  _setDisable(value) {
+    this.setState({
+      disabled: value
+    });
+  }
 
+  //----------------------------------Render-------------------------------//
   render() {
     var icon = <Icons.FaStar />;
     switch (this.props.icon) {
@@ -49,6 +69,7 @@ class MyButton extends Component {
         <Button
           color={this.props.color}
           content={this.props.content}
+          disabled={this.state.disabled}
           onClick={this._handleClick}
         >
           {icon}

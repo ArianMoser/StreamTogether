@@ -2,13 +2,14 @@ import React, { Fragment, Component } from "react";
 import Link from "next/link";
 import { Button, Container, Menu } from "semantic-ui-react";
 import { bake_cookie, read_cookie, delete_cookie } from "sfcookies";
-const jwt = require("jsonwebtoken");
+import PropTypes from "prop-types";
+import {checksession} from "./Util";
 
 export default class Navbar extends Component {
-  state = {};
-
   constructor(props) {
     super(props);
+    this.state = {};
+    //bind event handler
     this.logoutFunction = this.logoutFunction.bind(this);
   }
 
@@ -19,33 +20,24 @@ export default class Navbar extends Component {
     };
   }
 
-  //Checksession
-  checksession() {
-    if (read_cookie("StreamTogether").length != 0) {
-      try {
-        var decodedsession = jwt.verify(
-          read_cookie("StreamTogether"),
-          "shhhhh"
-        );
-        return decodedsession.username;
-      } catch (err) {
-        console.log("Error-Message: " + err.message);
-        return "ErrorTokenFalse";
-      }
-    } else {
-      return "ErrorTokenFalse";
-    }
-  }
+  static propTypes = {
+    name: PropTypes.string,
+    fixed: PropTypes.bool
+  };
 
+  //-------------------------functions of react----------------------------//
   componentDidMount() {
     this.setState({ activeItem: this.props.name });
-    var answer = this.checksession();
+    var answer = checksession();
     console.log("Current user: '" + answer + "'");
     console.log("Active Item: " + this.props.name);
   }
 
+  //----------------------------event handlers---------------------------//
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
 
+  //----------------------functions------------------------------//
+  // deletes the cookie and redirect the user to the login page
   logoutFunction(event) {
     if (read_cookie("StreamTogether").length != 0) {
       delete_cookie("StreamTogether");
@@ -53,12 +45,13 @@ export default class Navbar extends Component {
     }
   }
 
+  //----------------------------------Render-------------------------------//
   render() {
     const fixed = this.props.fixed;
     const activeItem = this.props.name;
     var buttonPlaceholder = "";
 
-    if (this.checksession() != "ErrorTokenFalse") {
+    if (checksession() != "ErrorTokenFalse") {
       // TODO: Ausloggen button hiermit
       var buttonPlaceholder = (
         <span>

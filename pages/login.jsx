@@ -4,7 +4,8 @@ import React, { Component } from "react";
 import $ from "jquery";
 import { userFunctionLogin } from "./PostMethods";
 const bcrypt = require("bcryptjs");
-import { bake_cookie } from "sfcookies";
+import { bake_cookie} from "sfcookies";
+import {checksession} from "../components/Util";
 const jwt = require("jsonwebtoken");
 
 import {
@@ -19,6 +20,20 @@ import {
 } from "semantic-ui-react";
 
 export default class Login extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentDidMount() {
+    if (checksession() != "ErrorTokenFalse")
+    {
+      window.location = "/";
+    }
+  }
+
+  //----------------------------event handlers---------------------------//
+  // handles the login event
   async onSubmitHandler(event) {
     event.preventDefault();
 
@@ -28,7 +43,7 @@ export default class Login extends Component {
     console.log("Username : " + username);
     console.log("Passwort : " + password);
 
-    const response = await userFunctionLogin("/login", username);
+    const response = await userFunctionLogin("/login", username, username);
     console.log(response);
     if (response.length == "0") {
       console.log("No user found");
@@ -41,14 +56,14 @@ export default class Login extends Component {
           "Welcome " + response[0].username;
         console.log("Password correct!");
         document.getElementById("feedback").innerHTML =
-          '<div class="ui positive message"><div class="header">Login successful</div><p>You will be redirected</p></div>';
+          '<div class="ui positive message"><div class="header">Login successful</div><p>Forwarding...</p></div>';
         setTimeout(continueToLogIn, 2000);
         function continueToLogIn() {
           //Set Cookie
           var sessiontoken = jwt.sign(
             {
               username: response[0].username,
-              exp: Math.floor(Date.now() / 1000) + (60 * 60) * 24
+              exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24
             },
             "shhhhh"
           );
@@ -63,7 +78,7 @@ export default class Login extends Component {
       }
     }
   }
-
+  //----------------------------------Render-------------------------------//
   render() {
     return (
       <OwnHeader useFooter={false} useHeader={false}>

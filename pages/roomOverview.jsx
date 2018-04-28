@@ -22,34 +22,22 @@ import {
 } from "semantic-ui-react";
 import { roomFunctionShowAll } from "./PostMethods";
 
-
-
 export default class roomOverview extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
-  }
-
-  static propTypes = {
-    activeItem: PropTypes.string,
-    rooms: PropTypes.object,
-    userId: PropTypes.string,
-    username: PropTypes.string
-  }
-
-  static get defaultProps() {
-    return {
+    this.state = {
       activeItem: "rooms",
       rooms: {},
       userId: "",
       username: ""
     };
   }
-
+  //-------------------------functions of react----------------------------//
   componentWillMount() {
     this._getAllRooms();
   }
 
+  //----------------------functions------------------------------//
   async _getAllRooms() {
     console.log("Loading rooms");
     const responseGetRooms = await roomFunctionShowAll("/selectRooms");
@@ -57,19 +45,16 @@ export default class roomOverview extends Component {
     console.log(responseGetRooms);
     this.setState({
       rooms: responseGetRooms
-    }).then(
-      function() {
-        console.log("Completed setState for rooms");
-      }.bind(this)
-    );
+    });
   }
 
+  //----------------------------------Render-------------------------------//
   render() {
-    const activeItem = this.props.activeItem;
-
+    const activeItem = this.state.activeItem;
     const rooms = this.state.rooms;
-    console.log(rooms);
     var roomCardList = [];
+    console.log(rooms);
+
     if (rooms != {} && rooms != undefined) {
       roomCardList = Object.keys(rooms).map(room => (
         <RoomCard
@@ -78,6 +63,7 @@ export default class roomOverview extends Component {
           hashedValue={rooms[room].hashedValue}
           key={room}
           password={rooms[room].password}
+          thumbnail={rooms[room].thumbnail}
           title={rooms[room].title}
           userNumber={rooms[room].ActiveUser}
         />
@@ -97,17 +83,25 @@ export default class roomOverview extends Component {
           <Grid container stackable verticalAlign="middle">
             {roomCardList.map(function(roomCard) {
               console.log(roomCard);
-              if (roomCard.key % 2 == 0) {
+              if (roomCard.key % 3 == 0) {
                 console.log("even");
                 var returnValue = (
-                  <Grid.Column width={8}>{roomCard}</Grid.Column>
+                  <Grid.Column width={5}>{roomCard}</Grid.Column>
                 );
-              } else {
-                console.log("odd");
+              } 
+              if (roomCard.key % 3 == 1) {
+                console.log("even");
                 var returnValue = (
-                  <Grid.Column width={8}>{roomCard}</Grid.Column>
+                  <Grid.Column width={5}>{roomCard}</Grid.Column>
                 );
               }
+              if (roomCard.key % 3 == 2) {
+                console.log("even");
+                var returnValue = (
+                  <Grid.Column width={5}>{roomCard}</Grid.Column>
+                );
+              }
+              
               return returnValue;
             })}
           </Grid>

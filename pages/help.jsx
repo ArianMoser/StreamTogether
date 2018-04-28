@@ -24,21 +24,17 @@ import {
   Statistic
 } from "semantic-ui-react";
 
-//Nav Bar
 export default class Help extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
-  }
-
-  static get defaultProps() {
-    return {
+    this.state = {
       activeItem: "help"
     };
   }
 
+  //----------------------------------Render-------------------------------//
   render() {
-    const activeItem = this.props.activeItem;
+    const activeItem = this.state.activeItem;
 
     return (
       <OwnHeader>
@@ -50,7 +46,10 @@ export default class Help extends Component {
                 <p style={{ fontSize: "1.33em" }}>
                   Here are some important things that may will help you.
                 </p>
-                <p> Alex has a small penis</p>
+                <p>How to create a room...</p>
+                <p>how to register...</p>
+                <p> How to log in</p>
+                <p> ... </p>
               </Grid.Column>
             </Grid.Row>
           </Grid>
