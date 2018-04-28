@@ -24,14 +24,18 @@ import { checksession } from "../components/Util";
 export default class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = { activeItem: "home" };
+    this.state = {
+      activeItem: "home",
+    };
   }
+
+
 
   checkLogIn() {
     if (checksession() == "ErrorTokenFalse") {
       window.alert("pls log in");
     } else {
-      window.location="./createRoom";
+      window.location = "./createRoom";
     }
   }
 
