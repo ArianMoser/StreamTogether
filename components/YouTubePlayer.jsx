@@ -14,10 +14,10 @@ export default class YouTubePlayer extends Component {
     this._onStateChanged = this._onStateChanged.bind(this);
   }
 
-  static PropTypes = {
+  static propTypes = {
     databaseId: PropTypes.number,
     handleVideoEnd: PropTypes.func,
-    timecode: PropTypes.number,
+    timecode: PropTypes.string,
     roomId: PropTypes.number,
     videoId: PropTypes.string
   };

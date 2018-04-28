@@ -9,6 +9,7 @@ import {
   Menu,
   Responsive,
   Segment,
+  Table,
   Visibility
 } from "semantic-ui-react";
 import Link from "next/link";
@@ -18,16 +19,24 @@ import OwnHeader from "../components/Header";
 import YouTubeSearch from "../components/YouTubeSearch";
 import TopBox from "../components/TopBox";
 import {
+  alterRoomEvent,
+  connectVideoAndRoom,
+  deletePlaylist,
+  insertVideo,
   changeRoomId,
   roomFunctionByHashedValue,
-  videoFunctionByRoomId
+  videoFunctionByRoomId,
+  videoFunctionByYoutubeId,
+  voteVideo
 } from "./PostMethods";
-import { read_cookie, delete_cookie } from "sfcookies";
+import { checksession } from "../components/Util";
 import Chat from "../components/Chat";
+import YouTubePlayer from "../components/YouTubePlayer";
+import VideoElement from "../components/VideoElement";
 
 const divStyle = {
-  color: 'blue',
-  backgroundImage: 'url(../pics/download.jpg)'
+  color: "blue",
+  backgroundImage: "url(../pics/download.jpg)"
 };
 
 const jwt = require("jsonwebtoken");
@@ -40,15 +49,11 @@ export default class Room extends Component {
       activeItem: "empty", //active item of the Navbar
       creator: "default-creator",
       description: "Default-description",
-      id: "0",
       roomId: "0",
       title: "Default-title",
       userName: "",
-      userlist: {},
       videos: []
     };
-
-
   }
 
   //-------------------------functions of react----------------------------//
@@ -60,40 +65,39 @@ export default class Room extends Component {
     //this._updateUserRoomId();
   }
 
-  componentDidUpdate(nextProps, nextState) {
-    /*  if (nextState.videos != this.state.videos) {
-      console.log("Rerendering");
-      setTimeout(this.forceUpdate(), 200);
-    } */
+  componentWillUpdate(nextProps, nextState) {
+    if (
+      nextState.videos.length != this.state.videos.length &&
+      this.state.videos[0] != undefined
+    ) {
+      // console.log("Changing state");
+      this.setState({
+        videos: nextState.videos
+      });
+    }
   }
+
   //----------------------functions------------------------------//
   // updates the active room of the current user in the user table
   async _updateUserRoomId() {
     console.log("Update current room of current user");
 
-    const user = await this.checksession(); // gets the username of current user
+    const user = await checksession(); // gets the username of current user
     this.setState({
       userName: user
     });
     const roomId = this.state.roomId;
-
-    //console.log("Username: " + user);
-    // console.log("roomId:   " + roomId);
-
     const responseUpdate = await changeRoomId(
       "/updateUserRoomId",
       user,
       roomId
     );
-    /*console.log(
-      "Reg. Complete | Affected Rows: " + responseUpdate.affectedRows
-    );*/
     if (responseUpdate.affectedRows == "1") {
       console.log("Changed current room of active user ");
     } else {
       console.log("Couldnt change current room of active user");
     }
-  }
+  } // end of _updateUserRoomId
 
   // gets room information
   async _getInformation() {
@@ -102,28 +106,19 @@ export default class Room extends Component {
     //reads hashedValue from the given url query
     var hashedValue = this.props.url.query.hv;
     console.log("Found hashedValue :" + hashedValue);
-    this.setState({hv: hashedValue});
+    this.setState({ hv: hashedValue });
     console.log("Tries to receive room information of the database");
     // trys to receive more room information from the database
     const responseRoomInformation = await roomFunctionByHashedValue(
       "/selectRoomInformation",
       hashedValue
     );
-    // console.log("Reg. Complete | Count : " + responseRoomInformation.length);
 
     //check if db push succeded
     if (responseRoomInformation.length == "1") {
       console.log("Request for more room information succeded");
-      /*console.log(responseRoomInformation);
-      console.log("RoomId:      " + responseRoomInformation[0].ID);
-      console.log("Title:       " + responseRoomInformation[0].title);
-      console.log("Ersteller:   " + responseRoomInformation[0].Ersteller);
-      console.log("Description: " + responseRoomInformation[0].description); */
       // get videos of room
       var videos = await this._getVideos(responseRoomInformation[0].ID);
-      this.setState({
-        videos: videos
-      });
       // saves the received room information
       this.setState({
         creator: responseRoomInformation[0].Ersteller,
@@ -139,7 +134,7 @@ export default class Room extends Component {
       // todo: add dialog
       console.log("Cant receive room information from the database");
     }
-  }
+  } //end of function _getInformation()
 
   // get videos of the room
   async _getVideos(roomId) {
@@ -152,53 +147,238 @@ export default class Room extends Component {
     return responseVideos;
   }
 
-  // reads the username out of the cookie
-  checksession() {
-    if (read_cookie("StreamTogether").length != 0) {
-      try {
-        var decodedsession = jwt.verify(
-          read_cookie("StreamTogether"),
-          "shhhhh"
-        );
-        return decodedsession.username;
-      } catch (err) {
-        console.log("Error-Message: " + err.message);
-        return "ErrorTokenFalse";
-      }
+  // is called, if you chose a video,
+  // -> pushs the video into the database
+  // -> creates connection between the video and the room (table playlist)
+  async _chooseVideo(video) {
+    var channelName = video.snippet.channelTitle;
+    var channelId = video.snippet.channelId;
+    var videoDescription = video.snippet.description;
+    var videoThumbnailUrl = video.snippet.thumbnails.default.url;
+    var videoTitle = video.snippet.title;
+    var videoId = video.id.videoId;
+
+    var videoList = this.state.videos.slice();
+    var video = {
+      videoTitle: videoTitle,
+      videoDescription: videoDescription,
+      videoId: videoId,
+      videoThumbnailUrl: videoThumbnailUrl,
+      channelId: channelId,
+      channelName: channelName
+    };
+    videoList.push(video);
+
+    console.log("Start pushing video to database");
+    //check if video is already inside of the database
+    var databaseId = await this._getDatabaseId(videoId);
+    if (databaseId == 0) {
+      // push video into database
+      const responseVideoInsertion = await insertVideo(
+        "/createVideo",
+        videoId,
+        videoTitle,
+        videoDescription,
+        videoThumbnailUrl,
+        channelId,
+        channelName,
+        this.state.userName
+      );
+      if (responseVideoInsertion.affectedRows == "1") {
+        console.log("Video inserted succesfully");
+        // Now get the database-id to connect room and video inside of playlist
+        databaseId = await this._getDatabaseId(videoId);
+      } else {
+        console.log("Couldnt insert Video into database");
+        return false;
+      } //end of else
     } else {
-      return "ErrorTokenFalse";
+      // Video is already in the database
+      console.log("Video is already in the database");
+    } // end of else
+    // connect room and video
+    const responsePlaylistInsertion = await connectVideoAndRoom(
+      "/createPlaylist",
+      databaseId,
+      this.state.roomId
+    );
+    if (responsePlaylistInsertion.affectedRows == "1") {
+      console.log("Created connection between video and room");
+    } else {
+      console.log("Couldnt create connection between video and room");
+    }
+    var videos = await this._getVideos(this.state.roomId);
+    // alters the delete room event
+    this._alterDeleteEvent(this.state.roomId);
+    console.log("Videos");
+    console.log(videos);
+
+    this.setState({
+      videos: videos
+    });
+  }
+
+  // alters the deletion event of the room
+  async _alterDeleteEvent(roomId) {
+    console.log("Alter room event");
+    if (roomId != 0 && roomId != undefined) {
+      const responseAlterEvent = await alterRoomEvent(
+        "/updateDeleteEvent",
+        roomId
+      );
+      console.log(responseAlterEvent);
     }
   }
+
+  // gets called, if the video is connectVideoAndRoom
+  // deletes connection between video and room (playlist table)
+  // alters the delete event for the room
+  async _nextVideo(roomId, videoId) {
+    console.log("Next Video");
+    this._deleteVideo(roomId, videoId);
+    this._alterDeleteEvent(roomId);
+  }
+
+  // votes for the video (inside of the playlist table)
+  async _voteVideo(roomId, databaseId, voteValue) {
+    console.log("Vote video");
+    const responseVoteVideo = await voteVideo(
+      "/updateUpVotes",
+      roomId,
+      databaseId,
+      voteValue
+    );
+    if (responseVoteVideo.affectedRows == "1") {
+      console.log("Video voted");
+      var videos = await this._getVideos(roomId);
+      this.setState({
+        videos: videos
+      });
+    } else {
+      console.log("Error during voting process");
+    }
+  }
+
+  // deletes connection between video and room (playlist table)
+  async _deleteVideo(roomId, videoId) {
+    console.log("Delete Video");
+    const responseDeleteVideo = await deletePlaylist(
+      "/deletePlaylist",
+      roomId,
+      videoId
+    );
+    if (responseDeleteVideo.affectedRows == "1") {
+      console.log("Deleted Video in table playlist");
+      var videos = await this._getVideos(this.state.roomId);
+      this.setState({
+        videos: videos
+      });
+    } else {
+      console.log("Error during deleting process of video");
+    }
+  }
+
+  // checks, if the video is already in the database
+  // if yes -> returns the databaseId of the video
+  async _getDatabaseId(youtubeId) {
+    const responseDatabaseId = await videoFunctionByYoutubeId(
+      "/selectVideoByYoutubeId",
+      youtubeId
+    );
+    if (responseDatabaseId.length == "1") {
+      console.log("Found a data set");
+      return responseDatabaseId[0].ID;
+    } else {
+      if (responseDatabaseId.length == "0") {
+        console.log("Couldnt find any dataset");
+        return 0;
+      } else {
+        console.log("Found multiple datasets. Working with default (0)");
+        return responseDatabaseId[0].ID;
+      }
+    }
+  }
+
   //----------------------------------Render-------------------------------//
   render() {
     const activeItem = this.state.activeItem;
     const title = this.state.title;
     const description = this.state.description;
-    const videos = this.state.videos;
-
-    console.log("UserName:" + this.state.userName);
-    console.log("roomId:" + this.state.roomId);
+    //default values
+    var videoPlayer = <h2>Noch kein Video ausgewählt.</h2>;
+    var playlist = <div>Penis</div>;
+    // loads the videoPlayer
+    console.log("Loads videoPlayer");
+    var videos = this.state.videos;
+    if (videos[0] != undefined) {
+      var videoPlayer = (
+        <YouTubePlayer
+          databaseId={videos[0].video_ID}
+          handleVideoEnd={(roomId, videoId) => this._nextVideo(roomId, videoId)}
+          timecode="0"
+          roomId={videos[0].room_ID}
+          videoId={videos[0].youtube_id}
+        />
+      );
+      // loads the playlist
+      console.log("Loads the playlist");
+      playlist = videos.map(video => {
+        return (
+          <VideoElement
+            channelId={video.channel_id}
+            channelName={video.channel_name}
+            databaseId={video.video_ID}
+            handleDelete={(roomId, databaseId) =>
+              this._deleteVideo(roomId, databaseId)
+            }
+            handleVote={(roomId, databaseId, voteValue) =>
+              this._voteVideo(roomId, databaseId, voteValue)
+            }
+            roomId={video.room_ID}
+            videoDescription={video.description}
+            videoId={video.youtube_id}
+            videoThumbnailUrl={video.thumbnail_url}
+            videoTitle={video.title}
+          />
+        );
+      }); //  end of iteration over videos
+    } // end of if
 
     return (
       <OwnHeader>
         <TopBox activeItem={activeItem} layer1={title} layer2={description} />
         <Segment style={{ padding: "8em 0em" }} vertical>
           <Grid container stackable verticalAlign="middle">
-          <Grid.Row>
-            <List divided verticalAlign="middle">
-              <YouTubeSearch
-                creator={this.state.creator}
-                getVideos={roomId => this._getVideos(roomId)}
-                roomId={this.state.roomId}
-                userName={
-                  this.state.userName != undefined ? this.state.userName : ""
-                }
-                videos={videos}
-              />
-            </List>
-          </Grid.Row>
-            <Chat hv={this.state.hv}/>
-        </Grid>
+            <Grid.Row>
+              <List divided verticalAlign="middle">
+                <Grid>
+                  <Grid.Row>
+                    <Grid.Column width={10}>
+                      {videoPlayer}
+                      <YouTubeSearch
+                        creator={this.state.creator}
+                        getVideos={roomId => this._getVideos(roomId)}
+                        chooseVideo={video => this._chooseVideo(video)}
+                        roomId={this.state.roomId}
+                        userName={
+                          this.state.userName != undefined
+                            ? this.state.userName
+                            : ""
+                        }
+                        videos={videos}
+                      />
+                    </Grid.Column>
+                    <Grid.Column width={4}>
+                      <Table basic="very" celled collapsing>
+                        <Table.Body>{playlist}</Table.Body>
+                        <Chat hv={this.state.hv}/>
+                      </Table>
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+              </List>
+            </Grid.Row>
+          </Grid>
         </Segment>
       </OwnHeader>
     );

@@ -20,7 +20,7 @@ class MyButton extends Component {
     };
   }
 
-  static PropTypes = {
+  static propTypes = {
     color: PropTypes.string,
     content: PropTypes.string,
     disabled: PropTypes.bool,
