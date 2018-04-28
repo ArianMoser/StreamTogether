@@ -319,7 +319,7 @@ export default class Room extends Component {
     const description = this.state.description;
     //default values
     var videoPlayer = <h2>Noch kein Video ausgewählt.</h2>;
-    var playlist = <div>Penis</div>;
+    var playlist = <div></div>;
     // loads the videoPlayer
     console.log("Loads videoPlayer");
     console.log("UrlForInvite:" + this.state.urlForInvite);
@@ -383,10 +383,14 @@ export default class Room extends Component {
                       />
                     </Grid.Column>
                     <Grid.Column width={4}>
-                      <Table basic="very" celled collapsing>
-                        <Table.Body>{playlist}</Table.Body>
+                      <Grid.Row>
+                        <Table basic="very" celled collapsing>
+                          <Table.Body>{playlist}</Table.Body>
+                        </Table>
+                      </Grid.Row>
+                      <Grid.Row>
                         <Chat hv={this.state.hv} />
-                      </Table>
+                      </Grid.Row>
                     </Grid.Column>
                   </Grid.Row>
                   <CopyToClipboard

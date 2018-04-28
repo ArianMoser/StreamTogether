@@ -3,15 +3,17 @@ import axios from "axios";
 import YouTubePlayer from "../components/YouTubePlayer";
 import MyButton from "../components/Button";
 import {
-  List,
   Button,
+  Comment,
+  Container,
+  Header,
   Icon,
   Input,
   Grid,
+  List,
   Segment,
   Sidebar,
-  Table,
-  Container
+  Table
 } from "semantic-ui-react";
 import VideoElement from "../components/VideoElement";
 import PropTypes from "prop-types";
@@ -194,15 +196,15 @@ export default class Chat extends Component {
           } //end of else
         } //end of if
         return (
-          <List.Item>
-            <List.Content key={index} style={style}>
-              {" "}
-              <List.Header>
-                {chatElement.username} ({chatElement.beautifulTime}) :
-              </List.Header>{" "}
-              {chatElement.message}{" "}
-            </List.Content>
-          </List.Item>
+          <Comment>
+            <Comment.Content key={index} style={style}>
+              <Comment.Author as="a">{chatElement.username}</Comment.Author>
+              <Comment.Metadata>
+                <span>{chatElement.beautifulTime}</span>
+              </Comment.Metadata>
+              <Comment.Text>{chatElement.message}</Comment.Text>
+            </Comment.Content>
+          </Comment>
         );
       });
     } // end of chatText
@@ -221,17 +223,21 @@ export default class Chat extends Component {
     return (
       <Grid>
         <Grid.Row>
-          <div className="App">
-            <p className="App-intro">
-              This is the Userlist: {userlistElement}
-              <p />
-              This is the username: {this.state.username}
-            </p>
-              <Sidebar.Pushable as={Segment} style={{maxHeight: 300, overflow:scroll}}>
-                <div style={divStyle}>
-                  <List celled>{chatTextElement}</List>
-                </div>
-              </Sidebar.Pushable>
+          <div className="App" >
+            <p className="App-intro">This is the Userlist: {userlistElement}</p>
+            <Sidebar.Pushable
+              as={Segment}
+              style={{ maxHeight: 300, maxWidth: 400, overflow: scroll }}
+            >
+              <div style={divStyle}>
+                <Comment.Group minimal style={{width:390}}>
+                  <Header as="h3" dividing>
+                    Chats
+                  </Header>
+                  {chatTextElement}
+                </Comment.Group>
+              </div>
+            </Sidebar.Pushable>
             <Input
               id="chat"
               focus
