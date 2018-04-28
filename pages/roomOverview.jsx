@@ -83,17 +83,25 @@ export default class roomOverview extends Component {
           <Grid container stackable verticalAlign="middle">
             {roomCardList.map(function(roomCard) {
               console.log(roomCard);
-              if (roomCard.key % 2 == 0) {
+              if (roomCard.key % 3 == 0) {
                 console.log("even");
                 var returnValue = (
-                  <Grid.Column width={8}>{roomCard}</Grid.Column>
+                  <Grid.Column width={5}>{roomCard}</Grid.Column>
                 );
-              } else {
-                console.log("odd");
+              } 
+              if (roomCard.key % 3 == 1) {
+                console.log("even");
                 var returnValue = (
-                  <Grid.Column width={8}>{roomCard}</Grid.Column>
+                  <Grid.Column width={5}>{roomCard}</Grid.Column>
                 );
               }
+              if (roomCard.key % 3 == 2) {
+                console.log("even");
+                var returnValue = (
+                  <Grid.Column width={5}>{roomCard}</Grid.Column>
+                );
+              }
+              
               return returnValue;
             })}
           </Grid>

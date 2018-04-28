@@ -59,7 +59,6 @@ var call = (module.exports = {
       );
       res.send(rows);
     });
-    //AUF SICHERHEIT DER EINGEGEBENEN SACHEN NOCH PRÜFEN MYSQLI STRING UND SO DIESER SCHEIß!
   },
   selectUserByUsernameOrEmail: function(res, dieNutzerDaten, connection) {
     console.log(dieNutzerDaten);

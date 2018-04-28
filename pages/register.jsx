@@ -96,7 +96,8 @@ export default class register extends Component {
               }
             } else {
               // exception during Registration db push
-              // todo: add dialog
+              document.getElementById("feedback").innerHTML =
+              '<div class="ui negative message"><div class="header">Error</div><p>Internal Error</p></div>';
             }
           } else {
             console.log("Email is Used!");
