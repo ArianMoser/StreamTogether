@@ -6,6 +6,7 @@ import {
   List,
   Icon,
   Input,
+  Popup,
   Menu,
   Responsive,
   Segment,
@@ -24,10 +25,11 @@ import {
 } from "./PostMethods";
 import { read_cookie, delete_cookie } from "sfcookies";
 import Chat from "../components/Chat";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const divStyle = {
-  color: 'blue',
-  backgroundImage: 'url(../pics/download.jpg)'
+  color: "blue",
+  backgroundImage: "url(../pics/download.jpg)"
 };
 
 const jwt = require("jsonwebtoken");
@@ -45,10 +47,10 @@ export default class Room extends Component {
       title: "Default-title",
       userName: "",
       userlist: {},
-      videos: []
+      videos: [],
+      urlForInvite: "",
+      copied: false
     };
-
-
   }
 
   //-------------------------functions of react----------------------------//
@@ -58,6 +60,8 @@ export default class Room extends Component {
 
   componentDidMount() {
     //this._updateUserRoomId();
+    this.state.urlForInvite = window.location.href;
+    console.log("url:" + this.state.urlForInvite);
   }
 
   componentDidUpdate(nextProps, nextState) {
@@ -102,7 +106,7 @@ export default class Room extends Component {
     //reads hashedValue from the given url query
     var hashedValue = this.props.url.query.hv;
     console.log("Found hashedValue :" + hashedValue);
-    this.setState({hv: hashedValue});
+    this.setState({ hv: hashedValue });
     console.log("Tries to receive room information of the database");
     // trys to receive more room information from the database
     const responseRoomInformation = await roomFunctionByHashedValue(
@@ -169,6 +173,13 @@ export default class Room extends Component {
       return "ErrorTokenFalse";
     }
   }
+
+  clearCopyMessage(){
+    document.getElementById("copied").innerHTML = "You copied the room adress. Invite a friend!";
+    setTimeout(function(){document.getElementById("copied").innerHTML = "";},2000);
+
+
+}
   //----------------------------------Render-------------------------------//
   render() {
     const activeItem = this.state.activeItem;
@@ -179,26 +190,41 @@ export default class Room extends Component {
     console.log("UserName:" + this.state.userName);
     console.log("roomId:" + this.state.roomId);
 
+    console.log("UrlForInvite:" + this.state.urlForInvite);
+
     return (
       <OwnHeader>
         <TopBox activeItem={activeItem} layer1={title} layer2={description} />
         <Segment style={{ padding: "8em 0em" }} vertical>
           <Grid container stackable verticalAlign="middle">
-          <Grid.Row>
-            <List divided verticalAlign="middle">
-              <YouTubeSearch
-                creator={this.state.creator}
-                getVideos={roomId => this._getVideos(roomId)}
-                roomId={this.state.roomId}
-                userName={
-                  this.state.userName != undefined ? this.state.userName : ""
-                }
-                videos={videos}
-              />
-            </List>
-          </Grid.Row>
-            <Chat hv={this.state.hv}/>
-        </Grid>
+            <Grid.Row>
+              <List divided verticalAlign="middle">
+                <YouTubeSearch
+                  creator={this.state.creator}
+                  getVideos={roomId => this._getVideos(roomId)}
+                  roomId={this.state.roomId}
+                  userName={
+                    this.state.userName != undefined ? this.state.userName : ""
+                  }
+                  videos={videos}
+                />
+              </List>
+            </Grid.Row>
+            <Grid.Row>
+              <Chat hv={this.state.hv} />
+              <Grid.Column />
+              <Grid.Column width={6}>
+
+                <CopyToClipboard
+                  text={this.state.urlForInvite}
+                  onCopy={() => this.setState({ copied: true })}
+                >
+                  <Button primary onClick={this.clearCopyMessage}>Invite friend</Button>
+                </CopyToClipboard>
+                <div id="copied"></div>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
         </Segment>
       </OwnHeader>
     );

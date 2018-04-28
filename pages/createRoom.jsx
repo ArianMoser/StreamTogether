@@ -177,7 +177,7 @@ export default class RoomCreator extends Component {
             console.log("Error during the event creation process");
           }
           document.getElementById("feedback").innerHTML =
-            '<div class="ui positive message"><div class="header">Room created</div><p>You will be redirect</p></div>';
+            '<div class="ui positive message"><div class="header">Room created</div><p>Forwarding...</p></div>';
           window.location = "./room?hv=" + hashedValue;
         } else {
           console.log("DB push failed");
