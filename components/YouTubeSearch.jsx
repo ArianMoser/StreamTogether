@@ -14,7 +14,8 @@ class YouTubeSearch extends Component {
     this.state = {
       nextPageToken: "",
       query: "",
-      searchResults: []
+      searchResults: [],
+      searchHappened: "no"
     };
 
     // Bind event handlers
@@ -75,6 +76,7 @@ class YouTubeSearch extends Component {
         });
       }
     );
+    this.state.searchHappened = "yes";
   }
 
   /**
@@ -125,7 +127,8 @@ class YouTubeSearch extends Component {
   _chooseVideo(video) {
     this.props.chooseVideo(video);
     this.setState({
-      searchResults: [] //resets youtube search results
+      searchResults: [], //resets youtube search results
+      searchHappened: "no"
     });
   }
 
@@ -173,7 +176,12 @@ class YouTubeSearch extends Component {
           <Icon name="chevron right" />More
         </Button>
       );
-    else var nextPageButton = <List.Item>Please search for a video.</List.Item>;
+    else if (
+      this.state.searchResults.length == 0 &&
+      this.state.searchHappened == "no"
+    ) {
+      var nextPageButton = <List.Item>Please search for a video.</List.Item>;
+    } else var nextPageButton = <List.Item>No results</List.Item>;
 
     return (
       <div>

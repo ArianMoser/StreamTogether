@@ -33,6 +33,7 @@ import { checksession } from "../components/Util";
 import Chat from "../components/Chat";
 import YouTubePlayer from "../components/YouTubePlayer";
 import VideoElement from "../components/VideoElement";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const divStyle = {
   color: "blue",
@@ -52,7 +53,9 @@ export default class Room extends Component {
       roomId: "0",
       title: "Default-title",
       userName: "",
-      videos: []
+      videos: [],
+      urlForInvite: "",
+      copied: false
     };
   }
 
@@ -63,6 +66,8 @@ export default class Room extends Component {
 
   componentDidMount() {
     //this._updateUserRoomId();
+    this.state.urlForInvite = window.location.href;
+    console.log("url:" + this.state.urlForInvite);
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -299,6 +304,14 @@ export default class Room extends Component {
     }
   }
 
+  clearCopyMessage() {
+    document.getElementById("copied").innerHTML =
+      "You copied the room adress. Invite a friend!";
+    setTimeout(function() {
+      document.getElementById("copied").innerHTML = "";
+    }, 2000);
+  }
+
   //----------------------------------Render-------------------------------//
   render() {
     const activeItem = this.state.activeItem;
@@ -309,6 +322,7 @@ export default class Room extends Component {
     var playlist = <div>Penis</div>;
     // loads the videoPlayer
     console.log("Loads videoPlayer");
+    console.log("UrlForInvite:" + this.state.urlForInvite);
     var videos = this.state.videos;
     if (videos[0] != undefined) {
       var videoPlayer = (
@@ -371,10 +385,19 @@ export default class Room extends Component {
                     <Grid.Column width={4}>
                       <Table basic="very" celled collapsing>
                         <Table.Body>{playlist}</Table.Body>
-                        <Chat hv={this.state.hv}/>
+                        <Chat hv={this.state.hv} />
                       </Table>
                     </Grid.Column>
                   </Grid.Row>
+                  <CopyToClipboard
+                    text={this.state.urlForInvite}
+                    onCopy={() => this.setState({ copied: true })}
+                  >
+                    <Button primary onClick={this.clearCopyMessage}>
+                      Invite friend
+                    </Button>
+                  </CopyToClipboard>
+                  <div id="copied" />
                 </Grid>
               </List>
             </Grid.Row>
