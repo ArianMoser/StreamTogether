@@ -56,7 +56,7 @@ export default class Login extends Component {
           "Welcome " + response[0].username;
         console.log("Password correct!");
         document.getElementById("feedback").innerHTML =
-          '<div class="ui positive message"><div class="header">Login successful</div><p>You will be redirected</p></div>';
+          '<div class="ui positive message"><div class="header">Login successful</div><p>Forwarding...</p></div>';
         setTimeout(continueToLogIn, 2000);
         function continueToLogIn() {
           //Set Cookie
