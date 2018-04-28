@@ -10,7 +10,8 @@ import {
   Grid,
   Segment,
   Sidebar,
-  Table
+  Table,
+  Container
 } from "semantic-ui-react";
 import VideoElement from "../components/VideoElement";
 import PropTypes from "prop-types";
@@ -226,11 +227,11 @@ export default class Chat extends Component {
               <p />
               This is the username: {this.state.username}
             </p>
-            <Sidebar.Pushable as={Segment}>
-              <div style={divStyle}>
-                <List celled>{chatTextElement}</List>
-              </div>
-            </Sidebar.Pushable>
+              <Sidebar.Pushable as={Segment} style={{maxHeight: 300, overflow:scroll}}>
+                <div style={divStyle}>
+                  <List celled>{chatTextElement}</List>
+                </div>
+              </Sidebar.Pushable>
             <Input
               id="chat"
               focus
