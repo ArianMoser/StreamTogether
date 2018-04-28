@@ -13,6 +13,7 @@ import {
   Image,
   List,
   Menu,
+  Popup,
   Responsive,
   Segment,
   Sidebar,
@@ -36,7 +37,16 @@ export default class Home extends Component {
       window.location = "./createRoom";
     }
   }
+ componentDidMount(){
+  if (checksession() == "ErrorTokenFalse") {
+    document.getElementById("createRoomButton").innerHTML = '<form action="/login"><button type="submit" class="ui primary button">Create room</button></form>';
+} else {
+  document.getElementById("createRoomButton").innerHTML = '<form action="/createRoom"><button type="submit" class="ui primary button">Create room</button></form>';
 
+}
+
+
+}
   //----------------------------------Render-------------------------------//
   render() {
     const activeItem = this.state.activeItem;
@@ -54,7 +64,7 @@ export default class Home extends Component {
                 <Header as="h4" style={{ fontSize: "2em" }}>
                   Step 1:
                 </Header>
-                <p style={{ fontSize: "1.33em" }}>
+                <p style={{ fontSize: "1.33em" }} id="createRoomButton">
                   <Button primary size="huge" onClick={this.checkLogIn}>
                     Create Room
                     <Icon name="right arrow" />
