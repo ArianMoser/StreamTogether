@@ -19,11 +19,20 @@ import {
   Visibility
 } from "semantic-ui-react";
 import TopBox from "../components/TopBox";
+import { checksession } from "../components/Util";
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = { activeItem: "home" };
+  }
+
+  checkLogIn() {
+    if (checksession() == "ErrorTokenFalse") {
+      window.alert("pls log in");
+    } else {
+      window.location="./createRoom";
+    }
   }
 
   //----------------------------------Render-------------------------------//
@@ -44,12 +53,10 @@ export default class Home extends Component {
                   Step 1:
                 </Header>
                 <p style={{ fontSize: "1.33em" }}>
-                  <Link href="./createRoom">
-                    <Button primary size="huge">
-                      Create Room
-                      <Icon name="right arrow" />
-                    </Button>
-                  </Link>
+                  <Button primary size="huge" onClick={this.checkLogIn}>
+                    Create Room
+                    <Icon name="right arrow" />
+                  </Button>
                 </p>
                 <p style={{ fontSize: "1.33em" }}>
                   You do not need to register to create a room.

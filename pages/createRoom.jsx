@@ -52,6 +52,11 @@ export default class RoomCreator extends Component {
     var currentUsername = checksession();
     console.log("Username: " + currentUsername);
     var currentUserId = this._getUserId(currentUsername);
+    //When user is already loged in...
+    if (checksession() == "ErrorTokenFalse") {
+      window.location = "/index";
+      window.alert("pls log in");
+    }
   }
 
   //----------------------------event handlers---------------------------//
@@ -172,7 +177,7 @@ export default class RoomCreator extends Component {
             console.log("Error during the event creation process");
           }
           document.getElementById("feedback").innerHTML =
-              '<div class="ui positive message"><div class="header">Room created</div><p>You will be redirect</p></div>';
+            '<div class="ui positive message"><div class="header">Room created</div><p>You will be redirect</p></div>';
           window.location = "./room?hv=" + hashedValue;
         } else {
           console.log("DB push failed");
