@@ -132,27 +132,20 @@ io.on("connection", client => {
     io.emit("sendMessageBack", { message: message, userlist: messageUserlist });
   });
 
-  client.on("triggerRefresh", message => {
+  client.on("triggerRefresh", message =>{
     console.log("Trigger for refresh received");
     var userlist = [];
-    var userlist2 = [];
     if (rooms.length != "0") {
       rooms.map(room => {
         var userInRoom = false;
-        var userNr = 0;
-        var del = 0;
         if (room.userlist.length != "0") {
           room.userlist.map(user => {
-            userNr = userNr + 1;
             if (user == message.username) {
               userInRoom = true;
-              del = userNr;
             } //end of if
           }); // end of iteration userlist
         } //end of if
         if (userInRoom == true) {
-          userlist2 = room.userlist;
-          userlist2.splice(del, 1);
           userlist = room.userlist;
         } // end of if
       }); // end of iteration room
@@ -162,11 +155,8 @@ io.on("connection", client => {
       username: "server",
       timeStamp: Math.floor(Date.now() / 1000)
     };
-    userlist.io.emit("sendVideoCommand", {
-      message: message,
-      userlist: userlist2
-    });
     io.emit("sendMessageBack", { message: messageInfo, userlist: userlist });
+    io.emit("sendVideoCommand", { message: message, userlist: userlist });
   });
 
   client.on("sendMessage", message => {

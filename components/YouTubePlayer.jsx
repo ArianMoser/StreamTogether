@@ -6,7 +6,7 @@ export default class YouTubePlayer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      status: "render"
+      init: new Date().getTime()
     };
     this._onError = this._onError.bind(this);
     this._onEnd = this._onEnd.bind(this);
@@ -42,12 +42,15 @@ export default class YouTubePlayer extends Component {
     if (
       this.props.status != nextProps.status
     ) {
+
       console.log("Unequal");
       console.log(this.props.status + "|" + nextProps.status);
-       if (nextProps.status == "pause"){
+      var currentTime = new Date().getTime();
+       if (nextProps.status == "pause" && (currentTime-this.state.init)>500){
          console.log("PauseVideo");
-        // this.refs.ytPlayer.internalPlayer.pauseVideo();
+         //this.refs.ytPlayer.internalPlayer.pauseVideo();
        }
+       this.setState({init: new Date().getTime()});
     }
   }
 
@@ -104,17 +107,19 @@ export default class YouTubePlayer extends Component {
   }
 
   _onPause(event) {
+    var currentTime = new Date().getTime();
+    console.log(currentTime-this.state.init);
     console.log("Player paused");
-    if (this.props.status != "pause") {
+    if (this.props.status != "pause" && (currentTime-this.state.init)>500) {
       this.props.handleVideoPause(this.props.roomId, this.props.databaseId);
     }
     //   console.log(event);
   }
 
   _onPlay(event) {
+    var currentTime = new Date().getTime();
     console.log("Player started");
     if (this.props.status != "play") {
-      var currentTime = new Date().getTime();
       var currentVideoTimer = event.target.getCurrentTime();
       var timecode = currentTime - currentVideoTimer * 1000;
       this.props.handleVideoPlay(
