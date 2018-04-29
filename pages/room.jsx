@@ -350,29 +350,28 @@ export default class Room extends Component {
     var videos = this.state.videos;
     if (videos[0] != undefined) {
       var video = videos[0];
-      var timecode = "0";
+      var started = "0";
       console.log(video);
       //check if started is
       if (video.started == 0){
         // videoId: video_ID
         // roomId: room_ID
         // set started to current Timestamp
-        var milliseconds = new Date().getTime();
-        console.log(milliseconds);
-        this._updateStarted(video.room_ID, video.video_ID, Math.round(milliseconds));
+        started = new Date().getTime();
+        console.log(started);
+        this._updateStarted(video.room_ID, video.video_ID, Math.round(started));
       } else {
         // set timecode
-        var currentTime = new Date().getTime();
-        var startTime = video.started;
-        console.log(currentTime);
+         started = video.started;
+        /*console.log(currentTime);
         timecode = Math.round((currentTime-startTime)/1000);
-        console.log(timecode);
+        console.log(timecode);*/
       }
       var videoPlayer = (
         <YouTubePlayer
           databaseId={videos[0].video_ID}
           handleVideoEnd={(roomId, videoId) => this._nextVideo(roomId, videoId)}
-          timecode={timecode}
+          started={started}
           roomId={videos[0].room_ID}
           videoId={videos[0].youtube_id}
         />

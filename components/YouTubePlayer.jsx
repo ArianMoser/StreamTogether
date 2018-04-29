@@ -17,6 +17,7 @@ export default class YouTubePlayer extends Component {
   static propTypes = {
     databaseId: PropTypes.number,
     handleVideoEnd: PropTypes.func,
+    started: PropTypes.string,
     timecode: PropTypes.string,
     roomId: PropTypes.number,
     videoId: PropTypes.string
@@ -25,6 +26,7 @@ export default class YouTubePlayer extends Component {
   static get defaultProps() {
     return {
       databaseId: 0,
+      started: new Date().getTime(),
       timecode: "0",
       roomId: 0,
       videoId: ""
@@ -48,8 +50,9 @@ export default class YouTubePlayer extends Component {
       width: "640",
       playerVars: {
         // https://developers.google.com/youtube/player_parameters
-        autoplay: 1,
-        start: timecode
+
+        /*autoplay: 1,
+        start: timecode*/
       }
     };
 
@@ -62,7 +65,6 @@ export default class YouTubePlayer extends Component {
         onPlay={this._onPlay}
         onReady={this._onReady}
         onStateChange={this._onStateChanged}
-        start={this.props.timecode}
         videoId={this.props.videoId}
       />
     );
@@ -91,8 +93,15 @@ export default class YouTubePlayer extends Component {
 
   _onReady(event) {
     // access to player in all event handlers via event.target
-    //console.log("Player ready");
+    console.log("Player ready");
+    var startTime = this.props.started;
+    var currentTime = new Date().getTime();
+    var timecode = Math.round((currentTime - startTime) / 1000);
+    console.log(timecode);
+    event.target.seekTo(timecode);
+    //event.target.playVideoAt({start:timecode});
     //console.log(event);
+
     // event.target.pauseVideo();
   }
 
