@@ -370,7 +370,7 @@ export const voteVideo = (api, roomId, videoId, voteValue) => {
 };
 
 //----------------Update started of a video (in playlist)-------------------//
-export const updateStarted = (api, roomId, videoId, started) => {
+export const updateStarted = (api, roomId, videoId, started, status) => {
   return new Promise((resolve, reject) => {
     $.ajax({
       url: api,
@@ -380,7 +380,29 @@ export const updateStarted = (api, roomId, videoId, started) => {
       data: JSON.stringify({
         roomId: roomId,
         videoId: videoId,
-        started: started
+        started: started,
+        status: status
+      }),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
+export const updateStatus = (api, roomId, videoId, status) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({
+        roomId: roomId,
+        videoId: videoId,
+        status: status
       }),
       success: function(res) {
         resolve(res);

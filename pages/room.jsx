@@ -27,6 +27,7 @@ import {
   changeRoomId,
   roomFunctionByHashedValue,
   updateStarted,
+  updateStatus,
   videoFunctionByRoomId,
   videoFunctionByYoutubeId,
   voteVideo
@@ -313,18 +314,56 @@ export default class Room extends Component {
   }
 
   // updates the started attribute of a video inside of the table Playlist
-  async _updateStarted(roomId, videoId, started) {
+  async _updateStarted(roomId, videoId, started, status) {
     console.log("Update started");
     const responseUpdateStarted = await updateStarted(
-      'updatePlaylistStarted',
+      "/updatePlaylistStarted",
       roomId,
       videoId,
-      started
+      started,
+      status
     );
-    if ( responseUpdateStarted.affectedRows == "1"){
+    if (responseUpdateStarted.affectedRows == "1") {
       console.log("Updated started value");
     } else {
       console.log("Error during update process(started)");
+    }
+  }
+
+  // updates the status of the videos
+  async _updateStatus(roomId, videoId, status) {
+    console.log("Update started");
+    const responseUpdateStatus = await updateStatus(
+      "/updatePlaylistStatus",
+      roomId,
+      videoId,
+      status
+    );
+    if (responseUpdateStatus.affectedRows == "1") {
+      console.log("Updated status value");
+      return true;
+    } else {
+      console.log("Error during update process(started)");
+      return false;
+    }
+  }
+
+  //handles the pause event
+  async handlePlayerPause(roomId, videoId) {
+    console.log("Player will paused on the room");
+    var res = await this._updateStatus(roomId, videoId, "pause");
+    if (res == true){
+      // trigger socket call
+    }
+
+  }
+
+  // handles the play event
+  async handlePlayerPlay(roomId, videoId) {
+    console.log("Player will started on the room");
+    var res = await this._updateStatus(roomId, videoId, "play");
+    if (res == true){
+      // trigger socket call
     }
   }
 
@@ -351,18 +390,25 @@ export default class Room extends Component {
     if (videos[0] != undefined) {
       var video = videos[0];
       var started = "0";
+      var status = "play"
       console.log(video);
       //check if started is
-      if (video.started == 0){
+      if (video.started == 0) {
         // videoId: video_ID
         // roomId: room_ID
         // set started to current Timestamp
         started = new Date().getTime();
         console.log(started);
-        this._updateStarted(video.room_ID, video.video_ID, Math.round(started));
+        this._updateStarted(
+          video.room_ID,
+          video.video_ID,
+          Math.round(started),
+          status
+        );
       } else {
         // set timecode
-         started = video.started;
+        started = video.started;
+        status = video.status;
         /*console.log(currentTime);
         timecode = Math.round((currentTime-startTime)/1000);
         console.log(timecode);*/
@@ -371,7 +417,10 @@ export default class Room extends Component {
         <YouTubePlayer
           databaseId={videos[0].video_ID}
           handleVideoEnd={(roomId, videoId) => this._nextVideo(roomId, videoId)}
+          handleVideoPlay={(roomId, videoId) => this.handlePlayerPlay(roomId, videoId)}
+          handleVideoPause={(roomId, videoId) => this.handlePlayerPause(roomId, videoId)}
           started={started}
+          status={status}
           roomId={videos[0].room_ID}
           videoId={videos[0].youtube_id}
         />
@@ -438,7 +487,11 @@ export default class Room extends Component {
                         </Sidebar.Pushable>
                       </Grid.Row>
                       <Grid.Row>
-                        <Chat hv={this.state.hv} />
+                        <Chat
+                          hv={this.state.hv}
+                          roomId={this.state.videoId}
+                          handleVideoCommand={roomId => this._getVideos(roomId)}
+                        />
                       </Grid.Row>
                     </Grid.Column>
                   </Grid.Row>

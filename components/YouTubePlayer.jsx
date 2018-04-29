@@ -5,7 +5,9 @@ import PropTypes from "prop-types";
 export default class YouTubePlayer extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      status: "render"
+    };
     this._onError = this._onError.bind(this);
     this._onEnd = this._onEnd.bind(this);
     this._onPause = this._onPause.bind(this);
@@ -43,16 +45,16 @@ export default class YouTubePlayer extends Component {
   }
 
   render() {
-    var timecode = this.props.timecode;
-
+    var startTime = this.props.started;
+    var currentTime = new Date().getTime();
+    var timecode = Math.round((currentTime - startTime) / 1000);
     const opts = {
       height: "390",
       width: "640",
       playerVars: {
         // https://developers.google.com/youtube/player_parameters
-
-        /*autoplay: 1,
-        start: timecode*/
+        /*autoplay: 1,*/
+        start: timecode
       }
     };
 
@@ -82,23 +84,29 @@ export default class YouTubePlayer extends Component {
   }
 
   _onPause(event) {
-    //  console.log("Player paused");
+    console.log("Player paused");
+    this.props.handleVideoPause(this.props.roomId, this.props.databaseId);
     //   console.log(event);
   }
 
   _onPlay(event) {
-    //console.log("Player started")
+    console.log("Player started");
+    this.props.handleVideoPlay(this.props.roomId, this.props.databaseId);
     //console.log(event);
   }
 
   _onReady(event) {
     // access to player in all event handlers via event.target
-    console.log("Player ready");
-    var startTime = this.props.started;
-    var currentTime = new Date().getTime();
-    var timecode = Math.round((currentTime - startTime) / 1000);
-    console.log(timecode);
-    event.target.seekTo(timecode);
+    if(this.props.status == "play") {
+      console.log("Player ready");
+      console.log(event);
+      var startTime = this.props.started;
+      var currentTime = new Date().getTime();
+      var timecode = Math.round((currentTime - startTime) / 1000);
+      console.log(timecode);
+      event.target.seekTo(timecode);
+    }
+
     //event.target.playVideoAt({start:timecode});
     //console.log(event);
 
@@ -106,7 +114,7 @@ export default class YouTubePlayer extends Component {
   }
 
   _onStateChanged(event) {
-    //console.log("Player state changed");
+    console.log("Player state changed");
     //console.log("CurrentTimer:" + event.target.getCurrentTime());
     //console.log(event);
   }

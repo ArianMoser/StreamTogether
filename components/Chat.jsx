@@ -158,6 +158,20 @@ export default class Chat extends Component {
         } //end of else
       } //end of if
     }); // end of socket.on
+    socket.on("sendVideoCommand", message => {
+      var userInList = false;
+      if (message.length != 0) {
+        console.log(message);
+        if (message.userlist.length != "0") {
+          message.userlist.map(user => {
+            user == this.state.username ? (userInList = true) : null;
+          });
+        } // end of if
+      } // end of if
+      if (userInList == true){
+        this.props.handleVideoCommand(this.props.roomId);
+      }
+    });
   } // end of _refreshChatText
 
   getTime(timeStamp) {

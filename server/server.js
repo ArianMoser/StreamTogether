@@ -255,6 +255,9 @@ app
         exp.post("/updatePlaylistStarted", (req, res) => {
           database.updatePlaylistStarted(res, req.body, connection);
         });
+        exp.post("/updatePlaylistStatus", (req, res) => {
+          database.updatePlaylistStatus(res, req.body, connection);
+        });
       }
     });
 

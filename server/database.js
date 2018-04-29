@@ -385,6 +385,31 @@ var call = (module.exports = {
       "Update `playlist`" +
       " SET `started`= " +
       mysql.escape(dieNutzerDaten.started) +
+      " , status= " +
+      mysql.escape(dieNutzerDaten.status) +
+      " WHERE `room_ID`=" +
+      mysql.escape(dieNutzerDaten.roomId) +
+      " AND `video_ID`=" +
+      mysql.escape(dieNutzerDaten.videoId) +
+      " ;";
+    console.log(query);
+    connection.query(query, function(err, rows, fields) {
+      if (err) {
+        console.log("An error ocurred performing the query.");
+        console.log(err);
+        return;
+      }
+
+      console.log("Number of records updated: " + rows.affectedRows);
+      res.send(rows);
+    });
+  },
+  updatePlaylistStatus: function(res, dieNutzerDaten, connection) {
+    console.log(dieNutzerDaten);
+    const query =
+      "Update `playlist`" +
+      " SET  status= " +
+      mysql.escape(dieNutzerDaten.status) +
       " WHERE `room_ID`=" +
       mysql.escape(dieNutzerDaten.roomId) +
       " AND `video_ID`=" +
