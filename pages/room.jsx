@@ -9,6 +9,7 @@ import {
   Menu,
   Responsive,
   Segment,
+  Sidebar,
   Table,
   Visibility
 } from "semantic-ui-react";
@@ -38,6 +39,12 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 const divStyle = {
   color: "blue",
   backgroundImage: "url(../pics/download.jpg)"
+};
+
+const scroll = {
+  maxHeight: 400,
+  maxWidth: 1000,
+  overflow: scroll
 };
 
 const jwt = require("jsonwebtoken");
@@ -319,7 +326,7 @@ export default class Room extends Component {
     const description = this.state.description;
     //default values
     var videoPlayer = <h2>Noch kein Video ausgewählt.</h2>;
-    var playlist = <div></div>;
+    var playlist = <div />;
     // loads the videoPlayer
     console.log("Loads videoPlayer");
     console.log("UrlForInvite:" + this.state.urlForInvite);
@@ -382,11 +389,18 @@ export default class Room extends Component {
                         videos={videos}
                       />
                     </Grid.Column>
-                    <Grid.Column width={4}>
+                    <Grid.Column width={6}>
                       <Grid.Row>
-                        <Table basic="very" celled collapsing>
-                          <Table.Body>{playlist}</Table.Body>
-                        </Table>
+                        <Sidebar.Pushable as={Segment} style={scroll}>
+                          <Table
+                            basic="very"
+                            celled
+                            collapsing
+                            style={{ width: 400 }}
+                          >
+                            <Table.Body>{playlist}</Table.Body>
+                          </Table>
+                        </Sidebar.Pushable>
                       </Grid.Row>
                       <Grid.Row>
                         <Chat hv={this.state.hv} />

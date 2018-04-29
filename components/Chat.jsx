@@ -20,7 +20,6 @@ import PropTypes from "prop-types";
 import openSocket from "socket.io-client";
 import { checksession } from "./Util";
 const socket = openSocket("http://localhost:8000");
-const imgUrl = "../pics/download.jpg";
 const divStyle = {
   color: "blue"
 };
@@ -230,7 +229,7 @@ export default class Chat extends Component {
               style={{ maxHeight: 300, maxWidth: 400, overflow: scroll }}
             >
               <div style={divStyle}>
-                <Comment.Group minimal style={{width:390}}>
+                <Comment.Group minimal style={{width:350}}>
                   <Header as="h3" dividing>
                     Chats
                   </Header>
