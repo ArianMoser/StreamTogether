@@ -71,5 +71,5 @@ See our result online ([Website](http://gruppe2.testsites.info/ "Our Website"))
 | Liste nutzer in room                | ok                 |
 | Playlistfunktion                    | ok                 |
 | VoteSystem                        | teils                 |
-| Invite Funktion                     |                  |
+| Invite Funktion                     | ok                 |
 | Avatar hochladen/ändern             |                  |
