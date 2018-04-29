@@ -252,6 +252,9 @@ app
         exp.post("/updateUpVotes", (req, res) => {
           database.updateUpVotes(res, req.body, connection);
         });
+        exp.post("/updatePlaylistStarted", (req, res) => {
+          database.updatePlaylistStarted(res, req.body, connection);
+        });
       }
     });
 

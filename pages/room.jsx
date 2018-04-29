@@ -9,6 +9,7 @@ import {
   Menu,
   Responsive,
   Segment,
+  Sidebar,
   Table,
   Visibility
 } from "semantic-ui-react";
@@ -25,6 +26,7 @@ import {
   insertVideo,
   changeRoomId,
   roomFunctionByHashedValue,
+  updateStarted,
   videoFunctionByRoomId,
   videoFunctionByYoutubeId,
   voteVideo
@@ -33,10 +35,17 @@ import { checksession } from "../components/Util";
 import Chat from "../components/Chat";
 import YouTubePlayer from "../components/YouTubePlayer";
 import VideoElement from "../components/VideoElement";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const divStyle = {
   color: "blue",
   backgroundImage: "url(../pics/download.jpg)"
+};
+
+const scroll = {
+  maxHeight: 400,
+  maxWidth: 1000,
+  overflow: scroll
 };
 
 const jwt = require("jsonwebtoken");
@@ -52,7 +61,9 @@ export default class Room extends Component {
       roomId: "0",
       title: "Default-title",
       userName: "",
-      videos: []
+      videos: [],
+      urlForInvite: "",
+      copied: false
     };
   }
 
@@ -63,6 +74,8 @@ export default class Room extends Component {
 
   componentDidMount() {
     //this._updateUserRoomId();
+    this.state.urlForInvite = window.location.href;
+    console.log("url:" + this.state.urlForInvite);
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -299,6 +312,30 @@ export default class Room extends Component {
     }
   }
 
+  // updates the started attribute of a video inside of the table Playlist
+  async _updateStarted(roomId, videoId, started) {
+    console.log("Update started");
+    const responseUpdateStarted = await updateStarted(
+      'updatePlaylistStarted',
+      roomId,
+      videoId,
+      started
+    );
+    if ( responseUpdateStarted.affectedRows == "1"){
+      console.log("Updated started value");
+    } else {
+      console.log("Error during update process(started)");
+    }
+  }
+
+  clearCopyMessage() {
+    document.getElementById("copied").innerHTML =
+      "You copied the room adress. Invite a friend!";
+    setTimeout(function() {
+      document.getElementById("copied").innerHTML = "";
+    }, 2000);
+  }
+
   //----------------------------------Render-------------------------------//
   render() {
     const activeItem = this.state.activeItem;
@@ -306,16 +343,36 @@ export default class Room extends Component {
     const description = this.state.description;
     //default values
     var videoPlayer = <h2>Noch kein Video ausgewählt.</h2>;
-    var playlist = <div>Penis</div>;
+    var playlist = <div />;
     // loads the videoPlayer
     console.log("Loads videoPlayer");
+    console.log("UrlForInvite:" + this.state.urlForInvite);
     var videos = this.state.videos;
     if (videos[0] != undefined) {
+      var video = videos[0];
+      var timecode = "0";
+      console.log(video);
+      //check if started is
+      if (video.started == 0){
+        // videoId: video_ID
+        // roomId: room_ID
+        // set started to current Timestamp
+        var milliseconds = new Date().getTime();
+        console.log(milliseconds);
+        this._updateStarted(video.room_ID, video.video_ID, Math.round(milliseconds));
+      } else {
+        // set timecode
+        var currentTime = new Date().getTime();
+        var startTime = video.started;
+        console.log(currentTime);
+        timecode = Math.round((currentTime-startTime)/1000);
+        console.log(timecode);
+      }
       var videoPlayer = (
         <YouTubePlayer
           databaseId={videos[0].video_ID}
           handleVideoEnd={(roomId, videoId) => this._nextVideo(roomId, videoId)}
-          timecode="0"
+          timecode={timecode}
           roomId={videos[0].room_ID}
           videoId={videos[0].youtube_id}
         />
@@ -368,13 +425,33 @@ export default class Room extends Component {
                         videos={videos}
                       />
                     </Grid.Column>
-                    <Grid.Column width={4}>
-                      <Table basic="very" celled collapsing>
-                        <Table.Body>{playlist}</Table.Body>
-                        <Chat hv={this.state.hv}/>
-                      </Table>
+                    <Grid.Column width={6}>
+                      <Grid.Row>
+                        <Sidebar.Pushable as={Segment} style={scroll}>
+                          <Table
+                            basic="very"
+                            celled
+                            collapsing
+                            style={{ width: 400 }}
+                          >
+                            <Table.Body>{playlist}</Table.Body>
+                          </Table>
+                        </Sidebar.Pushable>
+                      </Grid.Row>
+                      <Grid.Row>
+                        <Chat hv={this.state.hv} />
+                      </Grid.Row>
                     </Grid.Column>
                   </Grid.Row>
+                  <CopyToClipboard
+                    text={this.state.urlForInvite}
+                    onCopy={() => this.setState({ copied: true })}
+                  >
+                    <Button primary onClick={this.clearCopyMessage}>
+                      Invite friend
+                    </Button>
+                  </CopyToClipboard>
+                  <div id="copied" />
                 </Grid>
               </List>
             </Grid.Row>

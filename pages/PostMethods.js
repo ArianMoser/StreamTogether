@@ -369,6 +369,28 @@ export const voteVideo = (api, roomId, videoId, voteValue) => {
   });
 };
 
+//----------------Update started of a video (in playlist)-------------------//
+export const updateStarted = (api, roomId, videoId, started) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({
+        roomId: roomId,
+        videoId: videoId,
+        started: started
+      }),
+      success: function(res) {
+        resolve(res);
+      },
+      error: function(xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
 //----------------------Delete user----------------------//
 //todo: add password check to delete an account
 export const deleteUser = (api, id) => {

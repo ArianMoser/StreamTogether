@@ -22,9 +22,11 @@ See our result online ([Website](http://gruppe2.testsites.info/ "Our Website"))
 
 1. Switch to home directory (home/alex/Web-Projekt/StreamTogether/)
 2. git pull
-3. npm run build 
+3. Change Websocket address in Chat to "https://gruppe2.testsites.info/"
 4. Change "start" in package.json to "export NODE_ENV=production&&node ./dist/server.js"
-5. pm2 start npm -- start
+5. Change database password in "server.js"
+6. npm run build 
+7. pm2 start npm -- start
 
 
 
