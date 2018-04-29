@@ -91,13 +91,20 @@ export default class YouTubePlayer extends Component {
 
   _onPlay(event) {
     console.log("Player started");
-    this.props.handleVideoPlay(this.props.roomId, this.props.databaseId);
+    var currentTime = new Date().getTime();
+    var currentVideoTimer = event.target.getCurrentTime();
+    var timecode = currentTime - currentVideoTimer*1000;
+    this.props.handleVideoPlay(
+      this.props.roomId,
+      this.props.databaseId,
+      timecode
+    );
     //console.log(event);
   }
 
   _onReady(event) {
     // access to player in all event handlers via event.target
-    if(this.props.status == "play") {
+    if (this.props.status == "play") {
       console.log("Player ready");
       console.log(event);
       var startTime = this.props.started;

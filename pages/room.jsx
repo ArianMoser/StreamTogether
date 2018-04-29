@@ -37,6 +37,8 @@ import Chat from "../components/Chat";
 import YouTubePlayer from "../components/YouTubePlayer";
 import VideoElement from "../components/VideoElement";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import openSocket from "socket.io-client";
+const socket = openSocket("http://localhost:8000");
 
 const divStyle = {
   color: "blue",
@@ -352,17 +354,16 @@ export default class Room extends Component {
   async handlePlayerPause(roomId, videoId) {
     console.log("Player will paused on the room");
     var res = await this._updateStatus(roomId, videoId, "pause");
-    if (res == true){
+    if (res == true) {
       // trigger socket call
     }
-
   }
 
   // handles the play event
-  async handlePlayerPlay(roomId, videoId) {
+  async handlePlayerPlay(roomId, videoId, timecode) {
     console.log("Player will started on the room");
-    var res = await this._updateStatus(roomId, videoId, "play");
-    if (res == true){
+    var res = await this._updateStarted(roomId, videoId, timecode, "play");
+    if (res == true) {
       // trigger socket call
     }
   }
@@ -390,7 +391,7 @@ export default class Room extends Component {
     if (videos[0] != undefined) {
       var video = videos[0];
       var started = "0";
-      var status = "play"
+      var status = "play";
       console.log(video);
       //check if started is
       if (video.started == 0) {
@@ -417,8 +418,12 @@ export default class Room extends Component {
         <YouTubePlayer
           databaseId={videos[0].video_ID}
           handleVideoEnd={(roomId, videoId) => this._nextVideo(roomId, videoId)}
-          handleVideoPlay={(roomId, videoId) => this.handlePlayerPlay(roomId, videoId)}
-          handleVideoPause={(roomId, videoId) => this.handlePlayerPause(roomId, videoId)}
+          handleVideoPlay={(roomId, videoId, timecode) =>
+            this.handlePlayerPlay(roomId, videoId, timecode)
+          }
+          handleVideoPause={(roomId, videoId) =>
+            this.handlePlayerPause(roomId, videoId)
+          }
           started={started}
           status={status}
           roomId={videos[0].room_ID}
