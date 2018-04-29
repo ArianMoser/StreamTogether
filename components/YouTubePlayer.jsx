@@ -25,7 +25,7 @@ export default class YouTubePlayer extends Component {
   static get defaultProps() {
     return {
       databaseId: 0,
-      timecode: 0,
+      timecode: "0",
       roomId: 0,
       videoId: ""
     };
@@ -41,12 +41,15 @@ export default class YouTubePlayer extends Component {
   }
 
   render() {
+    var timecode = this.props.timecode;
+
     const opts = {
       height: "390",
       width: "640",
       playerVars: {
         // https://developers.google.com/youtube/player_parameters
-        autoplay: 1
+        autoplay: 1,
+        start: timecode
       }
     };
 

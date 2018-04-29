@@ -24,9 +24,7 @@ var call = (module.exports = {
   },
   selectUserById: function(res, dieNutzerDaten, connection) {
     const query =
-      "SELECT * from user WHERE id= " +
-      mysql.escape(dieNutzerDaten.id) +
-      ";";
+      "SELECT * from user WHERE id= " + mysql.escape(dieNutzerDaten.id) + ";";
     console.log(query);
     connection.query(query, function(err, rows, fields) {
       if (err) {
@@ -121,7 +119,9 @@ var call = (module.exports = {
   },
   selectRoomById: function(res, dieNutzerDaten, connection) {
     const query =
-      "SELECT * from room WHERE ID= " + mysql.escape(dieNutzerDaten.roomId) + " ;";
+      "SELECT * from room WHERE ID= " +
+      mysql.escape(dieNutzerDaten.roomId) +
+      " ;";
     connection.query(query, function(err, rows, fields) {
       if (err) {
         console.log("An error ocurred performing the query.");
@@ -191,7 +191,7 @@ var call = (module.exports = {
       " FROM playlist,video" +
       " WHERE video.ID = playlist.video_ID AND playlist.room_id = " +
       mysql.escape(dieNutzerDaten.roomId) +
-      " ORDER BY playlist.Upvotes DESC, Timestamp ASC;";
+      " ORDER BY playlist.started DESC, playlist.Upvotes DESC, Timestamp ASC;";
     connection.query(query, function(err, rows, fields) {
       if (err) {
         console.log("An error ocurred performing the query.");
@@ -362,6 +362,29 @@ var call = (module.exports = {
       "Update `playlist`" +
       " SET `Upvotes`=`Upvotes` + " +
       mysql.escape(dieNutzerDaten.voteValue) +
+      " WHERE `room_ID`=" +
+      mysql.escape(dieNutzerDaten.roomId) +
+      " AND `video_ID`=" +
+      mysql.escape(dieNutzerDaten.videoId) +
+      " ;";
+    console.log(query);
+    connection.query(query, function(err, rows, fields) {
+      if (err) {
+        console.log("An error ocurred performing the query.");
+        console.log(err);
+        return;
+      }
+
+      console.log("Number of records updated: " + rows.affectedRows);
+      res.send(rows);
+    });
+  },
+  updatePlaylistStarted: function(res, dieNutzerDaten, connection) {
+    console.log(dieNutzerDaten);
+    const query =
+      "Update `playlist`" +
+      " SET `started`= " +
+      mysql.escape(dieNutzerDaten.started) +
       " WHERE `room_ID`=" +
       mysql.escape(dieNutzerDaten.roomId) +
       " AND `video_ID`=" +

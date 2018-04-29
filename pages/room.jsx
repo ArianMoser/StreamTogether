@@ -26,6 +26,7 @@ import {
   insertVideo,
   changeRoomId,
   roomFunctionByHashedValue,
+  updateStarted,
   videoFunctionByRoomId,
   videoFunctionByYoutubeId,
   voteVideo
@@ -311,6 +312,22 @@ export default class Room extends Component {
     }
   }
 
+  // updates the started attribute of a video inside of the table Playlist
+  async _updateStarted(roomId, videoId, started) {
+    console.log("Update started");
+    const responseUpdateStarted = await updateStarted(
+      'updatePlaylistStarted',
+      roomId,
+      videoId,
+      started
+    );
+    if ( responseUpdateStarted.affectedRows == "1"){
+      console.log("Updated started value");
+    } else {
+      console.log("Error during update process(started)");
+    }
+  }
+
   clearCopyMessage() {
     document.getElementById("copied").innerHTML =
       "You copied the room adress. Invite a friend!";
@@ -332,11 +349,30 @@ export default class Room extends Component {
     console.log("UrlForInvite:" + this.state.urlForInvite);
     var videos = this.state.videos;
     if (videos[0] != undefined) {
+      var video = videos[0];
+      var timecode = "0";
+      console.log(video);
+      //check if started is
+      if (video.started == 0){
+        // videoId: video_ID
+        // roomId: room_ID
+        // set started to current Timestamp
+        var milliseconds = new Date().getTime();
+        console.log(milliseconds);
+        this._updateStarted(video.room_ID, video.video_ID, Math.round(milliseconds));
+      } else {
+        // set timecode
+        var currentTime = new Date().getTime();
+        var startTime = video.started;
+        console.log(currentTime);
+        timecode = Math.round((currentTime-startTime)/1000);
+        console.log(timecode);
+      }
       var videoPlayer = (
         <YouTubePlayer
           databaseId={videos[0].video_ID}
           handleVideoEnd={(roomId, videoId) => this._nextVideo(roomId, videoId)}
-          timecode="0"
+          timecode={timecode}
           roomId={videos[0].room_ID}
           videoId={videos[0].youtube_id}
         />
