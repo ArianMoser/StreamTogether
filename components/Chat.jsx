@@ -159,6 +159,7 @@ export default class Chat extends Component {
       } //end of if
     }); // end of socket.on
     socket.on("sendVideoCommand", message => {
+      console.log("Received Video Command");
       var userInList = false;
       if (message.length != 0) {
         console.log(message);
@@ -169,6 +170,7 @@ export default class Chat extends Component {
         } // end of if
       } // end of if
       if (userInList == true){
+        console.log("Handle the video command");
         this.props.handleVideoCommand(this.props.roomId);
       }
     });

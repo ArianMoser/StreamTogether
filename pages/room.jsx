@@ -163,6 +163,14 @@ export default class Room extends Component {
     return responseVideos;
   }
 
+  // sets videos of the room
+  async refreshVideos(roomId){
+    console.log(roomId);
+    var videos = await this._getVideos(roomId);
+    console.log(videos);
+    this.setState({videos : videos});
+  } // end of refreshVideos
+
   // is called, if you chose a video,
   // -> pushs the video into the database
   // -> creates connection between the video and the room (table playlist)
@@ -327,8 +335,10 @@ export default class Room extends Component {
     );
     if (responseUpdateStarted.affectedRows == "1") {
       console.log("Updated started value");
+      return true;
     } else {
       console.log("Error during update process(started)");
+      return false;
     }
   }
 
@@ -355,7 +365,11 @@ export default class Room extends Component {
     console.log("Player will paused on the room");
     var res = await this._updateStatus(roomId, videoId, "pause");
     if (res == true) {
-      // trigger socket call
+      // trigger socket call //this.props.url.query.hv
+      socket.emit("triggerRefresh", {
+        content: " has stoped the video",
+        username: this.state.userName
+      });
     }
   }
 
@@ -365,6 +379,10 @@ export default class Room extends Component {
     var res = await this._updateStarted(roomId, videoId, timecode, "play");
     if (res == true) {
       // trigger socket call
+      socket.emit("triggerRefresh", {
+        content: " has continued the video",
+        username: this.state.userName
+      });
     }
   }
 
@@ -494,8 +512,8 @@ export default class Room extends Component {
                       <Grid.Row>
                         <Chat
                           hv={this.state.hv}
-                          roomId={this.state.videoId}
-                          handleVideoCommand={roomId => this._getVideos(roomId)}
+                          roomId={this.state.roomId}
+                          handleVideoCommand={roomId => this.refreshVideos(roomId)}
                         />
                       </Grid.Row>
                     </Grid.Column>

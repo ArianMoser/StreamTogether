@@ -132,6 +132,33 @@ io.on("connection", client => {
     io.emit("sendMessageBack", { message: message, userlist: messageUserlist });
   });
 
+  client.on("triggerRefresh", message =>{
+    console.log("Trigger for refresh received");
+    var userlist = [];
+    if (rooms.length != "0") {
+      rooms.map(room => {
+        var userInRoom = false;
+        if (room.userlist.length != "0") {
+          room.userlist.map(user => {
+            if (user == message.username) {
+              userInRoom = true;
+            } //end of if
+          }); // end of iteration userlist
+        } //end of if
+        if (userInRoom == true) {
+          userlist = room.userlist;
+        } // end of if
+      }); // end of iteration room
+    } //end of if
+    var messageInfo = {
+      content: message.username + message.content,
+      username: "server",
+      timeStamp: Math.floor(Date.now() / 1000)
+    };
+    io.emit("sendMessageBack", { message: messageInfo, userlist: userlist });
+    io.emit("sendVideoCommand", { message: message, userlist: userlist });
+  });
+
   client.on("sendMessage", message => {
     console.log("Received message");
     var userlist = [];
