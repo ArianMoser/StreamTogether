@@ -155,7 +155,7 @@ export default class Room extends Component {
   // get videos of the room
   async _getVideos(roomId) {
     // get videos of room
-    console.log("Get videos of room");
+    //console.log("Get videos of room");
     const responseVideos = await videoFunctionByRoomId(
       "/selectVideosByRoomId",
       roomId
@@ -165,9 +165,9 @@ export default class Room extends Component {
 
   // sets videos of the room
   async refreshVideos(roomId){
-    console.log(roomId);
+  //  console.log(roomId);
     var videos = await this._getVideos(roomId);
-    console.log(videos);
+    //console.log(videos);
     this.setState({videos : videos});
   } // end of refreshVideos
 
@@ -362,10 +362,11 @@ export default class Room extends Component {
 
   //handles the pause event
   async handlePlayerPause(roomId, videoId) {
-    console.log("Player will paused on the room");
+    console.log("******Player will paused on the room");
     var res = await this._updateStatus(roomId, videoId, "pause");
     if (res == true) {
       // trigger socket call //this.props.url.query.hv
+
       socket.emit("triggerRefresh", {
         content: " has stoped the video",
         username: this.state.userName
@@ -375,7 +376,7 @@ export default class Room extends Component {
 
   // handles the play event
   async handlePlayerPlay(roomId, videoId, timecode) {
-    console.log("Player will started on the room");
+    console.log("************Player will started on the room");
     var res = await this._updateStarted(roomId, videoId, timecode, "play");
     if (res == true) {
       // trigger socket call
@@ -404,7 +405,7 @@ export default class Room extends Component {
     var playlist = <div />;
     // loads the videoPlayer
     console.log("Loads videoPlayer");
-    console.log("UrlForInvite:" + this.state.urlForInvite);
+  //  console.log("UrlForInvite:" + this.state.urlForInvite);
     var videos = this.state.videos;
     if (videos[0] != undefined) {
       var video = videos[0];

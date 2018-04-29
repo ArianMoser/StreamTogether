@@ -36,25 +36,44 @@ export default class YouTubePlayer extends Component {
   }
 
   componentDidUpdate(nextProps, nextState) {
-    /*console.log("Component Update");
-    if (nextProps.videos != this.props.videos) {
-      console.log(nextProps);
-      console.log("Rerendering Player");
-      this.forceUpdate();
-    } */
+    //console.log("Component Update");
+    //console.log(this.props);
+    //console.log(nextProps);
+    if (
+      this.props.status != nextProps.status
+    ) {
+      console.log("Unequal");
+      console.log(this.props.status + "|" + nextProps.status);
+       if (nextProps.status == "pause"){
+         console.log("PauseVideo");
+        // this.refs.ytPlayer.internalPlayer.pauseVideo();
+       }
+    }
   }
 
   render() {
     var startTime = this.props.started;
     var currentTime = new Date().getTime();
     var timecode = Math.round((currentTime - startTime) / 1000);
+
+    console.log(this.refs.ytPlayer);
+    if(this.refs.ytPlayer != undefined){
+      if (this.props.status == "play") {
+        this.refs.ytPlayer.internalPlayer.seekTo(timecode);
+      } else {
+        if (this.props.status == "pause"){
+          console.log("pauseVideo");
+          // this.refs.ytPlayer.internalPlayer.pauseVideo();
+        }
+      }
+    }
     const opts = {
       height: "390",
       width: "640",
       playerVars: {
         // https://developers.google.com/youtube/player_parameters
-        /*autoplay: 1,*/
-        start: timecode
+        //autoplay: autoplay,
+        //start: timecode
       }
     };
 
@@ -68,6 +87,7 @@ export default class YouTubePlayer extends Component {
         onReady={this._onReady}
         onStateChange={this._onStateChanged}
         videoId={this.props.videoId}
+        ref="ytPlayer"
       />
     );
   }
@@ -85,20 +105,24 @@ export default class YouTubePlayer extends Component {
 
   _onPause(event) {
     console.log("Player paused");
-    this.props.handleVideoPause(this.props.roomId, this.props.databaseId);
+    if (this.props.status != "pause") {
+      this.props.handleVideoPause(this.props.roomId, this.props.databaseId);
+    }
     //   console.log(event);
   }
 
   _onPlay(event) {
     console.log("Player started");
-    var currentTime = new Date().getTime();
-    var currentVideoTimer = event.target.getCurrentTime();
-    var timecode = currentTime - currentVideoTimer*1000;
-    this.props.handleVideoPlay(
-      this.props.roomId,
-      this.props.databaseId,
-      timecode
-    );
+    if (this.props.status != "play") {
+      var currentTime = new Date().getTime();
+      var currentVideoTimer = event.target.getCurrentTime();
+      var timecode = currentTime - currentVideoTimer * 1000;
+      this.props.handleVideoPlay(
+        this.props.roomId,
+        this.props.databaseId,
+        timecode
+      );
+    }
     //console.log(event);
   }
 
@@ -112,6 +136,9 @@ export default class YouTubePlayer extends Component {
       var timecode = Math.round((currentTime - startTime) / 1000);
       console.log(timecode);
       event.target.seekTo(timecode);
+    } else {
+      console.log(event.target);
+      event.target.pauseVideo();
     }
 
     //event.target.playVideoAt({start:timecode});

@@ -124,19 +124,19 @@ export default class Chat extends Component {
     socket.on("sendMessageBack", message => {
       var userInList = false;
       if (message.length != 0) {
-        console.log(message);
+        //console.log(message);
         if (message.userlist.length != "0") {
           message.userlist.map(user => {
             user == this.state.username ? (userInList = true) : null;
           });
         } // end of if
       } // end of if
-
+      userInList = true;
       if (userInList == true) {
-        console.log("User in Userlist");
+      //  console.log("User in Userlist");
         var beautifulTime = this.getTime(message.message.timeStamp);
         var chat = this.state.chat;
-        console.log(chat);
+      //  console.log(chat);
         if (chat != [] && chat.length != "0") {
           if (chat[chat.length - 1].timeStamp != message.message.timeStamp) {
             chat.push({
@@ -159,7 +159,7 @@ export default class Chat extends Component {
       } //end of if
     }); // end of socket.on
     socket.on("sendVideoCommand", message => {
-      console.log("Received Video Command");
+      //console.log("Received Video Command");
       var userInList = false;
       if (message.length != 0) {
         console.log(message);
@@ -185,7 +185,7 @@ export default class Chat extends Component {
     var seconds = date.getSeconds();
     seconds = seconds < 10 ? "0" + seconds : seconds;
     var beautifulTime = hours + ":" + minutes + ":" + seconds;
-    console.log(beautifulTime);
+    //console.log(beautifulTime);
     return beautifulTime;
   }
 
@@ -225,12 +225,12 @@ export default class Chat extends Component {
     } // end of chatText
 
     var userlistElement = <div />;
-    console.log("Creating userlist");
+    //console.log("Creating userlist");
     if (this.state.userlist != [] && this.state.userlist != undefined) {
-      console.log(this.state.userlist);
+      //console.log(this.state.userlist);
       userlistElement = this.state.userlist.map(user => {
-        console.log("User");
-        console.log({ user });
+      //  console.log("User");
+      //  console.log({ user });
         return <span>{user}|</span>;
       });
     } //end of if
