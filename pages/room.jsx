@@ -72,10 +72,10 @@ export default class Room extends Component {
 
   //-------------------------functions of react----------------------------//
   componentWillMount() {
-    this._getInformation();
   }
 
   componentDidMount() {
+    this._getInformation();
     //this._updateUserRoomId();
     this.state.urlForInvite = window.location.href;
     console.log("url:" + this.state.urlForInvite);
@@ -146,6 +146,7 @@ export default class Room extends Component {
       // updates the roomId of current user
       this._updateUserRoomId();
     } else {
+      window.location = "/roomOverview";
       // exception during receiving room information
       // todo: add dialog
       console.log("Cant receive room information from the database");
