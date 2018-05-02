@@ -5,7 +5,8 @@ const bodyParser = require("body-parser");
 const next = require("next");
 const database = require("./database");
 const mysql = require("mysql");
-
+const multer = require("multer");
+const uuid = require("uuid/v4");
 const server = http.createServer(exp);
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
@@ -132,7 +133,7 @@ io.on("connection", client => {
     io.emit("sendMessageBack", { message: message, userlist: messageUserlist });
   });
 
-  client.on("triggerRefresh", message =>{
+  client.on("triggerRefresh", message => {
     console.log("Trigger for refresh received");
     var userlist = [];
     if (rooms.length != "0") {
@@ -189,6 +190,23 @@ const connection = mysql.createConnection({
   database: "streamtogether"
 });
 
+//Setup Multer for uploading files
+const storage = multer.diskStorage({
+  destination: 'static/public/images/',
+  filename: function (req, file, callback) {
+    var ext = "";
+    switch (file.mimetype) {
+
+      case 'image/jpeg': ext = '.jpeg'; break;
+      case 'image/png': ext = '.png'; break;
+      default: ext = '';
+    }
+    callback(null, uuid() + ext);
+  }
+});
+
+const upload = multer({ storage: storage });
+
 exp.use(bodyParser.urlencoded({ extended: false }));
 exp.use(bodyParser.json());
 app
@@ -204,7 +222,7 @@ app
       return app.render(req, res, "/index");
     });
 
-    connection.connect(function(err) {
+    connection.connect(function (err) {
       // in case of error
       if (err) {
         console.log("Database Connection ERROR");
@@ -284,6 +302,10 @@ app
         });
         exp.post("/updatePlaylistStatus", (req, res) => {
           database.updatePlaylistStatus(res, req.body, connection);
+        });
+        exp.post("/uploadImage", upload.single('Image'), (req, res) => {
+          const fileData = req.file;
+          res.send(fileData.filename)
         });
       }
     });
