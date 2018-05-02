@@ -25,9 +25,11 @@ import {
   deletePlaylist,
   insertVideo,
   changeRoomId,
+  registerFunction,
   roomFunctionByHashedValue,
   updateStarted,
   updateStatus,
+  userFunctionByUsername,
   videoFunctionByRoomId,
   videoFunctionByYoutubeId,
   voteVideo
@@ -38,6 +40,8 @@ import YouTubePlayer from "../components/YouTubePlayer";
 import VideoElement from "../components/VideoElement";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import openSocket from "socket.io-client";
+import { getAdjective, getNoun } from "../components/Words";
+import { bake_cookie } from "sfcookies";
 const socket = openSocket("http://localhost:8000");
 
 const divStyle = {
@@ -71,8 +75,7 @@ export default class Room extends Component {
   }
 
   //-------------------------functions of react----------------------------//
-  componentWillMount() {
-  }
+  componentWillMount() {}
 
   componentDidMount() {
     this._getInformation();
@@ -98,7 +101,42 @@ export default class Room extends Component {
   async _updateUserRoomId() {
     console.log("Update current room of current user");
 
-    const user = await checksession(); // gets the username of current user
+    var user = await checksession(); // gets the username of current user
+    console.log("user:" + user);
+    if (user == undefined || user == "ErrorTokenFalse") {
+      var responseSelectUsername = "";
+      do {
+        user = this.generateUserName();
+        console.log("user: " + user);
+        responseSelectUsername = await userFunctionByUsername(
+          "/getuserbyusername",
+          user
+        );
+      } while (responseSelectUsername.length == "1");
+      const responseRegister = await registerFunction(
+        "/register",
+        user,
+        "temporary@user.net",
+        ""
+      );
+      if (responseRegister.affectedRows == "1") {
+        console.log("sessiontoken will be set");
+        console.log(user);
+        var sessiontoken = jwt.sign(
+          {
+            username: user,
+            exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24
+          },
+          "shhhhh"
+        );
+        console.log(sessiontoken);
+        bake_cookie("StreamTogether", sessiontoken);
+      } else {
+        console.log("sessiontoken wont be set");
+        window.location = "/roomOverview";
+      }
+    } //end of if
+
     this.setState({
       userName: user
     });
@@ -165,11 +203,11 @@ export default class Room extends Component {
   }
 
   // sets videos of the room
-  async refreshVideos(roomId){
-  //  console.log(roomId);
+  async refreshVideos(roomId) {
+    //  console.log(roomId);
     var videos = await this._getVideos(roomId);
     //console.log(videos);
-    this.setState({videos : videos});
+    this.setState({ videos: videos });
   } // end of refreshVideos
 
   // is called, if you chose a video,
@@ -388,6 +426,14 @@ export default class Room extends Component {
     }
   }
 
+  generateUserName() {
+    return (
+      getAdjective(Math.round(Math.random() * 58)) +
+      getNoun(Math.round(Math.random() * 49)) +
+      Math.round(Math.random() * 100).toString()
+    );
+  }
+
   clearCopyMessage() {
     document.getElementById("copied").innerHTML =
       "You copied the room adress. Invite a friend!";
@@ -406,7 +452,7 @@ export default class Room extends Component {
     var playlist = <div />;
     // loads the videoPlayer
     console.log("Loads videoPlayer");
-  //  console.log("UrlForInvite:" + this.state.urlForInvite);
+    //  console.log("UrlForInvite:" + this.state.urlForInvite);
     var videos = this.state.videos;
     if (videos[0] != undefined) {
       var video = videos[0];
@@ -515,7 +561,9 @@ export default class Room extends Component {
                         <Chat
                           hv={this.state.hv}
                           roomId={this.state.roomId}
-                          handleVideoCommand={roomId => this.refreshVideos(roomId)}
+                          handleVideoCommand={roomId =>
+                            this.refreshVideos(roomId)
+                          }
                         />
                       </Grid.Row>
                     </Grid.Column>
