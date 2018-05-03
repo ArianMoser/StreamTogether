@@ -21,10 +21,11 @@ import YouTubeSearch from "../components/YouTubeSearch";
 import TopBox from "../components/TopBox";
 import {
   alterRoomEvent,
+  changeRoomId,
   connectVideoAndRoom,
   deletePlaylist,
+  dropUserEvent,
   insertVideo,
-  changeRoomId,
   registerFunction,
   roomFunctionByHashedValue,
   updateStarted,
@@ -119,9 +120,26 @@ export default class Room extends Component {
         "temporary@user.net",
         ""
       );
-      if (responseRegister.affectedRows == "1") {
+      responseSelectUsername = await userFunctionByUsername(
+        "/getuserbyusername",
+        user
+      );
+      if (
+        responseRegister.affectedRows == "1" &&
+        responseSelectUsername.length == "1"
+      ) {
+        // get user id
+        console.log(responseSelectUsername);
+        var userId = responseSelectUsername[0].ID;
+        // create drop event
+        const responseDropUserEvent = await dropUserEvent(
+          "/createEventDropUser",
+          userId
+        );
+
         console.log("sessiontoken will be set");
         console.log(user);
+
         var sessiontoken = jwt.sign(
           {
             username: user,

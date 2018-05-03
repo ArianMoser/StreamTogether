@@ -241,6 +241,9 @@ app
         exp.post("/createEventDropRoom", (req, res) => {
           database.createEventDropRoom(res, req.body, connection);
         });
+        exp.post("/createEventDropUser", (req, res) => {
+          database.createEventDropUser(res, req.body, connection);
+        });
         exp.post("/createVideo", (req, res) => {
           database.insertVideo(res, req.body, connection);
         });

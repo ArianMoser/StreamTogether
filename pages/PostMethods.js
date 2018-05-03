@@ -498,7 +498,26 @@ export const dropRoomEvent = (api, roomid) => {
     });
   });
 };
-
+//-----------------Create Event for dropping temporary user--------//
+export const dropUserEvent = (api, userid) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({
+        userId: userid
+      }),
+      success: function (res) {
+        resolve(res);
+      },
+      error: function (xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
 //--------------Alter Event for dropping rooms-------------//
 //-----------------(resets the time)----------------------//
 export const alterRoomEvent = (api, roomid) => {
