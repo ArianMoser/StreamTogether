@@ -4,6 +4,7 @@ import TopBox from "../components/TopBox";
 import RoomCard from "../components/RoomCard";
 import PropTypes from "prop-types";
 import Link from "next/link";
+import { checksession } from "../components/Util";
 import {
   Card,
   Button,
@@ -20,7 +21,7 @@ import {
   Sidebar,
   Visibility
 } from "semantic-ui-react";
-import { roomFunctionShowAll } from "./PostMethods";
+import { roomFunctionShowAll, userFunctionByUsername } from "./PostMethods";
 
 export default class roomOverview extends Component {
   constructor(props) {
@@ -28,7 +29,7 @@ export default class roomOverview extends Component {
     this.state = {
       activeItem: "rooms",
       rooms: {},
-      userId: "",
+      roomId: 0,
       username: ""
     };
   }
@@ -37,15 +38,33 @@ export default class roomOverview extends Component {
     this._getAllRooms();
   }
 
+  componentDidMount() {
+    var userName = checksession();
+    console.log("user:" + userName);
+    this._getUserRoom(userName);
+  }
+
   //----------------------functions------------------------------//
   async _getAllRooms() {
     console.log("Loading rooms");
     const responseGetRooms = await roomFunctionShowAll("/selectRooms");
     console.log("Reg. Complete | Count : " + responseGetRooms.length);
     console.log(responseGetRooms);
-    this.setState({
-      rooms: responseGetRooms
-    });
+    this.setState({ rooms: responseGetRooms });
+  }
+
+  async _getUserRoom(userName) {
+    if (userName != undefined && userName != "") {
+      const responseUserInformation = await userFunctionByUsername(
+        "/getuserandroombyusername",
+        userName
+      );
+      if (responseUserInformation.length == "1") {
+        console.log(responseUserInformation);
+        console.log("RoomId: " + responseUserInformation[0].current_room_id);
+        this.setState({ roomId: responseUserInformation[0].current_room_id });
+      }
+    }
   }
 
   //----------------------------------Render-------------------------------//
@@ -53,22 +72,49 @@ export default class roomOverview extends Component {
     const activeItem = this.state.activeItem;
     const rooms = this.state.rooms;
     var roomCardList = [];
-    console.log(rooms);
-
+    var userRoom = <span> </span>;
+    // console.log(rooms);
     if (rooms != {} && rooms != undefined) {
-      roomCardList = Object.keys(rooms).map(room => (
-        <RoomCard
-          creator={rooms[room].creator}
-          description={rooms[room].description}
-          hashedValue={rooms[room].hashedValue}
-          key={room}
-          password={rooms[room].password}
-          thumbnail={rooms[room].thumbnail}
-          title={rooms[room].title}
-          userNumber={rooms[room].ActiveUser}
-        />
-      ));
-      console.log(roomCardList);
+      roomCardList = Object.keys(rooms).map(room => {
+        // console.log(room);
+        if (this.state.roomId == rooms[room].id) {
+          userRoom = (
+            <div style={{ borderColor: "coral", borderStyle: "solid" }}>
+              <RoomCard
+                creator={rooms[room].creator}
+                description={rooms[room].description}
+                hashedValue={rooms[room].hashedValue}
+                key={room}
+                password={rooms[room].password}
+                thumbnail={rooms[room].thumbnail}
+                title={rooms[room].title}
+                userNumber={rooms[room].ActiveUser}
+              />
+            </div>
+          );
+        } else {
+          return (
+            <RoomCard
+              creator={rooms[room].creator}
+              description={rooms[room].description}
+              hashedValue={rooms[room].hashedValue}
+              key={room}
+              password={rooms[room].password}
+              thumbnail={rooms[room].thumbnail}
+              title={rooms[room].title}
+              userNumber={rooms[room].ActiveUser}
+            />
+          );
+        }
+      });
+      if (
+        roomCardList.length == "0" ||
+        roomCardList == undefined ||
+        roomCardList[0] == undefined
+      ) {
+        roomCardList = [];
+      }
+      // console.log(roomCardList);
     } //end of if
 
     return (
@@ -81,27 +127,29 @@ export default class roomOverview extends Component {
         />
         <Segment style={{ padding: "8em 0em" }} vertical>
           <Grid container stackable verticalAlign="middle">
+            {userRoom}
             {roomCardList.map(function(roomCard) {
-              console.log(roomCard);
-              if (roomCard.key % 3 == 0) {
-                console.log("even");
-                var returnValue = (
-                  <Grid.Column width={5}>{roomCard}</Grid.Column>
-                );
-              } 
-              if (roomCard.key % 3 == 1) {
-                console.log("even");
-                var returnValue = (
-                  <Grid.Column width={5}>{roomCard}</Grid.Column>
-                );
+              if (roomCard != undefined) {
+                if (roomCard.key % 3 == 0) {
+                  console.log("even");
+                  var returnValue = (
+                    <Grid.Column width={5}>{roomCard}</Grid.Column>
+                  );
+                }
+                if (roomCard.key % 3 == 1) {
+                  console.log("even");
+                  var returnValue = (
+                    <Grid.Column width={5}>{roomCard}</Grid.Column>
+                  );
+                }
+                if (roomCard.key % 3 == 2) {
+                  console.log("even");
+                  var returnValue = (
+                    <Grid.Column width={5}>{roomCard}</Grid.Column>
+                  );
+                }
               }
-              if (roomCard.key % 3 == 2) {
-                console.log("even");
-                var returnValue = (
-                  <Grid.Column width={5}>{roomCard}</Grid.Column>
-                );
-              }
-              
+
               return returnValue;
             })}
           </Grid>
