@@ -222,6 +222,10 @@ app
       return app.render(req, res, "/index");
     });
 
+    exp.get("/github", async (req, res) => {
+      res.redirect("http://github.com/ArianMoser/StreamTogether");
+    });
+
     connection.connect(function (err) {
       // in case of error
       if (err) {
