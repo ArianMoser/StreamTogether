@@ -205,7 +205,7 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage, limits: {fileSize: 6291456} });
 
 exp.use(bodyParser.urlencoded({ extended: false }));
 exp.use(bodyParser.json());

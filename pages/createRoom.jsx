@@ -32,6 +32,7 @@ export default class RoomCreator extends Component {
     this.state = {
       activeItem: "empty",
       checkPassword: false,
+      checkThumbnail: false,
       currentUser: "",
       description: "",
       password: "",
@@ -43,6 +44,9 @@ export default class RoomCreator extends Component {
     this._handleDescriptionChange = this._handleDescriptionChange.bind(this);
     this._handleTitleChange = this._handleTitleChange.bind(this);
     this._handlePasswordChangeCheck = this._handlePasswordChangeCheck.bind(
+      this
+    );
+    this._handleThumbnailChange = this._handleThumbnailChange.bind(
       this
     );
     this._handlePasswordChange = this._handlePasswordChange.bind(this);
@@ -80,6 +84,12 @@ export default class RoomCreator extends Component {
     });
   }
 
+  _handleThumbnailChange(event) {
+    this.setState({
+      checkThumbnail: !this.state.checkThumbnail
+    });
+  }
+
   _handlePasswordChange(event) {
     this.setState({
       password: event.target.value
@@ -103,15 +113,15 @@ export default class RoomCreator extends Component {
 
     console.log(
       "Title: " +
-      title +
-      "| description: " +
-      description +
-      "| checkPassword: " +
-      checkPassword +
-      "| password: " +
-      password +
-      "| currentUser: " +
-      currentUser
+        title +
+        "| description: " +
+        description +
+        "| checkPassword: " +
+        checkPassword +
+        "| password: " +
+        password +
+        "| currentUser: " +
+        currentUser
     );
 
     // pattern for the input fields
@@ -131,24 +141,26 @@ export default class RoomCreator extends Component {
       );
       console.log(
         "Number of entries in the database with roomtitle '" +
-        title +
-        "' :" +
-        responseSelectTitle.length
+          title +
+          "' :" +
+          responseSelectTitle.length
       );
       //check if title is already used
       if (responseSelectTitle.length == "0") {
-
         var responseUploadImage = "";
 
         //Upload Image
         if (this.state.selectedFile != "") {
-          console.log(this.state.selectedFile)
-          const formData = new FormData()
-          formData.append('Image', this.state.selectedFile, this.state.selectedFile.name)
+          console.log(this.state.selectedFile);
+          const formData = new FormData();
+          formData.append(
+            "Image",
+            this.state.selectedFile,
+            this.state.selectedFile.name
+          );
           responseUploadImage = await uploadImage("/uploadImage", formData);
           console.log(responseUploadImage);
         }
-
 
         // send the room information to the database
         const responseRoomCreation = await createRoomFunction(
@@ -174,9 +186,9 @@ export default class RoomCreator extends Component {
           );
           console.log(
             "Number of entries in the database with roomtitle '" +
-            title +
-            "' :" +
-            responseGetHashedValue.length
+              title +
+              "' :" +
+              responseGetHashedValue.length
           );
           console.log(responseGetHashedValue);
           var hashedValue = responseGetHashedValue[0].hashedValue;
@@ -230,12 +242,12 @@ export default class RoomCreator extends Component {
     });
   }
 
-  fileChangedHandler = (event) => {
-    this.setState({ selectedFile: event.target.files[0] })
+  fileChangedHandler = event => {
+    this.setState({ selectedFile: event.target.files[0] });
     document.getElementById("selectPicture").innerHTML =
       '<i class="checkmark icon"></i> OK';
     //TODO: das gleiche wie bei password auch für thumbnail machen.
-  }
+  };
 
   //----------------------------------Render-------------------------------//
   render() {
@@ -247,8 +259,25 @@ export default class RoomCreator extends Component {
         type="password"
       />
     ) : (
-        <div />
-      );
+      <div />
+    );
+    const thumbnailField = this.state.checkThumbnail ? (
+      <div>
+        <label for="file" id="selectPicture" class="ui icon button">
+          <i class="file icon" />
+          Open File
+        </label>
+        <Input
+          type="file"
+          id="file"
+          style={{ display: "none" }}
+          onChange={this.fileChangedHandler}
+        />
+        <p/>Max. 6 MB
+      </div>
+    ) : (
+      <div />
+    );
 
     return (
       <OwnHeader>
@@ -269,13 +298,16 @@ export default class RoomCreator extends Component {
           <p />
           Custom Thumbnail?
           <p />
-          <div>
-            <label for="file" id="selectPicture" class="ui icon button">
-              <i class="file icon"></i>
-              Open File</label>
-            <Input type="file" id="file" style={{ display: "none" }} onChange={this.fileChangedHandler}></Input>
+          <Checkbox
+            toggle
+            type="checkbox"
+            value={this.state.checkThumbnail}
+            onChange={this._handleThumbnailChange}
+          />
+          <div id="thumbnailField">
+            <p />
+            {thumbnailField}
           </div>
-
           <p />
           Password?
           <p />
