@@ -83,7 +83,7 @@ export default class Login extends Component {
     return (
       <OwnHeader useFooter={false} useHeader={false}>
         <div className="login-site">
-          <style>{` body > div,
+          <style>{` body > div ,
                     body > div > div,
                     body > div > div > div.login-site {
                     height: 100%;}

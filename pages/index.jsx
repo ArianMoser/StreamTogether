@@ -30,7 +30,7 @@ export default class Home extends Component {
     };
   }
 
-  checkLogIn() {
+  checkLogin() {
     if (checksession() == "ErrorTokenFalse") {
       window.alert("pls log in");
     } else {
@@ -65,7 +65,7 @@ export default class Home extends Component {
                   Step 1:
                 </Header>
                 <p style={{ fontSize: "1.33em" }} id="createRoomButton">
-                  <Button primary size="huge" onClick={this.checkLogIn}>
+                  <Button primary size="huge" onClick={this.checkLogin}>
                     Create Room
                     <Icon name="right arrow" />
                   </Button>

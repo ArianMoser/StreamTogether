@@ -74,7 +74,7 @@ export default class Navbar extends Component {
       var buttonPlaceholder = (
         <span>
           <Link href="/login">
-            <Button as="logIn" inverted={!fixed} color="green">
+            <Button inverted={!fixed} color="green">
               Log In
             </Button>
           </Link>
