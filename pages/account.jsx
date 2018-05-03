@@ -48,7 +48,7 @@ export default class Account extends Component {
       deleteAccountCheck: false,
       email: "default-email",
       hashedPassword: "",
-      lastRoom: "default-room",
+      currentRoom: "default-room",
       newPassword1: "",
       newPassword2: "",
       oldPassword: "",
@@ -230,14 +230,14 @@ export default class Account extends Component {
           userId: userId,
           username: username,
           email: responseUserInformation[0].email,
-          lastRoom: responseRoomInformation[0].title
+          currentRoom: responseRoomInformation[0].title
         });
       } else {
         this.setState({
           userId: userId,
           username: username,
           email: responseUserInformation[0].email,
-          lastRoom: "Currently not in a room"
+          currentRoom: "Currently not in a room"
         });
       }
     } else {
@@ -273,7 +273,7 @@ export default class Account extends Component {
     const activeItem = this.state.activeItem;
     const username = this.state.username;
     const email = this.state.email;
-    const lastRoom = this.state.lastRoom;
+    const currentRoom = this.state.currentRoom;
 
     /*--------------------Panel----------------------------*/
     //todo: image dynamisch aus der db holen
@@ -314,12 +314,12 @@ export default class Account extends Component {
                   </Grid.Row>
                   <Grid.Row>
                     <Input
-                      icon="users"
+                      icon="book"
                       iconPosition="left"
-                      placeholder="last room"
+                      placeholder="current room"
                       readOnly="true"
-                      value={lastRoom}
-                      id="lastRoom"
+                      value={currentRoom}
+                      id="currentRoom"
                     />
                     <Label pointing='left'>Current Room</Label>
                   </Grid.Row>
