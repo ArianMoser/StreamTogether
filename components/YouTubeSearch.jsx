@@ -34,7 +34,7 @@ class YouTubeSearch extends Component {
   }
 
   static propTypes = {
-    creator: PropTypes.number,
+    creator: PropTypes.string,
     roomId: PropTypes.number,
     userName: PropTypes.string
   };

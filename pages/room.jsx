@@ -559,11 +559,12 @@ export default class Room extends Component {
                       </Grid.Row>
                       <Grid.Row>
                         <Chat
-                          hv={this.state.hv}
-                          roomId={this.state.roomId}
                           handleVideoCommand={roomId =>
                             this.refreshVideos(roomId)
                           }
+                          hv={this.state.hv}
+                          roomId={this.state.roomId}
+                          username={this.state.userName}
                         />
                       </Grid.Row>
                     </Grid.Column>

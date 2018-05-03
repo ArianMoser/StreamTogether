@@ -46,6 +46,11 @@ export default class Chat extends Component {
     this.__authentificateOnServer = this._authentificateOnServer.bind(this);
     //  setInterval(this._refreshChatText, 1000);
   }
+  static get defaultProps() {
+    return {
+      username: "user"
+    };
+  }
   //-------------------------functions of react----------------------------//
 
   componentDidMount() {
@@ -59,30 +64,33 @@ export default class Chat extends Component {
         username: this.state.username
       });
     });
-    this._authentificateOnServer();
+    if (this.state.username != "" && this.state.username != undefined) {
+      console.log("#####" + this.state.username);
+      this._authentificateOnServer();
+    }
   }
 
   componentWillMount() {
-    var username = checksession();
-    if (username != "ErrorTokenFalse") {
-      this.setState({
-        username: username
-      });
-    } else {
-      this.setState({
-        username: "undefined"
-      });
-    }
-
     this.props.hv != undefined && this.props.hv != ""
-      ? this.setState({ hv: this.props.hv })
-      : this.setState({ hv: "" });
+      ? this.setState({ hv: this.props.hv, username: this.props.username })
+      : this.setState({ hv: "", username: this.props.username });
   }
 
   componentWillUnmount() {
     socket.emit("leaveRoom", {
       username: this.state.username
     });
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if (nextProps.username != this.state.username) {
+      this.setState({ username: nextProps.username });
+    }
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.username != this.state.username) {
+      this._authentificateOnServer();
+    }
   }
 
   //----------------------------event handlers---------------------------//
@@ -133,10 +141,10 @@ export default class Chat extends Component {
       } // end of if
       userInList = true;
       if (userInList == true) {
-      //  console.log("User in Userlist");
+        //  console.log("User in Userlist");
         var beautifulTime = this.getTime(message.message.timeStamp);
         var chat = this.state.chat;
-      //  console.log(chat);
+        //  console.log(chat);
         if (chat != [] && chat.length != "0") {
           if (chat[chat.length - 1].timeStamp != message.message.timeStamp) {
             chat.push({
@@ -169,7 +177,7 @@ export default class Chat extends Component {
           });
         } // end of if
       } // end of if
-      if (userInList == true){
+      if (userInList == true) {
         console.log("Handle the video command");
         this.props.handleVideoCommand(this.props.roomId);
       }
@@ -229,8 +237,8 @@ export default class Chat extends Component {
     if (this.state.userlist != [] && this.state.userlist != undefined) {
       //console.log(this.state.userlist);
       userlistElement = this.state.userlist.map(user => {
-      //  console.log("User");
-      //  console.log({ user });
+        //  console.log("User");
+        //  console.log({ user });
         return <span>{user}|</span>;
       });
     } //end of if
@@ -238,14 +246,14 @@ export default class Chat extends Component {
     return (
       <Grid>
         <Grid.Row>
-          <div className="App" >
+          <div className="App">
             <p className="App-intro">This is the Userlist: {userlistElement}</p>
             <Sidebar.Pushable
               as={Segment}
               style={{ maxHeight: 300, maxWidth: 400, overflow: scroll }}
             >
               <div style={divStyle}>
-                <Comment.Group minimal style={{width:350}}>
+                <Comment.Group minimal style={{ width: 350 }}>
                   <Header as="h3" dividing>
                     Chats
                   </Header>
