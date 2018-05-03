@@ -495,11 +495,35 @@ var call = (module.exports = {
     const query =
       "CREATE EVENT dropRoom" +
       mysql.escape(dieNutzerDaten.roomid) +
-      " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 HOUR" +
+      " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 4 HOUR" +
       " DO" +
       " DELETE FROM room" +
       " WHERE room.id=" +
       mysql.escape(dieNutzerDaten.roomid) +
+      ";";
+    console.log(query);
+    connection.query(query, function (err, rows, fields) {
+      if (err) {
+        console.log("An error ocurred performing the query.");
+        console.log(err);
+        return;
+      }
+
+      console.log("Number of created events: " + rows.affectedRows);
+      res.send(rows);
+    });
+  },
+    //------------------creates the drop temporary user event------------------//
+  createEventDropUser: function (res, dieNutzerDaten, connection) {
+    console.log(dieNutzerDaten);
+    const query =
+      "CREATE EVENT dropUser" +
+      mysql.escape(dieNutzerDaten.userId) +
+      " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 4 HOUR" +
+      " DO" +
+      " DELETE FROM user" +
+      " WHERE user.id=" +
+      mysql.escape(dieNutzerDaten.userId) +
       ";";
     console.log(query);
     connection.query(query, function (err, rows, fields) {
@@ -519,7 +543,7 @@ var call = (module.exports = {
     const query =
       "ALTER EVENT dropRoom" +
       mysql.escape(dieNutzerDaten.roomid) +
-      " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 HOUR" +
+      " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 4 HOUR" +
       " DO" +
       " DELETE FROM room" +
       " WHERE room.id=" +
