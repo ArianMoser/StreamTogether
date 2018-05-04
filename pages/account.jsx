@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import Link from "next/link";
 import OwnHeader from "../components/Header";
 import TopBox from "../components/TopBox";
-import { checksession } from "../components/Util";
+import { checksession, checksessionfortempuser } from "../components/Util";
 import { read_cookie, delete_cookie } from "sfcookies";
 import $ from "jquery";
 import {
@@ -75,7 +75,7 @@ export default class Account extends Component {
 
   componentDidMount() {
     console.log("Check Cookie");
-    if (checksession() == "ErrorTokenFalse") {
+    if (checksession() == "ErrorTokenFalse" || checksessionfortempuser() == "yes") {
       window.location = "/login";
       console.log("Cookie not found");
     } else {

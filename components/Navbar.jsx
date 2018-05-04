@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Button, Container, Menu } from "semantic-ui-react";
 import { bake_cookie, read_cookie, delete_cookie } from "sfcookies";
 import PropTypes from "prop-types";
-import {checksession} from "./Util";
+import {checksession, checksessionfortempuser} from "./Util";
 
 export default class Navbar extends Component {
   constructor(props) {
@@ -41,7 +41,7 @@ export default class Navbar extends Component {
   logoutFunction(event) {
     if (read_cookie("StreamTogether").length != 0) {
       delete_cookie("StreamTogether");
-      window.location = "/login";
+      window.location = "/";
     }
   }
 
@@ -51,7 +51,7 @@ export default class Navbar extends Component {
     const activeItem = this.props.name;
     var buttonPlaceholder = "";
 
-    if (checksession() != "ErrorTokenFalse") {
+    if (checksession() != "ErrorTokenFalse" && checksessionfortempuser() == "no") {
       // TODO: Ausloggen button hiermit
       var buttonPlaceholder = (
         <span>

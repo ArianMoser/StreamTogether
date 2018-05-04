@@ -143,6 +143,7 @@ export default class Room extends Component {
         var sessiontoken = jwt.sign(
           {
             username: user,
+            tempuser: "yes",
             exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24
           },
           "shhhhh"

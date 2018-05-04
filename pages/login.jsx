@@ -5,7 +5,7 @@ import $ from "jquery";
 import { userFunctionLogin } from "./PostMethods";
 const bcrypt = require("bcryptjs");
 import { bake_cookie} from "sfcookies";
-import {checksession} from "../components/Util";
+import {checksession, checksessionfortempuser} from "../components/Util";
 const jwt = require("jsonwebtoken");
 
 import {
@@ -26,7 +26,7 @@ export default class Login extends Component {
   }
 
   componentDidMount() {
-    if (checksession() != "ErrorTokenFalse")
+    if (checksession() != "ErrorTokenFalse" &&  checksessionfortempuser() == "no")
     {
       window.location = "/";
     }
@@ -63,6 +63,7 @@ export default class Login extends Component {
           var sessiontoken = jwt.sign(
             {
               username: response[0].username,
+              tempuser: "no",
               exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24
             },
             "shhhhh"

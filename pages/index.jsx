@@ -20,7 +20,7 @@ import {
   Visibility
 } from "semantic-ui-react";
 import TopBox from "../components/TopBox";
-import { checksession } from "../components/Util";
+import { checksession, checksessionfortempuser } from "../components/Util";
 
 export default class Home extends Component {
   constructor(props) {
@@ -31,14 +31,14 @@ export default class Home extends Component {
   }
 
   checkLogin() {
-    if (checksession() == "ErrorTokenFalse") {
+    if (checksession() == "ErrorTokenFalse" || checksessionfortempuser() == "yes") {
       window.alert("pls log in");
     } else {
       window.location = "./createRoom";
     }
   }
  componentDidMount(){
-  if (checksession() == "ErrorTokenFalse") {
+  if (checksession() == "ErrorTokenFalse" || checksessionfortempuser() == "yes") {
     document.getElementById("createRoomButton").innerHTML = '<form action="/login"><button type="submit" class="ui primary button">Create room</button></form>';
 } else {
   document.getElementById("createRoomButton").innerHTML = '<form action="/createRoom"><button type="submit" class="ui primary button">Create room</button></form>';

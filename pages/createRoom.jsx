@@ -24,7 +24,7 @@ import {
   Segment,
   Visibility
 } from "semantic-ui-react";
-import { checksession } from "../components/Util";
+import { checksession, checksessionfortempuser } from "../components/Util";
 
 export default class RoomCreator extends Component {
   constructor(props) {
@@ -57,7 +57,7 @@ export default class RoomCreator extends Component {
     console.log("Username: " + currentUsername);
     var currentUserId = this._getUserId(currentUsername);
     //When user is already loged in...
-    if (checksession() == "ErrorTokenFalse") {
+    if (checksession() == "ErrorTokenFalse" || checksessionfortempuser() == "yes") {
       window.location = "/index";
       window.alert("pls log in");
     }
