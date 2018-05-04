@@ -73,13 +73,16 @@ export default class roomOverview extends Component {
     const rooms = this.state.rooms;
     var roomCardList = [];
     var userRoom = <span> </span>;
+    const spanstyle = {
+      "box-shadow": "10px 10px 5px blue"
+    };
     // console.log(rooms);
     if (rooms != {} && rooms != undefined) {
       roomCardList = Object.keys(rooms).map(room => {
-        // console.log(room);
+         console.log(rooms[room]);
         if (this.state.roomId == rooms[room].id) {
           userRoom = (
-            <div style={{ borderColor: "coral", borderStyle: "solid" }}>
+            <div style={spanstyle}>
               <RoomCard
                 creator={rooms[room].creator}
                 description={rooms[room].description}
@@ -94,6 +97,7 @@ export default class roomOverview extends Component {
           );
         } else {
           return (
+            <div>
             <RoomCard
               creator={rooms[room].creator}
               description={rooms[room].description}
@@ -104,9 +108,15 @@ export default class roomOverview extends Component {
               title={rooms[room].title}
               userNumber={rooms[room].ActiveUser}
             />
+            </div>
           );
-        }
+        } //end of else
+        
       });
+      console.log(".........");
+      console.log(userRoom);
+      console.log(roomCardList);
+      console.log(".........");
       if (
         roomCardList.length == "0" ||
         roomCardList == undefined ||

@@ -46,9 +46,7 @@ export default class RoomCreator extends Component {
     this._handlePasswordChangeCheck = this._handlePasswordChangeCheck.bind(
       this
     );
-    this._handleThumbnailChange = this._handleThumbnailChange.bind(
-      this
-    );
+    this._handleThumbnailChange = this._handleThumbnailChange.bind(this);
     this._handlePasswordChange = this._handlePasswordChange.bind(this);
     this._handleRoomCreation = this._handleRoomCreation.bind(this);
   }
@@ -99,7 +97,8 @@ export default class RoomCreator extends Component {
   // creates a room
   async _handleRoomCreation(event) {
     event.preventDefault();
-    const title = this.state.title;
+    var title = this.state.title;
+    title = title.replace("  ", " ");
     const description = this.state.description;
     const checkPassword = this.state.checkPassword;
     const currentUser = this.state.currentUser;
@@ -133,92 +132,99 @@ export default class RoomCreator extends Component {
       titleExpression.test(title) &&
       (pwExpression.test(password) || !checkPassword || true)
     )*/
-    if ((password != undefined && password != "") || !checkPassword) {
-      console.log("Testpattern succeded");
-      const responseSelectTitle = await roomFunctionByTitle(
-        "/selectRoomByTitle",
-        title
-      );
-      console.log(
-        "Number of entries in the database with roomtitle '" +
-          title +
-          "' :" +
-          responseSelectTitle.length
-      );
-      //check if title is already used
-      if (responseSelectTitle.length == "0") {
-        var responseUploadImage = "";
-
-        //Upload Image
-        if (this.state.selectedFile != "") {
-          console.log(this.state.selectedFile);
-          const formData = new FormData();
-          formData.append(
-            "Image",
-            this.state.selectedFile,
-            this.state.selectedFile.name
-          );
-          responseUploadImage = await uploadImage("/uploadImage", formData);
-          console.log(responseUploadImage);
-        }
-
-        // send the room information to the database
-        const responseRoomCreation = await createRoomFunction(
-          "/createRoom",
-          title,
-          description,
-          password,
-          currentUser,
-          responseUploadImage
+    if (title != " " && title != "" && title != undefined) {
+      if ((password != undefined && password != "") || !checkPassword) {
+        console.log("Testpattern succeded");
+        const responseSelectTitle = await roomFunctionByTitle(
+          "/selectRoomByTitle",
+          title
         );
         console.log(
-          "Reg. Complete | Affected Rows: " + responseRoomCreation.affectedRows
+          "Number of entries in the database with roomtitle '" +
+            title +
+            "' :" +
+            responseSelectTitle.length
         );
-        //check if db push succeded
-        if (responseRoomCreation.affectedRows == "1") {
-          console.log("DB push succeeded");
+        //check if title is already used
+        if (responseSelectTitle.length == "0") {
+          var responseUploadImage = "";
 
-          //get the link to the room
-          console.log("Get the hashed value to reach the room");
-          const responseGetHashedValue = await roomFunctionByTitle(
-            "/selectRoomByTitle",
-            title
+          //Upload Image
+          if (this.state.selectedFile != "") {
+            console.log(this.state.selectedFile);
+            const formData = new FormData();
+            formData.append(
+              "Image",
+              this.state.selectedFile,
+              this.state.selectedFile.name
+            );
+            responseUploadImage = await uploadImage("/uploadImage", formData);
+            console.log(responseUploadImage);
+          }
+
+          // send the room information to the database
+          const responseRoomCreation = await createRoomFunction(
+            "/createRoom",
+            title,
+            description,
+            password,
+            currentUser,
+            responseUploadImage
           );
           console.log(
-            "Number of entries in the database with roomtitle '" +
-              title +
-              "' :" +
-              responseGetHashedValue.length
+            "Reg. Complete | Affected Rows: " +
+              responseRoomCreation.affectedRows
           );
-          console.log(responseGetHashedValue);
-          var hashedValue = responseGetHashedValue[0].hashedValue;
-          var roomid = responseGetHashedValue[0].ID;
-          // create DropEvent
-          const responseDropRoomEvent = await dropRoomEvent(
-            "createEventDropRoom",
-            roomid
-          );
-          console.log(responseDropRoomEvent);
-          if (responseDropRoomEvent.serverStatus == "2") {
-            console.log("The drop event was scheduled in 1 hour");
+          //check if db push succeded
+          if (responseRoomCreation.affectedRows == "1") {
+            console.log("DB push succeeded");
+
+            //get the link to the room
+            console.log("Get the hashed value to reach the room");
+            const responseGetHashedValue = await roomFunctionByTitle(
+              "/selectRoomByTitle",
+              title
+            );
+            console.log(
+              "Number of entries in the database with roomtitle '" +
+                title +
+                "' :" +
+                responseGetHashedValue.length
+            );
+            console.log(responseGetHashedValue);
+            var hashedValue = responseGetHashedValue[0].hashedValue;
+            var roomid = responseGetHashedValue[0].ID;
+            // create DropEvent
+            const responseDropRoomEvent = await dropRoomEvent(
+              "createEventDropRoom",
+              roomid
+            );
+            console.log(responseDropRoomEvent);
+            if (responseDropRoomEvent.serverStatus == "2") {
+              console.log("The drop event was scheduled in 1 hour");
+            } else {
+              console.log("Error during the event creation process");
+            }
+            document.getElementById("feedback").innerHTML =
+              '<div class="ui positive message"><div class="header">Room created</div><p>Forwarding...</p></div>';
+            window.location = "./room?hv=" + hashedValue;
           } else {
-            console.log("Error during the event creation process");
+            console.log("DB push failed");
+            document.getElementById("feedback").innerHTML =
+              '<div class="ui negative message"><div class="header">Room not created</div><p>Internal Error - DB push</p></div>';
           }
-          document.getElementById("feedback").innerHTML =
-            '<div class="ui positive message"><div class="header">Room created</div><p>Forwarding...</p></div>';
-          window.location = "./room?hv=" + hashedValue;
         } else {
-          console.log("DB push failed");
+          console.log("A room with this title already exists");
           document.getElementById("feedback").innerHTML =
-            '<div class="ui negative message"><div class="header">Room not created</div><p>Internal Error - DB push</p></div>';
+            '<div class="ui negative message"><div class="header">Room not created</div><p>A room with this title already exists</p></div>';
         }
       } else {
-        console.log("A room with this title already exists");
-        document.getElementById("feedback").innerHTML =
-          '<div class="ui negative message"><div class="header">Room not created</div><p>A room with this title already exists</p></div>';
+        console.log("Testpattern failed");
       }
     } else {
-      console.log("Testpattern failed");
+      console.log("Roomname can not be empty");
+      document.getElementById("feedback").innerHTML =
+        '<div class="ui negative message"><div class="header">Room not created</div><p>Roomname can not be empty</p></div>';
     }
   }
   //----------------------functions------------------------------//
@@ -273,7 +279,7 @@ export default class RoomCreator extends Component {
           style={{ display: "none" }}
           onChange={this.fileChangedHandler}
         />
-        <p/>Max. 6 MB
+        <p />Max. 6 MB
       </div>
     ) : (
       <div />
