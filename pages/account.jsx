@@ -75,7 +75,10 @@ export default class Account extends Component {
 
   componentDidMount() {
     console.log("Check Cookie");
-    if (checksession() == "ErrorTokenFalse" || checksessionfortempuser() == "yes") {
+    if (
+      checksession() == "ErrorTokenFalse" ||
+      checksessionfortempuser() == "yes"
+    ) {
       window.location = "/login";
       console.log("Cookie not found");
     } else {
@@ -286,11 +289,14 @@ export default class Account extends Component {
             <Grid>
               <Grid.Row>
                 <Grid.Column width={4}>
-                  <Image src="../static/minion.png" size="small" circular />
+                  <Image
+                    src="../static/userpicture_default.png"
+                    size="small"
+                    circular
+                  />
                 </Grid.Column>
                 <Grid.Column width={12}>
                   <Grid.Row>
-                  
                     <Input
                       icon="users"
                       iconPosition="left"
@@ -299,7 +305,7 @@ export default class Account extends Component {
                       value={username}
                       id="username"
                     />
-                    <Label pointing='left'>Username</Label>
+                    <Label pointing="left">Username</Label>
                   </Grid.Row>
                   <Grid.Row>
                     <Input
@@ -310,7 +316,7 @@ export default class Account extends Component {
                       value={email}
                       id="email"
                     />
-                    <Label pointing='left'>E-Mail</Label>
+                    <Label pointing="left">E-Mail</Label>
                   </Grid.Row>
                   <Grid.Row>
                     <Input
@@ -321,7 +327,7 @@ export default class Account extends Component {
                       value={currentRoom}
                       id="currentRoom"
                     />
-                    <Label pointing='left'>Current Room</Label>
+                    <Label pointing="left">Current Room</Label>
                   </Grid.Row>
                 </Grid.Column>
               </Grid.Row>

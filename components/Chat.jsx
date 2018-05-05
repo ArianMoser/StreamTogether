@@ -10,6 +10,7 @@ import {
   Icon,
   Input,
   Grid,
+  Image,
   List,
   Segment,
   Sidebar,
@@ -237,9 +238,17 @@ export default class Chat extends Component {
     if (this.state.userlist != [] && this.state.userlist != undefined) {
       //console.log(this.state.userlist);
       userlistElement = this.state.userlist.map(user => {
-        //  console.log("User");
+        var userelement = (
+          <List.Item>
+            <Image avatar src="../static/userpicture_default.png" />
+            <List.Content>
+              <List.Header>{user}</List.Header>
+            </List.Content>
+          </List.Item>
+        );
+        console.log(userelement);
         //  console.log({ user });
-        return <span>{user}|</span>;
+        return userelement;
       });
     } //end of if
 
@@ -247,16 +256,15 @@ export default class Chat extends Component {
       <Grid>
         <Grid.Row>
           <div className="App">
-            <p className="App-intro">This is the Userlist: {userlistElement}</p>
+            <Header as="h2">Userlist</Header>
+            <List horizontal>{userlistElement}</List>
+            <Header as="h2">Chat</Header>
             <Sidebar.Pushable
               as={Segment}
               style={{ maxHeight: 300, maxWidth: 400, overflow: scroll }}
             >
               <div style={divStyle}>
                 <Comment.Group minimal style={{ width: 350 }}>
-                  <Header as="h3" dividing>
-                    Chats
-                  </Header>
                   {chatTextElement}
                 </Comment.Group>
               </div>

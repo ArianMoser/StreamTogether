@@ -550,6 +550,7 @@ export default class Room extends Component {
                   <Grid.Row>
                     <Grid.Column width={10}>
                       {videoPlayer}
+                      <Header as="h2">Search</Header>
                       <YouTubeSearch
                         creator={this.state.creator}
                         getVideos={roomId => this._getVideos(roomId)}
@@ -565,6 +566,7 @@ export default class Room extends Component {
                     </Grid.Column>
                     <Grid.Column width={6}>
                       <Grid.Row>
+                        <Header as="h2">Playlist</Header>
                         <Sidebar.Pushable as={Segment} style={scroll}>
                           <Table
                             basic="very"
