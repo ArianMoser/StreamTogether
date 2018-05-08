@@ -1,9 +1,14 @@
+//--------------------------------Imports-------------------------------//
 import React, { Fragment, Component } from "react";
 import Link from "next/link";
 import { Button, Container, Menu } from "semantic-ui-react";
 import { bake_cookie, read_cookie, delete_cookie } from "sfcookies";
 import PropTypes from "prop-types";
 import {checksession, checksessionfortempuser} from "./Util";
+
+//****************************************************************************
+//This component creates the header/navbar and controles which buttons are visible
+//****************************************************************************
 
 export default class Navbar extends Component {
   constructor(props) {
@@ -26,6 +31,7 @@ export default class Navbar extends Component {
   };
 
   //-------------------------functions of react----------------------------//
+  // componentDidMount() is invoked immediately after a component is mounted
   componentDidMount() {
     this.setState({ activeItem: this.props.name });
     var answer = checksession();
@@ -51,8 +57,8 @@ export default class Navbar extends Component {
     const activeItem = this.props.name;
     var buttonPlaceholder = "";
 
+    // If no cookie is set or user is a temp user
     if (checksession() != "ErrorTokenFalse" && checksessionfortempuser() == "no") {
-      // TODO: Ausloggen button hiermit
       var buttonPlaceholder = (
         <span>
           <Link href="/account">
@@ -91,8 +97,7 @@ export default class Navbar extends Component {
       );
     }
 
-    //console.log("fixed" + this.state.fixed);
-
+    //return
     return (
       <Menu
         fixed={fixed ? "top" : null}

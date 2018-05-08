@@ -1,3 +1,4 @@
+//--------------------------------Imports-------------------------------//
 import React, { Fragment, Component } from "react";
 import Navbar from "../components/Navbar";
 import {
@@ -7,6 +8,10 @@ import {
   Visibility
 } from "semantic-ui-react";
 import PropTypes from "prop-types";
+
+//****************************************************************************
+//This component creates the dark grey top Box
+//****************************************************************************
 
 export default class TopBox extends Component {
   constructor(props) {
@@ -36,6 +41,7 @@ export default class TopBox extends Component {
   hideFixedMenu = () => this.setState({ fixed: false });
   showFixedMenu = () => this.setState({ fixed: true });
 
+  //----------------------------------Render-----------------------------//
   render() {
     const layer1 = this.props.layer1;
     const layer2 = this.props.layer2;

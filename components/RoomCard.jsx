@@ -1,8 +1,16 @@
+//--------------------------------Imports-------------------------------//
 import React, { Component } from "react";
 import { Button, Card, Icon, Image, Input, Popup } from "semantic-ui-react";
 import PropTypes from "prop-types";
 import { userFunctionById } from "../pages/PostMethods";
+
+//--------------------------------Declarations-------------------------------//
 const bcrypt = require("bcryptjs");
+
+
+//****************************************************************************
+//This component creates the Room-Cards for the room overview
+//****************************************************************************
 
 export default class RoomCard extends Component {
   constructor(props) {
@@ -40,6 +48,7 @@ export default class RoomCard extends Component {
   };
 
   //-------------------------functions of react----------------------------//
+  //componentWillMount() is invoked just before mounting occurs
   componentWillMount() {
     this.setState(this.props);
     this._getUsername(this.props.creator);
@@ -69,8 +78,6 @@ export default class RoomCard extends Component {
       } else {
         console.log("Password wrong");
       }
-
-      //window.location = "./room?hv=" + this.state.hashedValue;
     }
   }
 
@@ -148,7 +155,9 @@ export default class RoomCard extends Component {
         <Card.Content>
           <Card.Header>{title}</Card.Header>
           <Card.Meta>
-            <span style={spanstyle} className="username">{userName}</span>
+            <span style={spanstyle} className="username">
+              {userName}
+            </span>
           </Card.Meta>
           <Card.Description>{description}</Card.Description>
         </Card.Content>

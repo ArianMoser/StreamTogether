@@ -1,6 +1,11 @@
+//--------------------------------Imports-------------------------------//
 import { Component } from "react";
 import YouTube from "react-youtube";
 import PropTypes from "prop-types";
+
+//****************************************************************************
+//This component is used for contole the Youtube-Player
+//****************************************************************************
 
 export default class YouTubePlayer extends Component {
   constructor(props) {
@@ -35,10 +40,8 @@ export default class YouTubePlayer extends Component {
     };
   }
 
+  //componentDidUpdate() is invoked immediately after updating occurs
   componentDidUpdate(nextProps, nextState) {
-    //console.log("Component Update");
-    //console.log(this.props);
-    //console.log(nextProps);
     if (
       this.props.status != nextProps.status
     ) {
@@ -54,6 +57,7 @@ export default class YouTubePlayer extends Component {
     }
   }
 
+  //----------------------------------Render-----------------------------//
   render() {
     var startTime = this.props.started;
     var currentTime = new Date().getTime();
@@ -95,15 +99,14 @@ export default class YouTubePlayer extends Component {
     );
   }
 
+  //----------------------------------Event-Handler-----------------------------//
   _onError(event) {
     console.log("Player error");
-    //  console.log(event);
   }
 
   _onEnd(event) {
     console.log("Player end");
     this.props.handleVideoEnd(this.props.roomId, this.props.databaseId);
-    //  console.log(event);
   }
 
   _onPause(event) {
@@ -113,7 +116,6 @@ export default class YouTubePlayer extends Component {
     if (this.props.status != "pause" && (currentTime-this.state.init)>500) {
       this.props.handleVideoPause(this.props.roomId, this.props.databaseId);
     }
-    //   console.log(event);
   }
 
   _onPlay(event) {
@@ -128,11 +130,10 @@ export default class YouTubePlayer extends Component {
         timecode
       );
     }
-    //console.log(event);
   }
 
+  // access to player in all event handlers via event.target
   _onReady(event) {
-    // access to player in all event handlers via event.target
     if (this.props.status == "play") {
       console.log("Player ready");
       console.log(event);
@@ -145,16 +146,9 @@ export default class YouTubePlayer extends Component {
       console.log(event.target);
       event.target.pauseVideo();
     }
-
-    //event.target.playVideoAt({start:timecode});
-    //console.log(event);
-
-    // event.target.pauseVideo();
   }
 
   _onStateChanged(event) {
     console.log("Player state changed");
-    //console.log("CurrentTimer:" + event.target.getCurrentTime());
-    //console.log(event);
   }
 }

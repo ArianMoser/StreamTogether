@@ -1,7 +1,12 @@
+//--------------------------------Imports-------------------------------//
 import { Component } from "react";
 import { Button, Icon } from "semantic-ui-react";
 import * as Icons from "react-icons/lib/fa";
 import PropTypes from "prop-types";
+
+//****************************************************************************
+//This component is used for adding the different buttons to the playlist.
+//****************************************************************************
 
 class MyButton extends Component {
   constructor(props) {
@@ -28,7 +33,7 @@ class MyButton extends Component {
     onClick: PropTypes.func
   };
 
-  //-------------------------functions of react----------------------------//
+  //-------------------------functions of react--------------------------//
   componentWillMount() {
     this.setState({
       disabled: this.props.disabled
@@ -39,14 +44,14 @@ class MyButton extends Component {
     this.props.onClick();
     console.log("Button clicked");
   }
-  //----------------------functions------------------------------//
+  //-----------------------------functions-------------------------------//
   _setDisable(value) {
     this.setState({
       disabled: value
     });
   }
 
-  //----------------------------------Render-------------------------------//
+  //----------------------------------Render-----------------------------//
   render() {
     var icon = <Icons.FaStar />;
     switch (this.props.icon) {
@@ -64,6 +69,7 @@ class MyButton extends Component {
         break;
     } // end of switch-case
 
+    //return
     return (
       <div>
         <Button

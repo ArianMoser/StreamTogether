@@ -1,10 +1,16 @@
+//--------------------------------Imports-------------------------------//
 import React, { Component } from "react";
 import axios from "axios";
 import MyButton from "../components/Button";
 import { List, Button, Icon, Input, Grid, Table } from "semantic-ui-react";
 import PropTypes from "prop-types";
 
+//--------------------------------Declarations-------------------------------//
 const API_KEY = "AIzaSyCkXsSdyK3kKmUYEe9T9wf6AUli3V6Nzus";
+
+//****************************************************************************
+//This component is used for the Youtube_Search
+//****************************************************************************
 
 class YouTubeSearch extends Component {
   constructor(props) {
@@ -40,6 +46,7 @@ class YouTubeSearch extends Component {
     userName: PropTypes.string
   };
 
+  //componentDidMount() is invoked immediately after a component is mounted
   componentDidMount() {
     this.setState({
       creator: this.props.creator,
@@ -53,7 +60,6 @@ class YouTubeSearch extends Component {
    * @param  {Event} e onChange event
    */
   _updateQuery(e) {
-    //  console.log(e);
     this.setState({
       query: e.target.value
     });
@@ -132,7 +138,7 @@ class YouTubeSearch extends Component {
       searchHappened: "no"
     });
   }
-  _handleKeyCheck(event){
+  _handleKeyCheck(event) {
     if (event.charCode == 13) {
       this._searchVideos();
     }
@@ -220,5 +226,4 @@ class YouTubeSearch extends Component {
     );
   }
 }
-
 export default YouTubeSearch;

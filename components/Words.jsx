@@ -1,6 +1,8 @@
+//--------------------------------Imports-------------------------------//
 import React, { Component } from "react";
 import { read_cookie, delete_cookie } from "sfcookies";
 
+//--------------------------------Declarations-------------------------------//
 var nouns = [
   "area",
   "book",
@@ -114,6 +116,11 @@ var adjectives = [
   "young"
 ];
 
+//****************************************************************************
+//This component is used to generate random usernames
+//****************************************************************************
+
+//--------------------------------Exports-------------------------------//
 export function getAdjective(nr) {
   if (nr >= 0 && nr < 58) {
     return adjectives[nr][0].toUpperCase() + adjectives[nr].slice(1);
