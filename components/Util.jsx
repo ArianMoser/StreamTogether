@@ -20,3 +20,19 @@ export function checksession() {
     return "ErrorTokenFalse";
   }
 }
+export function checksessionfortempuser() {
+  if (read_cookie("StreamTogether").length != 0) {
+    try {
+      var decodedsession = jwt.verify(
+        read_cookie("StreamTogether"),
+        "shhhhh"
+      );
+      return decodedsession.tempuser;
+    } catch (err) {
+      console.log("Error-Message: " + err.message);
+      return "ErrorTokenFalse";
+    }
+  } else {
+    return "ErrorTokenFalse";
+  }
+}

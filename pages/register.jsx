@@ -90,8 +90,8 @@ export default class register extends Component {
               // Registration completed
               document.getElementById("feedback").innerHTML =
                 '<div class="ui positive message"><div class="header">Registration successful</div><p>You will be forwarded to the log-in page in a few seconds</p></div>';
-              setTimeout(continueToLogIn, 4000);
-              function continueToLogIn() {
+              setTimeout(continueToLogin, 4000);
+              function continueToLogin() {
                 window.location = "./login";
               }
             } else {

@@ -93,7 +93,11 @@ export default class RoomCard extends Component {
     const description = this.state.description;
     const hashedValue = this.state.hashedValue;
     const title = this.state.title;
+    var thumbnail = "../static/" + this.state.thumbnail;
     const userNumber = this.state.userNumber;
+    if (this.state.thumbnail != "room_default.png") {
+      thumbnail = "../static/public/images/" + this.state.thumbnail;
+    }
 
     var joinButton = (
       <Button
@@ -134,13 +138,17 @@ export default class RoomCard extends Component {
       );
     }
 
+    const spanstyle = {
+      color: "blue"
+    };
+
     return (
       <Card>
-        <Image src="../static/minion.png" />
+        <Image style={{ maxWidth: 290, maxHeight: 500 }} src={thumbnail} />
         <Card.Content>
           <Card.Header>{title}</Card.Header>
           <Card.Meta>
-            <span className="username">{userName}</span>
+            <span style={spanstyle} className="username">{userName}</span>
           </Card.Meta>
           <Card.Description>{description}</Card.Description>
         </Card.Content>

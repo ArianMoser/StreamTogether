@@ -5,7 +5,8 @@ const bodyParser = require("body-parser");
 const next = require("next");
 const database = require("./database");
 const mysql = require("mysql");
-
+const multer = require("multer");
+const uuid = require("uuid/v4");
 const server = http.createServer(exp);
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
@@ -132,6 +133,33 @@ io.on("connection", client => {
     io.emit("sendMessageBack", { message: message, userlist: messageUserlist });
   });
 
+  client.on("triggerRefresh", message => {
+    console.log("Trigger for refresh received");
+    var userlist = [];
+    if (rooms.length != "0") {
+      rooms.map(room => {
+        var userInRoom = false;
+        if (room.userlist.length != "0") {
+          room.userlist.map(user => {
+            if (user == message.username) {
+              userInRoom = true;
+            } //end of if
+          }); // end of iteration userlist
+        } //end of if
+        if (userInRoom == true) {
+          userlist = room.userlist;
+        } // end of if
+      }); // end of iteration room
+    } //end of if
+    var messageInfo = {
+      content: message.username + message.content,
+      username: "server",
+      timeStamp: Math.floor(Date.now() / 1000)
+    };
+    io.emit("sendMessageBack", { message: messageInfo, userlist: userlist });
+    io.emit("sendVideoCommand", { message: message, userlist: userlist });
+  });
+
   client.on("sendMessage", message => {
     console.log("Received message");
     var userlist = [];
@@ -162,6 +190,23 @@ const connection = mysql.createConnection({
   database: "streamtogether"
 });
 
+//Setup Multer for uploading files
+const storage = multer.diskStorage({
+  destination: 'static/public/images/',
+  filename: function (req, file, callback) {
+    var ext = "";
+    switch (file.mimetype) {
+
+      case 'image/jpeg': ext = '.jpeg'; break;
+      case 'image/png': ext = '.png'; break;
+      default: ext = '';
+    }
+    callback(null, uuid() + ext);
+  }
+});
+
+const upload = multer({ storage: storage, limits: {fileSize: 6291456} });
+
 exp.use(bodyParser.urlencoded({ extended: false }));
 exp.use(bodyParser.json());
 app
@@ -177,7 +222,11 @@ app
       return app.render(req, res, "/index");
     });
 
-    connection.connect(function(err) {
+    exp.get("/github", async (req, res) => {
+      res.redirect("http://github.com/ArianMoser/StreamTogether");
+    });
+
+    connection.connect(function (err) {
       // in case of error
       if (err) {
         console.log("Database Connection ERROR");
@@ -191,6 +240,9 @@ app
         });
         exp.post("/createEventDropRoom", (req, res) => {
           database.createEventDropRoom(res, req.body, connection);
+        });
+        exp.post("/createEventDropUser", (req, res) => {
+          database.createEventDropUser(res, req.body, connection);
         });
         exp.post("/createVideo", (req, res) => {
           database.insertVideo(res, req.body, connection);
@@ -254,6 +306,13 @@ app
         });
         exp.post("/updatePlaylistStarted", (req, res) => {
           database.updatePlaylistStarted(res, req.body, connection);
+        });
+        exp.post("/updatePlaylistStatus", (req, res) => {
+          database.updatePlaylistStatus(res, req.body, connection);
+        });
+        exp.post("/uploadImage", upload.single('Image'), (req, res) => {
+          const fileData = req.file;
+          res.send(fileData.filename)
         });
       }
     });

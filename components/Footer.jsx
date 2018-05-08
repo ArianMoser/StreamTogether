@@ -1,6 +1,13 @@
 import React, { Fragment, Component } from "react";
 import Link from "next/link";
-import { Container, Header, List, Grid, Segment } from "semantic-ui-react";
+import {
+  Container,
+  Header,
+  List,
+  Icon,
+  Grid,
+  Segment
+} from "semantic-ui-react";
 
 export default class Footer extends Component {
   render() {
@@ -20,6 +27,11 @@ export default class Footer extends Component {
                   </Link>
                   <Link href="/dataprivacy">
                     <List.Item as="a">Data privacy</List.Item>
+                  </Link>
+                  <Link href="/github">
+                    <List.Item as="a">
+                      <Icon name="github"/>Github
+                    </List.Item>
                   </Link>
                 </List>
               </Grid.Column>

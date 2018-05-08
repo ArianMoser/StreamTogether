@@ -23,6 +23,7 @@ class YouTubeSearch extends Component {
     this._searchVideos = this._searchVideos.bind(this);
     this._loadMore = this._loadMore.bind(this);
     this._chooseVideo = this._chooseVideo.bind(this);
+    this._handleKeyCheck = this._handleKeyCheck.bind(this);
   }
 
   static get defaultProps() {
@@ -34,7 +35,7 @@ class YouTubeSearch extends Component {
   }
 
   static propTypes = {
-    creator: PropTypes.number,
+    creator: PropTypes.string,
     roomId: PropTypes.number,
     userName: PropTypes.string
   };
@@ -131,6 +132,11 @@ class YouTubeSearch extends Component {
       searchHappened: "no"
     });
   }
+  _handleKeyCheck(event){
+    if (event.charCode == 13) {
+      this._searchVideos();
+    }
+  }
 
   //--------------------------------Render----------------------------------//
   render() {
@@ -193,6 +199,7 @@ class YouTubeSearch extends Component {
               placeholder="Search for videos..."
               type="text"
               onChange={this._updateQuery}
+              onKeyPress={this._handleKeyCheck}
               value={this.state.query}
             />
             <Button

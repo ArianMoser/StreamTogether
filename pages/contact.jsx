@@ -28,7 +28,7 @@ export default class Contact extends Component {
     };
   }
 
-//-------------------------------Render----------------------------------//
+  //-------------------------------Render----------------------------------//
   render() {
     const activeItem = this.state.activeItem;
 
@@ -39,25 +39,47 @@ export default class Contact extends Component {
           <Grid container stackable verticalAlign="middle">
             <Grid.Row>
               <Grid.Column width={8}>
-                <p style={{ fontSize: "1.33em" }}>
-                  <p>
-                    {" "}
-                    Max Mustermann<br />
-                    Musterstra&szlig;e 111<br /> Geb&auml;ude 44<br /> 90210
-                    Musterstadt
-                  </p>
-                  <p>
-                    Telefon: +49 (0) 123 44 55 66<br /> Telefax: +49 (0) 123 44
-                    55 99<br /> E-Mail: mustermann@musterfirma.de
-                  </p>
-                </p>
+                <List>
+                  <List.Item>
+                    <List.Icon name="users" size="big" />
+                    <List.Content>
+                      <Header as="h4">Max Mustermann</Header>
+                    </List.Content>
+                  </List.Item>
+                  <List.Item>
+                    <List.Icon name="marker" size="big" />
+                    <List.Content>
+                      <Header as="h4">Musterstra&szlig;e 111</Header>
+                    </List.Content>
+                  </List.Item>
+                  <List.Item>
+                    <List.Icon name="mail" size="big" />
+                    <List.Content>
+                      <Header as="h4">
+                        <a href="mailto:mustermann@musterfirma.de">
+                          mustermann@musterfirma.de
+                        </a>
+                      </Header>
+                    </List.Content>
+                  </List.Item>
+                  <List.Item>
+                    <List.Icon name="linkify" size="big" />
+                    <List.Content>
+                      <Header as="h4">
+                        <a href="http://gruppe2.testsites.info">
+                          gruppe2.testsites.info
+                        </a>
+                      </Header>
+                    </List.Content>
+                  </List.Item>
+                </List>
               </Grid.Column>
               <Grid.Column width={8}>
                 <iframe
                   width="100%"
                   height="400"
                   src="https://maps.google.de/maps?hl=de&q=Akurala%20Beach&t=&z=15&ie=UTF8&iwloc=B&output=embed"
-                  frameborder="0"
+                  frameBorder="0"
                 />
               </Grid.Column>
             </Grid.Row>

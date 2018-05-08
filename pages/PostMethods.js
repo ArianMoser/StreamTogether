@@ -1,6 +1,26 @@
 import $ from "jquery";
 const bcrypt = require("bcryptjs");
 
+//----------------------IMAGEUPLOAD----------------------//
+export const uploadImage = (api, formdata) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: false,
+      processData: false,
+      data: formdata,
+      success: function (res) {
+        resolve(res);
+      },
+      error: function (xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
+
 //----------------------GETUSERDATA----------------------//
 export const userFunctionByUsername = (api, username) => {
   return new Promise((resolve, reject) => {
@@ -10,10 +30,10 @@ export const userFunctionByUsername = (api, username) => {
       cache: false,
       contentType: "application/json",
       data: JSON.stringify({ username: username }),
-      success: function(res) {
+      success: function (res) {
         resolve(res);
       },
-      error: function(xhr, status, err) {
+      error: function (xhr, status, err) {
         reject(err);
       }
     });
@@ -28,10 +48,10 @@ export const userFunctionByEmail = (api, email) => {
       cache: false,
       contentType: "application/json",
       data: JSON.stringify({ email: email }),
-      success: function(res) {
+      success: function (res) {
         resolve(res);
       },
-      error: function(xhr, status, err) {
+      error: function (xhr, status, err) {
         reject(err);
       }
     });
@@ -46,10 +66,10 @@ export const userFunctionById = (api, id) => {
       cache: false,
       contentType: "application/json",
       data: JSON.stringify({ id: id }),
-      success: function(res) {
+      success: function (res) {
         resolve(res);
       },
-      error: function(xhr, status, err) {
+      error: function (xhr, status, err) {
         reject(err);
       }
     });
@@ -64,10 +84,10 @@ export const roomFunctionShowAll = api => {
       cache: false,
       contentType: "application/json",
       data: JSON.stringify({}),
-      success: function(res) {
+      success: function (res) {
         resolve(res);
       },
-      error: function(xhr, status, err) {
+      error: function (xhr, status, err) {
         reject(err);
       }
     });
@@ -81,11 +101,11 @@ export const roomFunctionById = (api, roomId) => {
       type: "POST",
       cache: false,
       contentType: "application/json",
-      data: JSON.stringify({roomId: roomId}),
-      success: function(res) {
+      data: JSON.stringify({ roomId: roomId }),
+      success: function (res) {
         resolve(res);
       },
-      error: function(xhr, status, err) {
+      error: function (xhr, status, err) {
         reject(err);
       }
     });
@@ -100,10 +120,10 @@ export const roomFunctionByTitle = (api, title) => {
       cache: false,
       contentType: "application/json",
       data: JSON.stringify({ title: title }),
-      success: function(res) {
+      success: function (res) {
         resolve(res);
       },
-      error: function(xhr, status, err) {
+      error: function (xhr, status, err) {
         reject(err);
       }
     });
@@ -118,10 +138,10 @@ export const roomFunctionByHashedValue = (api, hashedValue) => {
       cache: false,
       contentType: "application/json",
       data: JSON.stringify({ hashedValue: hashedValue }),
-      success: function(res) {
+      success: function (res) {
         resolve(res);
       },
-      error: function(xhr, status, err) {
+      error: function (xhr, status, err) {
         reject(err);
       }
     });
@@ -136,10 +156,10 @@ export const videoFunctionByRoomId = (api, roomId) => {
       cache: false,
       contentType: "application/json",
       data: JSON.stringify({ roomId: roomId }),
-      success: function(res) {
+      success: function (res) {
         resolve(res);
       },
-      error: function(xhr, status, err) {
+      error: function (xhr, status, err) {
         reject(err);
       }
     });
@@ -154,10 +174,10 @@ export const videoFunctionByYoutubeId = (api, youtubeId) => {
       cache: false,
       contentType: "application/json",
       data: JSON.stringify({ youtubeId: youtubeId }),
-      success: function(res) {
+      success: function (res) {
         resolve(res);
       },
-      error: function(xhr, status, err) {
+      error: function (xhr, status, err) {
         reject(err);
       }
     });
@@ -172,10 +192,10 @@ export const userFunctionLogin = (api, username, email) => {
       cache: false,
       contentType: "application/json",
       data: JSON.stringify({ username: username, email: email }),
-      success: function(res) {
+      success: function (res) {
         resolve(res);
       },
-      error: function(xhr, status, err) {
+      error: function (xhr, status, err) {
         reject(err);
       }
     });
@@ -196,10 +216,10 @@ export const registerFunction = (api, username, email, password) => {
         email: email,
         password: hash
       }),
-      success: function(res) {
+      success: function (res) {
         resolve(res);
       },
-      error: function(xhr, status, err) {
+      error: function (xhr, status, err) {
         reject(err);
       }
     });
@@ -212,7 +232,8 @@ export const createRoomFunction = (
   title,
   description,
   password,
-  currentUser
+  currentUser,
+  responseUploadImage
 ) => {
   if (password === undefined || password == "") {
     var hash = "";
@@ -232,12 +253,13 @@ export const createRoomFunction = (
         description: description,
         password: hash,
         creator: currentUser,
-        hashedValue: hashedValue
+        hashedValue: hashedValue,
+        responseUploadImage: responseUploadImage
       }),
-      success: function(res) {
+      success: function (res) {
         resolve(res);
       },
-      error: function(xhr, status, err) {
+      error: function (xhr, status, err) {
         reject(err);
       }
     });
@@ -270,10 +292,10 @@ export const insertVideo = (
         channelName: channelName,
         userName: userName
       }),
-      success: function(res) {
+      success: function (res) {
         resolve(res);
       },
-      error: function(xhr, status, err) {
+      error: function (xhr, status, err) {
         reject(err);
       }
     });
@@ -292,10 +314,10 @@ export const connectVideoAndRoom = (api, videoId, roomId) => {
         videoId: videoId,
         roomId: roomId
       }),
-      success: function(res) {
+      success: function (res) {
         resolve(res);
       },
-      error: function(xhr, status, err) {
+      error: function (xhr, status, err) {
         reject(err);
       }
     });
@@ -314,10 +336,10 @@ export const changeRoomId = (api, username, roomId) => {
         username: username,
         roomId: roomId
       }),
-      success: function(res) {
+      success: function (res) {
         resolve(res);
       },
-      error: function(xhr, status, err) {
+      error: function (xhr, status, err) {
         reject(err);
       }
     });
@@ -337,10 +359,10 @@ export const changePassword = (api, id, passwordNew) => {
         id: id,
         passwordNew: hashNewPassword
       }),
-      success: function(res) {
+      success: function (res) {
         resolve(res);
       },
-      error: function(xhr, status, err) {
+      error: function (xhr, status, err) {
         reject(err);
       }
     });
@@ -359,10 +381,10 @@ export const voteVideo = (api, roomId, videoId, voteValue) => {
         videoId: videoId,
         voteValue: voteValue
       }),
-      success: function(res) {
+      success: function (res) {
         resolve(res);
       },
-      error: function(xhr, status, err) {
+      error: function (xhr, status, err) {
         reject(err);
       }
     });
@@ -370,7 +392,7 @@ export const voteVideo = (api, roomId, videoId, voteValue) => {
 };
 
 //----------------Update started of a video (in playlist)-------------------//
-export const updateStarted = (api, roomId, videoId, started) => {
+export const updateStarted = (api, roomId, videoId, started, status) => {
   return new Promise((resolve, reject) => {
     $.ajax({
       url: api,
@@ -380,12 +402,34 @@ export const updateStarted = (api, roomId, videoId, started) => {
       data: JSON.stringify({
         roomId: roomId,
         videoId: videoId,
-        started: started
+        started: started,
+        status: status
       }),
-      success: function(res) {
+      success: function (res) {
         resolve(res);
       },
-      error: function(xhr, status, err) {
+      error: function (xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
+export const updateStatus = (api, roomId, videoId, status) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({
+        roomId: roomId,
+        videoId: videoId,
+        status: status
+      }),
+      success: function (res) {
+        resolve(res);
+      },
+      error: function (xhr, status, err) {
         reject(err);
       }
     });
@@ -403,10 +447,10 @@ export const deleteUser = (api, id) => {
       data: JSON.stringify({
         id: id
       }),
-      success: function(res) {
+      success: function (res) {
         resolve(res);
       },
-      error: function(xhr, status, err) {
+      error: function (xhr, status, err) {
         reject(err);
       }
     });
@@ -424,10 +468,10 @@ export const deletePlaylist = (api, roomId, videoId) => {
         roomId: roomId,
         videoId: videoId
       }),
-      success: function(res) {
+      success: function (res) {
         resolve(res);
       },
-      error: function(xhr, status, err) {
+      error: function (xhr, status, err) {
         reject(err);
       }
     });
@@ -445,16 +489,35 @@ export const dropRoomEvent = (api, roomid) => {
       data: JSON.stringify({
         roomid: roomid
       }),
-      success: function(res) {
+      success: function (res) {
         resolve(res);
       },
-      error: function(xhr, status, err) {
+      error: function (xhr, status, err) {
         reject(err);
       }
     });
   });
 };
-
+//-----------------Create Event for dropping temporary user--------//
+export const dropUserEvent = (api, userid) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: api,
+      type: "POST",
+      cache: false,
+      contentType: "application/json",
+      data: JSON.stringify({
+        userId: userid
+      }),
+      success: function (res) {
+        resolve(res);
+      },
+      error: function (xhr, status, err) {
+        reject(err);
+      }
+    });
+  });
+};
 //--------------Alter Event for dropping rooms-------------//
 //-----------------(resets the time)----------------------//
 export const alterRoomEvent = (api, roomid) => {
@@ -467,10 +530,10 @@ export const alterRoomEvent = (api, roomid) => {
       data: JSON.stringify({
         roomid: roomid
       }),
-      success: function(res) {
+      success: function (res) {
         resolve(res);
       },
-      error: function(xhr, status, err) {
+      error: function (xhr, status, err) {
         reject(err);
       }
     });

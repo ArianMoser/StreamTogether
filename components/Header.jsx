@@ -23,16 +23,11 @@ export default class Header extends Component {
     const activeItem = this.props.activeItem;
 
     const footer = useFooter ? <Footer /> : <div id="possibleFooterPosition" />;
-    const header = useHeader ? (
-      <Navbar name={activeItem}> Header </Navbar>
-    ) : (
-      <div> keinHeader </div>
-    );
+
 
     return (
       <Fragment>
         <Responsive {...Responsive.onlyComputer}>
-          {Header}
           {this.props.children}
           {footer}
         </Responsive>

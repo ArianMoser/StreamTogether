@@ -21,12 +21,16 @@ import YouTubeSearch from "../components/YouTubeSearch";
 import TopBox from "../components/TopBox";
 import {
   alterRoomEvent,
+  changeRoomId,
   connectVideoAndRoom,
   deletePlaylist,
+  dropUserEvent,
   insertVideo,
-  changeRoomId,
+  registerFunction,
   roomFunctionByHashedValue,
   updateStarted,
+  updateStatus,
+  userFunctionByUsername,
   videoFunctionByRoomId,
   videoFunctionByYoutubeId,
   voteVideo
@@ -36,6 +40,10 @@ import Chat from "../components/Chat";
 import YouTubePlayer from "../components/YouTubePlayer";
 import VideoElement from "../components/VideoElement";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import openSocket from "socket.io-client";
+import { getAdjective, getNoun } from "../components/Words";
+import { bake_cookie } from "sfcookies";
+const socket = openSocket("http://localhost:8000");
 
 const divStyle = {
   color: "blue",
@@ -68,11 +76,10 @@ export default class Room extends Component {
   }
 
   //-------------------------functions of react----------------------------//
-  componentWillMount() {
-    this._getInformation();
-  }
+  componentWillMount() {}
 
   componentDidMount() {
+    this._getInformation();
     //this._updateUserRoomId();
     this.state.urlForInvite = window.location.href;
     console.log("url:" + this.state.urlForInvite);
@@ -95,7 +102,60 @@ export default class Room extends Component {
   async _updateUserRoomId() {
     console.log("Update current room of current user");
 
-    const user = await checksession(); // gets the username of current user
+    var user = await checksession(); // gets the username of current user
+    console.log("user:" + user);
+    if (user == undefined || user == "ErrorTokenFalse") {
+      var responseSelectUsername = "";
+      do {
+        user = this.generateUserName();
+        console.log("user: " + user);
+        responseSelectUsername = await userFunctionByUsername(
+          "/getuserbyusername",
+          user
+        );
+      } while (responseSelectUsername.length == "1");
+      const responseRegister = await registerFunction(
+        "/register",
+        user,
+        "temporary@user.net",
+        ""
+      );
+      responseSelectUsername = await userFunctionByUsername(
+        "/getuserbyusername",
+        user
+      );
+      if (
+        responseRegister.affectedRows == "1" &&
+        responseSelectUsername.length == "1"
+      ) {
+        // get user id
+        console.log(responseSelectUsername);
+        var userId = responseSelectUsername[0].ID;
+        // create drop event
+        const responseDropUserEvent = await dropUserEvent(
+          "/createEventDropUser",
+          userId
+        );
+
+        console.log("sessiontoken will be set");
+        console.log(user);
+
+        var sessiontoken = jwt.sign(
+          {
+            username: user,
+            tempuser: "yes",
+            exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24
+          },
+          "shhhhh"
+        );
+        console.log(sessiontoken);
+        bake_cookie("StreamTogether", sessiontoken);
+      } else {
+        console.log("sessiontoken wont be set");
+        window.location = "/roomOverview";
+      }
+    } //end of if
+
     this.setState({
       userName: user
     });
@@ -143,6 +203,7 @@ export default class Room extends Component {
       // updates the roomId of current user
       this._updateUserRoomId();
     } else {
+      window.location = "/roomOverview";
       // exception during receiving room information
       // todo: add dialog
       console.log("Cant receive room information from the database");
@@ -152,13 +213,21 @@ export default class Room extends Component {
   // get videos of the room
   async _getVideos(roomId) {
     // get videos of room
-    console.log("Get videos of room");
+    //console.log("Get videos of room");
     const responseVideos = await videoFunctionByRoomId(
       "/selectVideosByRoomId",
       roomId
     );
     return responseVideos;
   }
+
+  // sets videos of the room
+  async refreshVideos(roomId) {
+    //  console.log(roomId);
+    var videos = await this._getVideos(roomId);
+    //console.log(videos);
+    this.setState({ videos: videos });
+  } // end of refreshVideos
 
   // is called, if you chose a video,
   // -> pushs the video into the database
@@ -313,19 +382,75 @@ export default class Room extends Component {
   }
 
   // updates the started attribute of a video inside of the table Playlist
-  async _updateStarted(roomId, videoId, started) {
+  async _updateStarted(roomId, videoId, started, status) {
     console.log("Update started");
     const responseUpdateStarted = await updateStarted(
-      'updatePlaylistStarted',
+      "/updatePlaylistStarted",
       roomId,
       videoId,
-      started
+      started,
+      status
     );
-    if ( responseUpdateStarted.affectedRows == "1"){
+    if (responseUpdateStarted.affectedRows == "1") {
       console.log("Updated started value");
+      return true;
     } else {
       console.log("Error during update process(started)");
+      return false;
     }
+  }
+
+  // updates the status of the videos
+  async _updateStatus(roomId, videoId, status) {
+    console.log("Update started");
+    const responseUpdateStatus = await updateStatus(
+      "/updatePlaylistStatus",
+      roomId,
+      videoId,
+      status
+    );
+    if (responseUpdateStatus.affectedRows == "1") {
+      console.log("Updated status value");
+      return true;
+    } else {
+      console.log("Error during update process(started)");
+      return false;
+    }
+  }
+
+  //handles the pause event
+  async handlePlayerPause(roomId, videoId) {
+    console.log("******Player will paused on the room");
+    var res = await this._updateStatus(roomId, videoId, "pause");
+    if (res == true) {
+      // trigger socket call //this.props.url.query.hv
+
+      socket.emit("triggerRefresh", {
+        content: " has stoped the video",
+        username: this.state.userName
+      });
+    }
+  }
+
+  // handles the play event
+  async handlePlayerPlay(roomId, videoId, timecode) {
+    console.log("************Player will started on the room");
+    var res = await this._updateStarted(roomId, videoId, timecode, "play");
+    if (res == true) {
+      // trigger socket call
+      socket.emit("triggerRefresh", {
+        content: " has continued the video",
+        username: this.state.userName
+      });
+    }
+  }
+
+  generateUserName() {
+    return (
+      getAdjective(Math.round(Math.random() * 58)) +
+      getNoun(Math.round(Math.random() * 49)) +
+      Math.round(Math.random() * 100).toString()
+    );
   }
 
   clearCopyMessage() {
@@ -346,33 +471,46 @@ export default class Room extends Component {
     var playlist = <div />;
     // loads the videoPlayer
     console.log("Loads videoPlayer");
-    console.log("UrlForInvite:" + this.state.urlForInvite);
+    //  console.log("UrlForInvite:" + this.state.urlForInvite);
     var videos = this.state.videos;
     if (videos[0] != undefined) {
       var video = videos[0];
-      var timecode = "0";
+      var started = "0";
+      var status = "play";
       console.log(video);
       //check if started is
-      if (video.started == 0){
+      if (video.started == 0) {
         // videoId: video_ID
         // roomId: room_ID
         // set started to current Timestamp
-        var milliseconds = new Date().getTime();
-        console.log(milliseconds);
-        this._updateStarted(video.room_ID, video.video_ID, Math.round(milliseconds));
+        started = new Date().getTime();
+        console.log(started);
+        this._updateStarted(
+          video.room_ID,
+          video.video_ID,
+          Math.round(started),
+          status
+        );
       } else {
         // set timecode
-        var currentTime = new Date().getTime();
-        var startTime = video.started;
-        console.log(currentTime);
+        started = video.started;
+        status = video.status;
+        /*console.log(currentTime);
         timecode = Math.round((currentTime-startTime)/1000);
-        console.log(timecode);
+        console.log(timecode);*/
       }
       var videoPlayer = (
         <YouTubePlayer
           databaseId={videos[0].video_ID}
           handleVideoEnd={(roomId, videoId) => this._nextVideo(roomId, videoId)}
-          timecode={timecode}
+          handleVideoPlay={(roomId, videoId, timecode) =>
+            this.handlePlayerPlay(roomId, videoId, timecode)
+          }
+          handleVideoPause={(roomId, videoId) =>
+            this.handlePlayerPause(roomId, videoId)
+          }
+          started={started}
+          status={status}
           roomId={videos[0].room_ID}
           videoId={videos[0].youtube_id}
         />
@@ -412,6 +550,7 @@ export default class Room extends Component {
                   <Grid.Row>
                     <Grid.Column width={10}>
                       {videoPlayer}
+                      <Header as="h2">Search</Header>
                       <YouTubeSearch
                         creator={this.state.creator}
                         getVideos={roomId => this._getVideos(roomId)}
@@ -427,6 +566,7 @@ export default class Room extends Component {
                     </Grid.Column>
                     <Grid.Column width={6}>
                       <Grid.Row>
+                        <Header as="h2">Playlist</Header>
                         <Sidebar.Pushable as={Segment} style={scroll}>
                           <Table
                             basic="very"
@@ -439,7 +579,14 @@ export default class Room extends Component {
                         </Sidebar.Pushable>
                       </Grid.Row>
                       <Grid.Row>
-                        <Chat hv={this.state.hv} />
+                        <Chat
+                          handleVideoCommand={roomId =>
+                            this.refreshVideos(roomId)
+                          }
+                          hv={this.state.hv}
+                          roomId={this.state.roomId}
+                          username={this.state.userName}
+                        />
                       </Grid.Row>
                     </Grid.Column>
                   </Grid.Row>

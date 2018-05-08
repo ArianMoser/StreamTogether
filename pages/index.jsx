@@ -20,7 +20,7 @@ import {
   Visibility
 } from "semantic-ui-react";
 import TopBox from "../components/TopBox";
-import { checksession } from "../components/Util";
+import { checksession, checksessionfortempuser } from "../components/Util";
 
 export default class Home extends Component {
   constructor(props) {
@@ -30,15 +30,15 @@ export default class Home extends Component {
     };
   }
 
-  checkLogIn() {
-    if (checksession() == "ErrorTokenFalse") {
+  checkLogin() {
+    if (checksession() == "ErrorTokenFalse" || checksessionfortempuser() == "yes") {
       window.alert("pls log in");
     } else {
       window.location = "./createRoom";
     }
   }
  componentDidMount(){
-  if (checksession() == "ErrorTokenFalse") {
+  if (checksession() == "ErrorTokenFalse" || checksessionfortempuser() == "yes") {
     document.getElementById("createRoomButton").innerHTML = '<form action="/login"><button type="submit" class="ui primary button">Create room</button></form>';
 } else {
   document.getElementById("createRoomButton").innerHTML = '<form action="/createRoom"><button type="submit" class="ui primary button">Create room</button></form>';
@@ -65,7 +65,7 @@ export default class Home extends Component {
                   Step 1:
                 </Header>
                 <p style={{ fontSize: "1.33em" }} id="createRoomButton">
-                  <Button primary size="huge" onClick={this.checkLogIn}>
+                  <Button primary size="huge" onClick={this.checkLogin}>
                     Create Room
                     <Icon name="right arrow" />
                   </Button>
@@ -79,7 +79,6 @@ export default class Home extends Component {
               </Grid.Column>
               <Grid.Column floated="right" width={7}>
                 <Image
-                  bordered
                   rounded
                   size="large"
                   src="../static/MusicListen.jpg"
@@ -98,7 +97,6 @@ export default class Home extends Component {
               </Grid.Column>
               <Grid.Column floated="right" width={7}>
                 <Image
-                  bordered
                   rounded
                   size="large"
                   src="../static/Tomorrowland2015.jpg"
@@ -114,7 +112,7 @@ export default class Home extends Component {
                 <p style={{ fontSize: "1.33em" }}>Watch. Videos. Together.</p>
               </Grid.Column>
               <Grid.Column floated="right" width={7}>
-                <Image bordered rounded size="large" src="../static/yt.png" />
+                <Image rounded size="large" src="../static/yt.png" />
               </Grid.Column>
             </Grid.Row>
           </Grid>
@@ -132,26 +130,18 @@ export default class Home extends Component {
             <Grid.Row textAlign="center">
               <Grid.Column style={{ paddingBottom: "5em", paddingTop: "5em" }}>
                 <Header as="h3" style={{ fontSize: "2em" }}>
-                  Stream with friends
+                <Icon name='talk outline' size='huge' />Chat with friends
                 </Header>
               </Grid.Column>
               <Grid.Column style={{ paddingBottom: "5em", paddingTop: "5em" }}>
                 <Header as="h3" style={{ fontSize: "2em" }}>
-                  Another reason
+                <Icon name='clone' size='huge' />Synchronous playback
                 </Header>
-                <p style={{ fontSize: "1.33em" }}>
-                  <Image avatar src="../static/Tomorrowland2015.jpg" />
-                  <b>I/b> am the BOSS</b>
-                </p>
               </Grid.Column>
               <Grid.Column style={{ paddingBottom: "5em", paddingTop: "5em" }}>
                 <Header as="h3" style={{ fontSize: "2em" }}>
-                  And one more reason
+                <Icon name='search' size='huge' />Integrated YouTube search
                 </Header>
-                <p style={{ fontSize: "1.33em" }}>
-                  <Image avatar src="../static/Tomorrowland2015.jpg" />
-                  <b>I</b> am the <b>BOSS</b>
-                </p>
               </Grid.Column>
             </Grid.Row>
           </Grid>

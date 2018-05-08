@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import Link from "next/link";
 import OwnHeader from "../components/Header";
 import TopBox from "../components/TopBox";
-import { checksession } from "../components/Util";
+import { checksession, checksessionfortempuser } from "../components/Util";
 import { read_cookie, delete_cookie } from "sfcookies";
 import $ from "jquery";
 import {
@@ -48,7 +48,7 @@ export default class Account extends Component {
       deleteAccountCheck: false,
       email: "default-email",
       hashedPassword: "",
-      lastRoom: "default-room",
+      currentRoom: "default-room",
       newPassword1: "",
       newPassword2: "",
       oldPassword: "",
@@ -75,7 +75,10 @@ export default class Account extends Component {
 
   componentDidMount() {
     console.log("Check Cookie");
-    if (checksession() == "ErrorTokenFalse") {
+    if (
+      checksession() == "ErrorTokenFalse" ||
+      checksessionfortempuser() == "yes"
+    ) {
       window.location = "/login";
       console.log("Cookie not found");
     } else {
@@ -230,14 +233,14 @@ export default class Account extends Component {
           userId: userId,
           username: username,
           email: responseUserInformation[0].email,
-          lastRoom: responseRoomInformation[0].title
+          currentRoom: responseRoomInformation[0].title
         });
       } else {
         this.setState({
           userId: userId,
           username: username,
           email: responseUserInformation[0].email,
-          lastRoom: "Currently not in a room"
+          currentRoom: "Currently not in a room"
         });
       }
     } else {
@@ -273,7 +276,7 @@ export default class Account extends Component {
     const activeItem = this.state.activeItem;
     const username = this.state.username;
     const email = this.state.email;
-    const lastRoom = this.state.lastRoom;
+    const currentRoom = this.state.currentRoom;
 
     /*--------------------Panel----------------------------*/
     //todo: image dynamisch aus der db holen
@@ -286,11 +289,14 @@ export default class Account extends Component {
             <Grid>
               <Grid.Row>
                 <Grid.Column width={4}>
-                  <Image src="../static/minion.png" size="small" circular />
+                  <Image
+                    src="../static/userpicture_default.png"
+                    size="small"
+                    circular
+                  />
                 </Grid.Column>
                 <Grid.Column width={12}>
                   <Grid.Row>
-                  
                     <Input
                       icon="users"
                       iconPosition="left"
@@ -299,7 +305,7 @@ export default class Account extends Component {
                       value={username}
                       id="username"
                     />
-                    <Label pointing='left'>Username</Label>
+                    <Label pointing="left">Username</Label>
                   </Grid.Row>
                   <Grid.Row>
                     <Input
@@ -310,18 +316,18 @@ export default class Account extends Component {
                       value={email}
                       id="email"
                     />
-                    <Label pointing='left'>E-Mail</Label>
+                    <Label pointing="left">E-Mail</Label>
                   </Grid.Row>
                   <Grid.Row>
                     <Input
-                      icon="users"
+                      icon="book"
                       iconPosition="left"
-                      placeholder="last room"
+                      placeholder="current room"
                       readOnly="true"
-                      value={lastRoom}
-                      id="lastRoom"
+                      value={currentRoom}
+                      id="currentRoom"
                     />
-                    <Label pointing='left'>Current Room</Label>
+                    <Label pointing="left">Current Room</Label>
                   </Grid.Row>
                 </Grid.Column>
               </Grid.Row>
