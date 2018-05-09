@@ -121,6 +121,7 @@ var adjectives = [
 //****************************************************************************
 
 //--------------------------------Exports-------------------------------//
+// get Adjective
 export function getAdjective(nr) {
   if (nr >= 0 && nr < 58) {
     return adjectives[nr][0].toUpperCase() + adjectives[nr].slice(1);
@@ -129,6 +130,7 @@ export function getAdjective(nr) {
   }
 }
 
+// get Noun
 export function getNoun(nr) {
   if (nr >= 0 && nr < 50) {
     return nouns[nr][0].toUpperCase() + nouns[nr].slice(1);

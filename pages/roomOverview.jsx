@@ -1,3 +1,4 @@
+//--------------------------------Imports-------------------------------//
 import React, { Component } from "react";
 import OwnHeader from "../components/Header";
 import TopBox from "../components/TopBox";
@@ -34,10 +35,13 @@ export default class roomOverview extends Component {
     };
   }
   //-------------------------functions of react----------------------------//
+
+  //componentWillMount() is invoked just before mounting occurs
   componentWillMount() {
     this._getAllRooms();
   }
 
+  //componentDidMount() is invoked immediately after a component is mounted
   componentDidMount() {
     var userName = checksession();
     console.log("user:" + userName);
@@ -76,7 +80,8 @@ export default class roomOverview extends Component {
     const spanstyle = {
       "box-shadow": "10px 10px 5px blue"
     };
-    // console.log(rooms);
+
+    //to highlight the current room
     if (rooms != {} && rooms != undefined) {
       roomCardList = Object.keys(rooms).map(room => {
          console.log(rooms[room]);
@@ -124,7 +129,6 @@ export default class roomOverview extends Component {
       ) {
         roomCardList = [];
       }
-      // console.log(roomCardList);
     } //end of if
 
     return (
@@ -159,7 +163,6 @@ export default class roomOverview extends Component {
                   );
                 }
               }
-
               return returnValue;
             })}
           </Grid>

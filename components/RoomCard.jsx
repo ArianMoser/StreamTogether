@@ -69,6 +69,7 @@ export default class RoomCard extends Component {
     });
   }
 
+  //check password
   _handlePasswordCheck(event) {
     if (event.charCode == 13) {
       console.log("Check password");
@@ -82,6 +83,7 @@ export default class RoomCard extends Component {
   }
 
   //----------------------functions------------------------------//
+  //get username
   async _getUsername(id) {
     const responseUsername = await userFunctionById("/getUserById", id);
     console.log(responseUsername);
@@ -102,6 +104,7 @@ export default class RoomCard extends Component {
     const title = this.state.title;
     var thumbnail = "../static/" + this.state.thumbnail;
     const userNumber = this.state.userNumber;
+    //check for thumbnail
     if (this.state.thumbnail != "room_default.png") {
       thumbnail = "../static/public/images/" + this.state.thumbnail;
     }
@@ -120,6 +123,7 @@ export default class RoomCard extends Component {
       </Button>
     );
 
+    //check if password is set
     if (
       this.state.password != "" &&
       this.state.password != "Default-Password"

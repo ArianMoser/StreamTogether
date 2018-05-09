@@ -1,4 +1,4 @@
-//Imports
+//--------------------------------Imports-------------------------------//
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import Link from "next/link";

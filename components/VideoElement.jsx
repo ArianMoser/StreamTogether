@@ -51,14 +51,14 @@ export default class VideoElement extends React.Component {
   //componentWillMount() is invoked just before mounting occurs
   componentWillMount() {
     this.setState(this.props);
-  } //end of componentWillMount
+  }
 
   //componentWillUpdate() is invoked just before rendering when new props or state are being received
   componentWillUpdate(nextProps, nextState) {
     if (nextProps.videoId != this.state.videoId) {
       this.setState(nextProps);
     }
-  } //end of componentDidUpdate
+  }
 
   //----------------------------------Event-Handler-----------------------------//
   _handleDelete() {

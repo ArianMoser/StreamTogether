@@ -1,4 +1,4 @@
-//Imports
+//--------------------------------Imports-------------------------------//
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import Link from "next/link";
@@ -36,10 +36,10 @@ import {
   roomFunctionById
 } from "./PostMethods";
 
+//--------------------------------Declarations-------------------------------//
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-//Nav Bar
 export default class Account extends Component {
   constructor(props) {
     super(props);
@@ -55,6 +55,7 @@ export default class Account extends Component {
       userId: "",
       username: "default-username"
     };
+    
     // bind event handlers
     this._changePassword = this._changePassword.bind(this);
     this._handleOldPasswordChange = this._handleOldPasswordChange.bind(this);
@@ -67,12 +68,15 @@ export default class Account extends Component {
   }
 
   //-------------------------functions of react----------------------------//
+  // componentWillMount() is invoked just before mounting occurs
   componentWillMount() {
     this.setState({
       deleteAccountCheck: false
     });
   }
 
+  // componentDidMount() is invoked immediately after a component is mounted
+  //check if Cookie is set. Otherwise the user will be redirected to the login page
   componentDidMount() {
     console.log("Check Cookie");
     if (
@@ -116,6 +120,7 @@ export default class Account extends Component {
     event.preventDefault();
     console.log("Handle password change");
 
+    //password pattern
     var pwExpression = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
     const oldPassword = this.state.oldPassword;
@@ -123,12 +128,14 @@ export default class Account extends Component {
     const newPassword2 = this.state.newPassword2;
     const userId = this.state.userId;
 
+    //check if pattern is successfull
     if (pwExpression.test(newPassword1) && pwExpression.test(newPassword2)) {
       console.log("oldPassword:  " + oldPassword);
       console.log("newPassword1: " + newPassword1);
       console.log("newPassword2: " + newPassword2);
       console.log("userid:       " + userId);
 
+      //check if passwords ars equal
       if (newPassword1 == newPassword2) {
         console.log("Passwords are equal. Continues ... ");
         //check oldPassword
@@ -137,6 +144,7 @@ export default class Account extends Component {
           this.state.hashedPassword != ""
         ) {
           console.log("Password accepted");
+          //change password
           const responseChangePassword = await changePassword(
             "/updateUserPassword",
             userId,
@@ -184,10 +192,12 @@ export default class Account extends Component {
 
     if (deleteAccountCheck) {
       console.log("Delete Account check succeded");
+      //delete account
       const responseDeleteAccount = await deleteUser("/deleteUser", userId);
       console.log(
         "Reg. Complete | Affected Rows: " + responseDeleteAccount.affectedRows
       );
+      //check if db push is succeded
       if (responseDeleteAccount.affectedRows == "1") {
         console.log("Deletion completed");
         delete_cookie("StreamTogether");
@@ -209,6 +219,7 @@ export default class Account extends Component {
 
     console.log("Tries to receive room information of the database");
     console.log("Found Username: " + username);
+    //get user information
     const responseUserInformation = await userFunctionLogin(
       "/login",
       username,
@@ -216,6 +227,7 @@ export default class Account extends Component {
     );
     console.log(responseUserInformation);
     console.log("Reg. Complete | Count : " + responseUserInformation.length);
+    //check if db push succeed
     if (responseUserInformation.length == "1") {
       console.log("DB push succeeded");
       console.log("Get room name");
@@ -256,6 +268,7 @@ export default class Account extends Component {
       username
     );
     console.log(response);
+    //check if db select succeded
     if (response.length == "1") {
       var hashedPassword = response[0].password;
       var currentUserId = response[0].ID;
@@ -279,9 +292,10 @@ export default class Account extends Component {
     const currentRoom = this.state.currentRoom;
 
     /*--------------------Panel----------------------------*/
-    //todo: image dynamisch aus der db holen
     const panes = [
       {
+
+        //account info
         menuItem: "Info",
         render: () => (
           <Tab.Pane>
@@ -336,6 +350,7 @@ export default class Account extends Component {
         )
       },
 
+      //Password change
       {
         menuItem: "Password change",
         render: () => (
@@ -415,6 +430,8 @@ export default class Account extends Component {
           </Tab.Pane>
         )
       },
+
+      //delete account
       {
         menuItem: "Delete account",
         render: () => (

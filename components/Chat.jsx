@@ -79,7 +79,6 @@ export default class Chat extends Component {
   }
 
   // componentWillMount() is invoked just before mounting occurs
-  // ARI
   componentWillMount() {
     this.props.hv != undefined && this.props.hv != ""
       ? this.setState({ hv: this.props.hv, username: this.props.username })
@@ -95,7 +94,6 @@ export default class Chat extends Component {
   }
 
   // componentWillUpdate() is invoked just before rendering when new props or state are being received
-  // ARI
   componentWillUpdate(nextProps, nextState) {
     if (nextProps.username != this.state.username) {
       this.setState({ username: nextProps.username });
@@ -103,7 +101,6 @@ export default class Chat extends Component {
   }
 
   // componentDidUpdate() is invoked immediately after updating occurs
-  // ARI
   componentDidUpdate(prevProps, prevState) {
     if (prevState.username != this.state.username) {
       this._authentificateOnServer();
@@ -184,6 +181,8 @@ export default class Chat extends Component {
       } //end of if
     }); // end of socket.on
 
+
+    //send video command
     socket.on("sendVideoCommand", message => {
       var userInList = false;
       if (message.length != 0) {

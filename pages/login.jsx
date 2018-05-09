@@ -1,13 +1,11 @@
+//--------------------------------Imports-------------------------------//
 import OwnHeader from "../components/Header";
 import Link from "next/link";
 import React, { Component } from "react";
 import $ from "jquery";
 import { userFunctionLogin } from "./PostMethods";
-const bcrypt = require("bcryptjs");
 import { bake_cookie} from "sfcookies";
 import {checksession, checksessionfortempuser} from "../components/Util";
-const jwt = require("jsonwebtoken");
-
 import {
   Button,
   Form,
@@ -19,12 +17,19 @@ import {
   Segment
 } from "semantic-ui-react";
 
+//--------------------------------Declarations-------------------------------//
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+
+
 export default class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
 
+  // componentDidMount() is invoked immediately after a component is mounted
+  // if user is log in, redirect to index
   componentDidMount() {
     if (checksession() != "ErrorTokenFalse" &&  checksessionfortempuser() == "no")
     {
@@ -43,14 +48,17 @@ export default class Login extends Component {
     console.log("Username : " + username);
     console.log("Passwort : " + password);
 
+    //check if user exist
     const response = await userFunctionLogin("/login", username, username);
     console.log(response);
+    //check response
     if (response.length == "0") {
       console.log("No user found");
       document.getElementById("feedback").innerHTML =
         '<div class="ui negative message"><div class="header">Error</div><p>Username or Password not correct</p></div>';
     } else {
       console.log("User found");
+      //check if password is equal
       if (bcrypt.compareSync(password, response[0].password)) {
         document.getElementById("test").innerHTML =
           "Welcome " + response[0].username;

@@ -1,3 +1,18 @@
+//--------------------------------Imports-------------------------------//
+import Link from "next/link";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import OwnHeader from "../components/Header";
+import YouTubeSearch from "../components/YouTubeSearch";
+import TopBox from "../components/TopBox";
+import { checksession } from "../components/Util";
+import Chat from "../components/Chat";
+import YouTubePlayer from "../components/YouTubePlayer";
+import VideoElement from "../components/VideoElement";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import openSocket from "socket.io-client";
+import { getAdjective, getNoun } from "../components/Words";
+import { bake_cookie } from "sfcookies";
 import {
   Button,
   Container,
@@ -13,12 +28,6 @@ import {
   Table,
   Visibility
 } from "semantic-ui-react";
-import Link from "next/link";
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import OwnHeader from "../components/Header";
-import YouTubeSearch from "../components/YouTubeSearch";
-import TopBox from "../components/TopBox";
 import {
   alterRoomEvent,
   changeRoomId,
@@ -35,28 +44,20 @@ import {
   videoFunctionByYoutubeId,
   voteVideo
 } from "./PostMethods";
-import { checksession } from "../components/Util";
-import Chat from "../components/Chat";
-import YouTubePlayer from "../components/YouTubePlayer";
-import VideoElement from "../components/VideoElement";
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import openSocket from "socket.io-client";
-import { getAdjective, getNoun } from "../components/Words";
-import { bake_cookie } from "sfcookies";
-const socket = openSocket("http://localhost:8000");
 
+//--------------------------------Declarations-------------------------------//
+const socket = openSocket("http://localhost:8000");
+const jwt = require("jsonwebtoken");
 const divStyle = {
   color: "blue",
   backgroundImage: "url(../pics/download.jpg)"
 };
-
 const scroll = {
   maxHeight: 400,
   maxWidth: 1000,
   overflow: scroll
 };
 
-const jwt = require("jsonwebtoken");
 
 export default class Room extends Component {
   constructor(props) {
@@ -76,8 +77,11 @@ export default class Room extends Component {
   }
 
   //-------------------------functions of react----------------------------//
+
+    // componentWillMount() is invoked just before mounting occurs
   componentWillMount() {}
 
+  // componentDidMount() is invoked immediately after a component is mounted
   componentDidMount() {
     this._getInformation();
     //this._updateUserRoomId();
@@ -85,12 +89,12 @@ export default class Room extends Component {
     console.log("url:" + this.state.urlForInvite);
   }
 
+  // componentWillUpdate() is invoked just before rendering when new props or state are being received
   componentWillUpdate(nextProps, nextState) {
     if (
       nextState.videos.length != this.state.videos.length &&
       this.state.videos[0] != undefined
     ) {
-      // console.log("Changing state");
       this.setState({
         videos: nextState.videos
       });
@@ -101,12 +105,13 @@ export default class Room extends Component {
   // updates the active room of the current user in the user table
   async _updateUserRoomId() {
     console.log("Update current room of current user");
-
-    var user = await checksession(); // gets the username of current user
+    // gets the username of current user
+    var user = await checksession();
     console.log("user:" + user);
     if (user == undefined || user == "ErrorTokenFalse") {
       var responseSelectUsername = "";
       do {
+        //generate a new temp username
         user = this.generateUserName();
         console.log("user: " + user);
         responseSelectUsername = await userFunctionByUsername(
@@ -114,6 +119,7 @@ export default class Room extends Component {
           user
         );
       } while (responseSelectUsername.length == "1");
+      //register new temp user
       const responseRegister = await registerFunction(
         "/register",
         user,
@@ -124,6 +130,7 @@ export default class Room extends Component {
         "/getuserbyusername",
         user
       );
+      //check if db pushes are succeded
       if (
         responseRegister.affectedRows == "1" &&
         responseSelectUsername.length == "1"
@@ -140,6 +147,7 @@ export default class Room extends Component {
         console.log("sessiontoken will be set");
         console.log(user);
 
+        //Create cookie
         var sessiontoken = jwt.sign(
           {
             username: user,
@@ -160,6 +168,7 @@ export default class Room extends Component {
       userName: user
     });
     const roomId = this.state.roomId;
+    //change current room of active user
     const responseUpdate = await changeRoomId(
       "/updateUserRoomId",
       user,
@@ -205,7 +214,6 @@ export default class Room extends Component {
     } else {
       window.location = "/roomOverview";
       // exception during receiving room information
-      // todo: add dialog
       console.log("Cant receive room information from the database");
     }
   } //end of function _getInformation()
@@ -213,7 +221,6 @@ export default class Room extends Component {
   // get videos of the room
   async _getVideos(roomId) {
     // get videos of room
-    //console.log("Get videos of room");
     const responseVideos = await videoFunctionByRoomId(
       "/selectVideosByRoomId",
       roomId
@@ -223,9 +230,7 @@ export default class Room extends Component {
 
   // sets videos of the room
   async refreshVideos(roomId) {
-    //  console.log(roomId);
     var videos = await this._getVideos(roomId);
-    //console.log(videos);
     this.setState({ videos: videos });
   } // end of refreshVideos
 
@@ -278,12 +283,14 @@ export default class Room extends Component {
       // Video is already in the database
       console.log("Video is already in the database");
     } // end of else
+
     // connect room and video
     const responsePlaylistInsertion = await connectVideoAndRoom(
       "/createPlaylist",
       databaseId,
       this.state.roomId
     );
+    // check if db push succeded
     if (responsePlaylistInsertion.affectedRows == "1") {
       console.log("Created connection between video and room");
     } else {
@@ -445,6 +452,7 @@ export default class Room extends Component {
     }
   }
 
+  //generate username
   generateUserName() {
     return (
       getAdjective(Math.round(Math.random() * 58)) +
@@ -453,6 +461,7 @@ export default class Room extends Component {
     );
   }
 
+  
   clearCopyMessage() {
     document.getElementById("copied").innerHTML =
       "You copied the room adress. Invite a friend!";
@@ -471,7 +480,6 @@ export default class Room extends Component {
     var playlist = <div />;
     // loads the videoPlayer
     console.log("Loads videoPlayer");
-    //  console.log("UrlForInvite:" + this.state.urlForInvite);
     var videos = this.state.videos;
     if (videos[0] != undefined) {
       var video = videos[0];

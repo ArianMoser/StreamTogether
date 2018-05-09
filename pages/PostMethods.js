@@ -1,4 +1,7 @@
+//--------------------------------Imports-------------------------------//
 import $ from "jquery";
+
+//--------------------------------Declarations-------------------------------//
 const bcrypt = require("bcryptjs");
 
 //----------------------IMAGEUPLOAD----------------------//
@@ -238,8 +241,10 @@ export const createRoomFunction = (
   if (password === undefined || password == "") {
     var hash = "";
   } else {
+    // hash password
     var hash = bcrypt.hashSync(password, 11);
   }
+  // hash title
   var hashedValue = bcrypt.hashSync(title, 11);
 
   return new Promise((resolve, reject) => {
@@ -348,6 +353,7 @@ export const changeRoomId = (api, username, roomId) => {
 
 //--------------------Update password---------------------//
 export const changePassword = (api, id, passwordNew) => {
+  // hash news password
   const hashNewPassword = bcrypt.hashSync(passwordNew, 11);
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -436,7 +442,6 @@ export const updateStatus = (api, roomId, videoId, status) => {
   });
 };
 //----------------------Delete user----------------------//
-//todo: add password check to delete an account
 export const deleteUser = (api, id) => {
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -518,6 +523,7 @@ export const dropUserEvent = (api, userid) => {
     });
   });
 };
+
 //--------------Alter Event for dropping rooms-------------//
 //-----------------(resets the time)----------------------//
 export const alterRoomEvent = (api, roomid) => {

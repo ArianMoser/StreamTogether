@@ -57,7 +57,7 @@ export default class Navbar extends Component {
     const activeItem = this.props.name;
     var buttonPlaceholder = "";
 
-    // If no cookie is set or user is a temp user
+    // If no cookie is set or user is a temp user then...
     if (checksession() != "ErrorTokenFalse" && checksessionfortempuser() == "no") {
       var buttonPlaceholder = (
         <span>

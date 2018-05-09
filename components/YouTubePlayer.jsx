@@ -63,6 +63,7 @@ export default class YouTubePlayer extends Component {
     var currentTime = new Date().getTime();
     var timecode = Math.round((currentTime - startTime) / 1000);
 
+    //check status youtubePlayer
     console.log(this.refs.ytPlayer);
     if(this.refs.ytPlayer != undefined){
       if (this.props.status == "play") {
