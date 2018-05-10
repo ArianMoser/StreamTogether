@@ -76,7 +76,8 @@ export default class Room extends Component {
   }
 
   //-------------------------functions of react----------------------------//
-  componentWillMount() {}
+  componentWillMount() {
+  }
 
   componentDidMount() {
     this._getInformation();
@@ -539,6 +540,18 @@ export default class Room extends Component {
       }); //  end of iteration over videos
     } // end of if
 
+    var chat = <div></div>
+    if (this.state.userName != "" && this.state.userName != undefined) {
+      chat =                         <Chat
+                          handleVideoCommand={roomId =>
+                            this.refreshVideos(roomId)
+                          }
+                          hv={this.state.hv}
+                          roomId={this.state.roomId}
+                          username={this.state.userName}
+                        />
+
+    }
     return (
       <OwnHeader>
         <TopBox activeItem={activeItem} layer1={title} layer2={description} />
@@ -579,15 +592,8 @@ export default class Room extends Component {
                         </Sidebar.Pushable>
                       </Grid.Row>
                       <Grid.Row>
-                        <Chat
-                          handleVideoCommand={roomId =>
-                            this.refreshVideos(roomId)
-                          }
-                          hv={this.state.hv}
-                          roomId={this.state.roomId}
-                          username={this.state.userName}
-                        />
-                      </Grid.Row>
+                        {chat}
+                    </Grid.Row>
                     </Grid.Column>
                   </Grid.Row>
                   <CopyToClipboard

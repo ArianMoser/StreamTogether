@@ -140,7 +140,7 @@ export default class Chat extends Component {
           });
         } // end of if
       } // end of if
-      userInList = true;
+      //userInList = true;
       if (userInList == true) {
         //  console.log("User in Userlist");
         var beautifulTime = this.getTime(message.message.timeStamp);
@@ -238,11 +238,16 @@ export default class Chat extends Component {
     if (this.state.userlist != [] && this.state.userlist != undefined) {
       //console.log(this.state.userlist);
       userlistElement = this.state.userlist.map(user => {
+        var style = { color: "black" };
+        //console.log(this.state.username + "|" + user);
+        if (this.state.username == user) {
+          style = { color: "blue" };
+        }
         var userelement = (
           <List.Item>
             <Image avatar src="../static/userpicture_default.png" />
             <List.Content>
-              <List.Header>{user}</List.Header>
+              <List.Header style={style}>{user}</List.Header>
             </List.Content>
           </List.Item>
         );
