@@ -149,13 +149,15 @@ export default class Chat extends Component {
     socket.on("sendMessageBack", message => {
       var userInList = false;
       if (message.length != 0) {
-        if (message.userlist.length != "0") {
-          message.userlist.map(user => {
-            user == this.state.username ? (userInList = true) : null;
-          });
+        if (message.userlist != undefined) {
+          if (message.userlist.length != "0") {
+            message.userlist.map(user => {
+              user == this.state.username ? (userInList = true) : null;
+            });
+          }
         } // end of if
       } // end of if
-      userInList = true;
+      //userInList = true;
       if (userInList == true) {
         var beautifulTime = this.getTime(message.message.timeStamp);
         var chat = this.state.chat;
@@ -180,7 +182,6 @@ export default class Chat extends Component {
         } //end of else
       } //end of if
     }); // end of socket.on
-
 
     //send video command
     socket.on("sendVideoCommand", message => {
