@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 export default class YouTubePlayer extends Component {
   constructor(props) {
     super(props);
+    this.state = { controlled: false };
     this._onError = this._onError.bind(this);
     this._onEnd = this._onEnd.bind(this);
     this._onPause = this._onPause.bind(this);
@@ -39,19 +40,37 @@ export default class YouTubePlayer extends Component {
 
   componentDidMount() {}
 
+  componentWillUpdate(nextProps, nextState) {
+    if (nextState.controlled == true) {
+      this.playVideo();
+      this.setState({ controlled: false });
+    }
+  }
+
   //componentDidUpdate() is invoked immediately after updating occurs
-  componentDidUpdate(nextProps, nextState) {}
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.status != prevProps.status) {
+      console.log("Status changed");
+      //this.setState({ controlled: true });
+    }
+    if (
+      Math.abs(Math.round((this.props.started - prevProps.started) / 1000)) > 2
+    ) {
+      console.log(
+        Math.abs(Math.round((this.props.started - prevProps.started) / 1000))
+      );
+      console.log("Started Time changed");
+      this.setState({ controlled: true });
+    }
+  }
 
   async playVideo() {
     console.log("Play Video (private function)");
     var startTime = this.props.started;
     var currentTime = new Date().getTime();
     var timecode = Math.round((currentTime - startTime) / 1000);
-    console.log(timecode);
-    console.log(this.refs.ytPlayer);
     await this.refs.ytPlayer.internalPlayer.playVideo();
     await this.refs.ytPlayer.internalPlayer.seekTo(timecode + 1);
-    await this.refs.ytPlayer.internalPlayer.playVideo();
   }
   //----------------------------------Render-----------------------------//
   render() {
@@ -60,7 +79,6 @@ export default class YouTubePlayer extends Component {
       width: "640",
       playerVars: {
         // https://developers.google.com/youtube/player_parameters
-        autoplay: 0
         //start: timecode
       }
     };
@@ -96,14 +114,53 @@ export default class YouTubePlayer extends Component {
 
   _onPlay(event) {
     console.log("Player started");
+    var currentTime = new Date().getTime();
+    var startTime = this.props.started;
+    var timecode = Math.round((currentTime - startTime) / 1000);
+    var currentVideoTimer = event.target.getCurrentTime();
+    var diff = Math.abs(currentTime - timecode);
+    if (
+      (this.props.status != "play" || diff > 2) &&
+      this.state.controlled == false
+    ) {
+      var newTimecode = currentTime - currentVideoTimer * 1000;
+      this.props.handleVideoPlay(
+        this.props.roomId,
+        this.props.databaseId,
+        newTimecode
+      );
+    } else {
+      console.log("startTime:" + startTime);
+      console.log("currentTime:" + currentTime);
+      console.log("timecode:" + timecode);
+      console.log(currentVideoTimer);
+      console.log(diff);
+    }
   }
 
   // access to player in all event handlers via event.target
   _onReady(event) {
     console.log("Player ready");
-    console.log(event.target);
-    //event.target.playVideo();
-    //this.refs.ytPlayer.internalPlayer.playVideo();
+    //console.log(event.target);
+    if (this.status == "play") {
+      var startTime = this.props.started;
+      var currentTime = new Date().getTime();
+      var timecode = Math.round((currentTime - startTime) / 1000);
+      console.log(timecode);
+      console.log(this.refs.ytPlayer);
+      this.refs.ytPlayer.internalPlayer.playVideo();
+      this.refs.ytPlayer.internalPlayer.seekTo(timecode + 1);
+      this.setState({ controlled: false });
+    } else {
+      var startTime = this.props.started;
+      var currentTime = new Date().getTime();
+      var timecode = Math.round((currentTime - startTime) / 1000);
+      console.log(timecode);
+      console.log(this.refs.ytPlayer);
+      this.refs.ytPlayer.internalPlayer.pauseVideo();
+      this.refs.ytPlayer.internalPlayer.seekTo(timecode + 1);
+      this.setState({ controlled: false });
+    }
   }
 
   _onStateChanged(event) {
