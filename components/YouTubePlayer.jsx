@@ -42,18 +42,15 @@ export default class YouTubePlayer extends Component {
 
   //componentDidUpdate() is invoked immediately after updating occurs
   componentDidUpdate(nextProps, nextState) {
-    if (
-      this.props.status != nextProps.status
-    ) {
-
+    if (this.props.status != nextProps.status && false) {
       console.log("Unequal");
       console.log(this.props.status + "|" + nextProps.status);
       var currentTime = new Date().getTime();
-       if (nextProps.status == "pause" && (currentTime-this.state.init)>500){
-         console.log("PauseVideo");
-         //this.refs.ytPlayer.internalPlayer.pauseVideo();
-       }
-       this.setState({init: new Date().getTime()});
+      if (nextProps.status == "pause" && currentTime - this.state.init > 500) {
+        console.log("PauseVideo");
+        //this.refs.ytPlayer.internalPlayer.pauseVideo();
+      }
+      this.setState({ init: new Date().getTime() });
     }
   }
 
@@ -65,11 +62,11 @@ export default class YouTubePlayer extends Component {
 
     //check status youtubePlayer
     console.log(this.refs.ytPlayer);
-    if(this.refs.ytPlayer != undefined){
+    if (this.refs.ytPlayer != undefined && false) {
       if (this.props.status == "play") {
         this.refs.ytPlayer.internalPlayer.seekTo(timecode);
       } else {
-        if (this.props.status == "pause"){
+        if (this.props.status == "pause") {
           console.log("pauseVideo");
           // this.refs.ytPlayer.internalPlayer.pauseVideo();
         }
@@ -112,9 +109,9 @@ export default class YouTubePlayer extends Component {
 
   _onPause(event) {
     var currentTime = new Date().getTime();
-    console.log(currentTime-this.state.init);
+    console.log(currentTime - this.state.init);
     console.log("Player paused");
-    if (this.props.status != "pause" && (currentTime-this.state.init)>500) {
+    if (this.props.status != "pause" && false) {
       this.props.handleVideoPause(this.props.roomId, this.props.databaseId);
     }
   }
