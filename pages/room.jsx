@@ -523,10 +523,9 @@ export default class Room extends Component {
       );
       var pauseButton = (
         <Button
-          onClick={(roomId, videoId) =>this.handlePlayerPause(
-            videos[0].room_ID,
-            videos[0].video_ID
-          )}
+          onClick={(roomId, videoId) =>
+            this.handlePlayerPause(videos[0].room_ID, videos[0].video_ID)
+          }
         >
           Pause Video{" "}
         </Button>
@@ -555,17 +554,16 @@ export default class Room extends Component {
       }); //  end of iteration over videos
     } // end of if
 
-    var chat = <div></div>
+    var chat = <div />;
     if (this.state.userName != "" && this.state.userName != undefined) {
-      chat =                         <Chat
-                          handleVideoCommand={roomId =>
-                            this.refreshVideos(roomId)
-                          }
-                          hv={this.state.hv}
-                          roomId={this.state.roomId}
-                          username={this.state.userName}
-                        />
-
+      chat = (
+        <Chat
+          handleVideoCommand={roomId => this.refreshVideos(roomId)}
+          hv={this.state.hv}
+          roomId={this.state.roomId}
+          username={this.state.userName}
+        />
+      );
     }
     return (
       <OwnHeader>
@@ -607,9 +605,7 @@ export default class Room extends Component {
                           </Table>
                         </Sidebar.Pushable>
                       </Grid.Row>
-                      <Grid.Row>
-                        {chat}
-                    </Grid.Row>
+                      <Grid.Row>{chat}</Grid.Row>
                     </Grid.Column>
                   </Grid.Row>
                   <CopyToClipboard

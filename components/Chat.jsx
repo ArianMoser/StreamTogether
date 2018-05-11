@@ -21,6 +21,7 @@ import VideoElement from "../components/VideoElement";
 import PropTypes from "prop-types";
 import openSocket from "socket.io-client";
 import { checksession } from "./Util";
+import * as Scroll from "react-scroll";
 
 //--------------------------------Declarations-------------------------------//
 const socket = openSocket("http://localhost:8000");
@@ -105,6 +106,7 @@ export default class Chat extends Component {
     if (prevState.username != this.state.username) {
       this._authentificateOnServer();
     }
+    this.scrollToBottom();
   }
 
   //----------------------------event handlers---------------------------//
@@ -214,6 +216,22 @@ export default class Chat extends Component {
     return beautifulTime;
   }
 
+  scrollToBottom = () => {
+    var scrollY = window.scrollY;
+    var scrollX = window.scrollX;
+    this.chatEnd.scrollIntoView({ behavior: "instant", block: "start" });
+    //this.chatInputEnd.scrollIntoView({ behavior: "instant", block: "end" });
+    console.log(window);
+    //window.scrollTo(scrollY);
+    window.scrollTo(scrollX, scrollY);
+    console.log(scrollX, scrollY);
+    console.log("----");
+    //this.scrollTop = 300;
+    //this.refs.chat.scrollToBottom();
+
+    //Scroll.animateScroll.scrollTo(400)
+  };
+
   //--------------------------------Render----------------------------------//
   render() {
     //create chatbox
@@ -282,12 +300,18 @@ export default class Chat extends Component {
             <Sidebar.Pushable
               as={Segment}
               style={{ maxHeight: 300, maxWidth: 400, overflow: scroll }}
+              ref="chat"
             >
               <div style={divStyle}>
                 <Comment.Group minimal style={{ width: 350 }}>
                   {chatTextElement}
                 </Comment.Group>
               </div>
+              <div
+                ref={el => {
+                  this.chatEnd = el;
+                }}
+              />
             </Sidebar.Pushable>
             <Input
               id="chat"
@@ -301,6 +325,11 @@ export default class Chat extends Component {
               Send<Icon name="right arrow" />
             </Button>
             <p />
+            <div
+              ref={el => {
+                this.chatInputEnd = el;
+              }}
+            />
           </div>
         </Grid.Row>
       </Grid>
