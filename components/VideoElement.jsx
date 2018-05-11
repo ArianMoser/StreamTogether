@@ -102,9 +102,21 @@ export default class VideoElement extends React.Component {
       <Table.Row>
         <Table.Cell>
           {" "}
-          <img src={this.state.videoThumbnailUrl} height="100px" />{" "}
+          <a
+            target="_bank"
+            href={"https://youtube.com/channel/" + this.state.channelId}
+          >
+            <img src={this.state.videoThumbnailUrl} height="100px" />{" "}
+          </a>
         </Table.Cell>
-        <Table.Cell>{this.state.videoTitle}</Table.Cell>
+        <Table.Cell>
+          <a
+            target="_blank"
+            href={"https://youtube.com/watch?v=" + this.state.videoId}
+          >
+            {this.state.videoTitle}
+          </a>
+        </Table.Cell>
         <Table.Cell width={3}>
           <MyButton
             color="green"
