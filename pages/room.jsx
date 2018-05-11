@@ -58,7 +58,6 @@ const scroll = {
   overflow: scroll
 };
 
-
 export default class Room extends Component {
   constructor(props) {
     super(props);
@@ -78,7 +77,7 @@ export default class Room extends Component {
 
   //-------------------------functions of react----------------------------//
 
-    // componentWillMount() is invoked just before mounting occurs
+  // componentWillMount() is invoked just before mounting occurs
   componentWillMount() {}
 
   // componentDidMount() is invoked immediately after a component is mounted
@@ -461,7 +460,6 @@ export default class Room extends Component {
     );
   }
 
-  
   clearCopyMessage() {
     document.getElementById("copied").innerHTML =
       "You copied the room adress. Invite a friend!";
@@ -523,6 +521,16 @@ export default class Room extends Component {
           videoId={videos[0].youtube_id}
         />
       );
+      var pauseButton = (
+        <Button
+          onClick={(roomId, videoId) =>this.handlePlayerPause(
+            videos[0].room_ID,
+            videos[0].video_ID
+          )}
+        >
+          Pause Video{" "}
+        </Button>
+      );
       // loads the playlist
       console.log("Loads the playlist");
       playlist = videos.map(video => {
@@ -558,6 +566,7 @@ export default class Room extends Component {
                   <Grid.Row>
                     <Grid.Column width={10}>
                       {videoPlayer}
+                      {pauseButton}
                       <Header as="h2">Search</Header>
                       <YouTubeSearch
                         creator={this.state.creator}

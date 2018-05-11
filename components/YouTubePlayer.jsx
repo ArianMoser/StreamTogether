@@ -2,6 +2,7 @@
 import { Component } from "react";
 import YouTube from "react-youtube";
 import PropTypes from "prop-types";
+import Button from "semantic-ui-react";
 
 //****************************************************************************
 //This component is used for contole the Youtube-Player
@@ -17,6 +18,7 @@ export default class YouTubePlayer extends Component {
     this._onPlay = this._onPlay.bind(this);
     this._onReady = this._onReady.bind(this);
     this._onStateChanged = this._onStateChanged.bind(this);
+    this.handlePauseVideo = this.handlePauseVideo.bind(this);
   }
 
   static propTypes = {
@@ -42,7 +44,9 @@ export default class YouTubePlayer extends Component {
 
   componentWillUpdate(nextProps, nextState) {
     if (nextState.controlled == true) {
-      this.playVideo();
+      if (nextProps.status == "play") {
+        this.playVideo();
+      }
       this.setState({ controlled: false });
     }
   }
@@ -51,16 +55,22 @@ export default class YouTubePlayer extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.status != prevProps.status) {
       console.log("Status changed");
-      //this.setState({ controlled: true });
-    }
-    if (
-      Math.abs(Math.round((this.props.started - prevProps.started) / 1000)) > 2
-    ) {
-      console.log(
-        Math.abs(Math.round((this.props.started - prevProps.started) / 1000))
-      );
-      console.log("Started Time changed");
-      this.setState({ controlled: true });
+      if (this.props.status == "pause") {
+        this.refs.ytPlayer.internalPlayer.pauseVideo();
+      } else {
+        this.setState({ controlled: true });
+      }
+    } else {
+      if (
+        Math.abs(Math.round((this.props.started - prevProps.started) / 1000)) >
+        2
+      ) {
+        console.log(
+          Math.abs(Math.round((this.props.started - prevProps.started) / 1000))
+        );
+        console.log("Started Time changed");
+        this.setState({ controlled: true });
+      }
     }
   }
 
@@ -84,6 +94,7 @@ export default class YouTubePlayer extends Component {
     };
 
     return (
+      //  <div>
       <YouTube
         opts={opts}
         onError={this._onError}
@@ -95,6 +106,8 @@ export default class YouTubePlayer extends Component {
         videoId={this.props.videoId}
         ref="ytPlayer"
       />
+      //<Button onClick={this.handlePauseVideo} />
+      //  </div>
     );
   }
 
@@ -166,5 +179,9 @@ export default class YouTubePlayer extends Component {
   _onStateChanged(event) {
     console.log("Player state changed");
     console.log(event);
+  }
+
+  handlePauseVideo(event) {
+    this.refs.ytPlayer.internalPlayer.pauseVideo();
   }
 }
