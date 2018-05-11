@@ -618,6 +618,8 @@ export default class Room extends Component {
                   </CopyToClipboard>
                   <div id="copied" />
                 </Grid>
+                <div style={{height:50}}>
+                    </div>
               </List>
             </Grid.Row>
           </Grid>
