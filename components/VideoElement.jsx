@@ -1,7 +1,12 @@
+//--------------------------------Imports-------------------------------//
 import React, { Component } from "react";
 import { Button, Icon, Table } from "semantic-ui-react";
 import MyButton from "../components/Button";
 import PropTypes from "prop-types";
+
+//****************************************************************************
+// ARI
+//****************************************************************************
 
 export default class VideoElement extends React.Component {
   constructor(props) {
@@ -41,16 +46,21 @@ export default class VideoElement extends React.Component {
     };
   } // end of defaultProps
 
+  //-------------------------functions of react--------------------------//
+
+  //componentWillMount() is invoked just before mounting occurs
   componentWillMount() {
     this.setState(this.props);
-  } //end of componentWillMount
+  }
 
+  //componentWillUpdate() is invoked just before rendering when new props or state are being received
   componentWillUpdate(nextProps, nextState) {
     if (nextProps.videoId != this.state.videoId) {
       this.setState(nextProps);
     }
-  } //end of componentDidUpdate
+  }
 
+  //----------------------------------Event-Handler-----------------------------//
   _handleDelete() {
     console.log("Clicked delete");
     console.log("DatabaseId:" + this.state.databaseId);
@@ -86,6 +96,7 @@ export default class VideoElement extends React.Component {
     // start video earlier (switches the position in the queue)
   }
 
+  //----------------------------------Render-----------------------------//
   render() {
     return (
       <Table.Row>

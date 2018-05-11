@@ -1,4 +1,4 @@
-//Imports
+//--------------------------------Imports-------------------------------//
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import Link from "next/link";
@@ -47,8 +47,8 @@ export default class Help extends Component {
                   Here are some important things that may will help you.
                 </p>
                 <p>How to create a room...</p>
-                <p>how to register...</p>
-                <p> How to log in</p>
+                <p>How to register...</p>
+                <p>How to log in...</p>
                 <p> ... </p>
               </Grid.Column>
             </Grid.Row>

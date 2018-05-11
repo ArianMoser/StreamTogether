@@ -1,3 +1,4 @@
+//--------------------------------Imports-------------------------------//
 import OwnHeader from "../components/Header";
 import Link from "next/link";
 import React, { Component } from "react";
@@ -39,18 +40,19 @@ export default class register extends Component {
     console.log("Input :" + pw);
     console.log("Input :" + pw2);
 
+    //define pattern
     var userExpression = /^[A-Za-z0-9_]{1,32}$/;
     var emailExpression = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
     var pwExpression = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
-    //Check Regex Statements
+    //Check regex statements
     if (
       userExpression.test(username) &&
       emailExpression.test(email) &&
       pwExpression.test(pw) &&
       pwExpression.test(pw2)
     ) {
-      //Check if Passwords are equal!
+      //Check if passwords are equal!
       if (pw == pw2) {
         const responseSelectUsername = await userFunctionByUsername(
           "/getuserbyusername",
@@ -62,7 +64,7 @@ export default class register extends Component {
             " :" +
             responseSelectUsername.length
         );
-        //Check if Username is Used!
+        //Check if username is used!
         if (responseSelectUsername.length == "0") {
           const responseSelectEmail = await userFunctionByEmail(
             "/getuserbyemail",
@@ -74,9 +76,9 @@ export default class register extends Component {
               " :" +
               responseSelectEmail.length
           );
-          //Check if Email is Used!
+          //Check if email is used!
           if (responseSelectEmail.length == "0") {
-            //Send Registration
+            //Send registration
             const responseRegister = await registerFunction(
               "/register",
               username,
@@ -86,6 +88,7 @@ export default class register extends Component {
             console.log(
               "Reg. Complete | Affected Rows: " + responseRegister.affectedRows
             );
+            //check if db push is succedd
             if (responseRegister.affectedRows == "1") {
               // Registration completed
               document.getElementById("feedback").innerHTML =

@@ -1,9 +1,15 @@
+//--------------------------------Imports-------------------------------//
 import React, {Component} from "react";
 import { read_cookie, delete_cookie } from "sfcookies";
 
+//--------------------------------Declarations-------------------------------//
 const jwt = require("jsonwebtoken");
-// readsout the Cookie
-// () -> username (type: String)
+
+//****************************************************************************
+//This component is used for checking the cookies
+//****************************************************************************
+
+// check if cookie is set, read cookie, return username
 export function checksession() {
   if (read_cookie("StreamTogether").length != 0) {
     try {
@@ -20,6 +26,8 @@ export function checksession() {
     return "ErrorTokenFalse";
   }
 }
+
+// check if cookie is set, read cookie, return tempuser
 export function checksessionfortempuser() {
   if (read_cookie("StreamTogether").length != 0) {
     try {

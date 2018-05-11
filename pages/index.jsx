@@ -1,4 +1,4 @@
-//Imports
+//--------------------------------Imports-------------------------------//
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import Link from "next/link";
@@ -30,6 +30,7 @@ export default class Home extends Component {
     };
   }
 
+  // check if user is log in
   checkLogin() {
     if (checksession() == "ErrorTokenFalse" || checksessionfortempuser() == "yes") {
       window.alert("pls log in");
@@ -37,6 +38,9 @@ export default class Home extends Component {
       window.location = "./createRoom";
     }
   }
+
+  // componentDidMount() is invoked immediately after a component is mounted
+  // change the link for room creation, if user is not log in
  componentDidMount(){
   if (checksession() == "ErrorTokenFalse" || checksessionfortempuser() == "yes") {
     document.getElementById("createRoomButton").innerHTML = '<form action="/login"><button type="submit" class="ui primary button">Create room</button></form>';

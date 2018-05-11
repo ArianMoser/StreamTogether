@@ -1,3 +1,4 @@
+//--------------------------------Imports-------------------------------//
 import React, { Fragment, Component } from "react";
 import "../node_modules/semantic-ui-css/semantic.min.css";
 import { Responsive } from "semantic-ui-react";
@@ -21,9 +22,7 @@ export default class Header extends Component {
     const useFooter = this.props.useFooter;
     const useHeader = this.props.useHeader;
     const activeItem = this.props.activeItem;
-
     const footer = useFooter ? <Footer /> : <div id="possibleFooterPosition" />;
-
 
     return (
       <Fragment>

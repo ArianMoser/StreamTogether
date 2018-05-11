@@ -20,7 +20,6 @@ var call = (module.exports = {
       console.log("Query selectUserByUsername succesfully executed: ", rows);
       res.send(rows);
     });
-    //AUF SICHERHEIT DER EINGEGEBENEN SACHEN NOCH PRÜFEN MYSQLI STRING UND SO DIESER SCHEIß!
   },
   selectUserById: function (res, dieNutzerDaten, connection) {
     const query =
@@ -97,8 +96,6 @@ var call = (module.exports = {
     });
   },
   selectRooms: function (res, dieNutzerDaten, connection) {
-    /*const query =
-      "SELECT * from room ;";*/
     const query =
       "SELECT room.id, room.title, room.description, room.password, room.thumbnail, room.creator, room.hashedValue, COUNT(user.ID) as 'ActiveUser'" +
       " FROM `room`, user" +
@@ -513,7 +510,7 @@ var call = (module.exports = {
       res.send(rows);
     });
   },
-    //------------------creates the drop temporary user event------------------//
+  //------------------creates the drop temporary user event------------------//
   createEventDropUser: function (res, dieNutzerDaten, connection) {
     console.log(dieNutzerDaten);
     const query =

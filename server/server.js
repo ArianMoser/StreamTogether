@@ -1,3 +1,4 @@
+//--------------------------------Declarations-------------------------------//
 const express = require("express");
 const http = require("http");
 const exp = express();
@@ -13,16 +14,16 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 const io = require("socket.io")();
 
+//********************CHAT******************/
+
 //Open connection to websocket for chat
 const port = 8000;
 io.listen(port);
 console.log("listening on port ", port);
-
 var rooms = [];
 //send the client every <interval> second a message
-io.on("connection", client => {
   // user is connected
-
+io.on("connection", client => {
   // user is disconnected
   client.on("disconnect", event => {
     // default disconnect event
@@ -34,8 +35,8 @@ io.on("connection", client => {
     io.emit("sendMessageBack", { message });
   });
 
+  // user will leave the room (disconnect or switch page)
   client.on("leaveRoom", messageReceived => {
-    // user will leave the room (disconnect or switch page)
     console.log("User will disconnect");
     var username = messageReceived.username;
     if (rooms.length != "0") {
@@ -108,7 +109,7 @@ io.on("connection", client => {
             var countUser = room.userlist.length;
             room.userlist = userlist.filter(user => {
               return user !== username;
-            }); // removing user from other rooms
+            }); //removing user from other rooms
             if (countUser != room.userlist.length) {
               console.log("User removed from list");
               //message room that the user disconnected
@@ -133,6 +134,7 @@ io.on("connection", client => {
     io.emit("sendMessageBack", { message: message, userlist: messageUserlist });
   });
 
+  //trigger User to Refresh
   client.on("triggerRefresh", message => {
     console.log("Trigger for refresh received");
     var userlist = [];
@@ -160,6 +162,7 @@ io.on("connection", client => {
     io.emit("sendVideoCommand", { message: message, userlist: userlist });
   });
 
+  //send message
   client.on("sendMessage", message => {
     console.log("Received message");
     var userlist = [];
@@ -182,6 +185,8 @@ io.on("connection", client => {
   });
 });
 
+//********************DATABASE******************/
+
 //Open connection to database
 const connection = mysql.createConnection({
   host: "localhost",
@@ -189,6 +194,8 @@ const connection = mysql.createConnection({
   password: "",
   database: "streamtogether"
 });
+
+//********************IMAGE STORAGE******************/
 
 //Setup Multer for uploading files
 const storage = multer.diskStorage({
@@ -204,8 +211,9 @@ const storage = multer.diskStorage({
     callback(null, uuid() + ext);
   }
 });
-
 const upload = multer({ storage: storage, limits: {fileSize: 6291456} });
+
+//********************REVERSE PROXY/LINK******************/
 
 exp.use(bodyParser.urlencoded({ extended: false }));
 exp.use(bodyParser.json());
@@ -226,6 +234,7 @@ app
       res.redirect("http://github.com/ArianMoser/StreamTogether");
     });
 
+    //if database is connected
     connection.connect(function (err) {
       // in case of error
       if (err) {
@@ -316,8 +325,6 @@ app
         });
       }
     });
-
-    //Datenbank etc.
 
     exp.get("*", (req, res) => {
       return handle(req, res);

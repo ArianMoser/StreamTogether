@@ -1,3 +1,4 @@
+//--------------------------------Imports-------------------------------//
 import OwnHeader from "../components/Header";
 import Link from "next/link";
 import React, { Component } from "react";
@@ -52,11 +53,12 @@ export default class RoomCreator extends Component {
   }
 
   //-------------------------functions of react----------------------------//
+  // componentDidMount() is invoked immediately after a component is mounted
   componentDidMount() {
     var currentUsername = checksession();
     console.log("Username: " + currentUsername);
     var currentUserId = this._getUserId(currentUsername);
-    //When user is already loged in...
+    //When user is not loged in...
     if (checksession() == "ErrorTokenFalse" || checksessionfortempuser() == "yes") {
       window.location = "/index";
       window.alert("pls log in");
@@ -104,6 +106,7 @@ export default class RoomCreator extends Component {
     const currentUser = this.state.currentUser;
     var password = this.state.password;
 
+    //check if password is set
     if (password == undefined || !checkPassword) {
       password = "";
     } else {
@@ -123,15 +126,7 @@ export default class RoomCreator extends Component {
         currentUser
     );
 
-    // pattern for the input fields
-    //var titleExpression = /^[A-Za-z0-9_]{3,32}$/;
-    // var pwExpression = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-
-    //Check Regex Statements
-    /*if (
-      titleExpression.test(title) &&
-      (pwExpression.test(password) || !checkPassword || true)
-    )*/
+    //check title and password
     if (title != " " && title != "" && title != undefined) {
       if ((password != undefined && password != "") || !checkPassword) {
         console.log("Testpattern succeded");
@@ -145,6 +140,7 @@ export default class RoomCreator extends Component {
             "' :" +
             responseSelectTitle.length
         );
+
         //check if title is already used
         if (responseSelectTitle.length == "0") {
           var responseUploadImage = "";
@@ -175,6 +171,7 @@ export default class RoomCreator extends Component {
             "Reg. Complete | Affected Rows: " +
               responseRoomCreation.affectedRows
           );
+
           //check if db push succeded
           if (responseRoomCreation.affectedRows == "1") {
             console.log("DB push succeeded");
@@ -227,6 +224,7 @@ export default class RoomCreator extends Component {
         '<div class="ui negative message"><div class="header">Room not created</div><p>Roomname can not be empty</p></div>';
     }
   }
+
   //----------------------functions------------------------------//
   // gets the username by an id
   async _getUserId(username) {
@@ -252,7 +250,6 @@ export default class RoomCreator extends Component {
     this.setState({ selectedFile: event.target.files[0] });
     document.getElementById("selectPicture").innerHTML =
       '<i class="checkmark icon"></i> OK';
-    //TODO: das gleiche wie bei password auch für thumbnail machen.
   };
 
   //----------------------------------Render-------------------------------//

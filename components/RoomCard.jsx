@@ -1,8 +1,16 @@
+//--------------------------------Imports-------------------------------//
 import React, { Component } from "react";
 import { Button, Card, Icon, Image, Input, Popup } from "semantic-ui-react";
 import PropTypes from "prop-types";
 import { userFunctionById } from "../pages/PostMethods";
+
+//--------------------------------Declarations-------------------------------//
 const bcrypt = require("bcryptjs");
+
+
+//****************************************************************************
+//This component creates the Room-Cards for the room overview
+//****************************************************************************
 
 export default class RoomCard extends Component {
   constructor(props) {
@@ -40,6 +48,7 @@ export default class RoomCard extends Component {
   };
 
   //-------------------------functions of react----------------------------//
+  //componentWillMount() is invoked just before mounting occurs
   componentWillMount() {
     this.setState(this.props);
     this._getUsername(this.props.creator);
@@ -60,6 +69,7 @@ export default class RoomCard extends Component {
     });
   }
 
+  //check password
   _handlePasswordCheck(event) {
     if (event.charCode == 13) {
       console.log("Check password");
@@ -69,12 +79,11 @@ export default class RoomCard extends Component {
       } else {
         console.log("Password wrong");
       }
-
-      //window.location = "./room?hv=" + this.state.hashedValue;
     }
   }
 
   //----------------------functions------------------------------//
+  //get username
   async _getUsername(id) {
     const responseUsername = await userFunctionById("/getUserById", id);
     console.log(responseUsername);
@@ -95,6 +104,7 @@ export default class RoomCard extends Component {
     const title = this.state.title;
     var thumbnail = "../static/" + this.state.thumbnail;
     const userNumber = this.state.userNumber;
+    //check for thumbnail
     if (this.state.thumbnail != "room_default.png") {
       thumbnail = "../static/public/images/" + this.state.thumbnail;
     }
@@ -113,6 +123,7 @@ export default class RoomCard extends Component {
       </Button>
     );
 
+    //check if password is set
     if (
       this.state.password != "" &&
       this.state.password != "Default-Password"
@@ -148,7 +159,9 @@ export default class RoomCard extends Component {
         <Card.Content>
           <Card.Header>{title}</Card.Header>
           <Card.Meta>
-            <span style={spanstyle} className="username">{userName}</span>
+            <span style={spanstyle} className="username">
+              {userName}
+            </span>
           </Card.Meta>
           <Card.Description>{description}</Card.Description>
         </Card.Content>

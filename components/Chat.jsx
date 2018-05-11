@@ -1,3 +1,4 @@
+//--------------------------------Imports-------------------------------//
 import React, { Component } from "react";
 import axios from "axios";
 import YouTubePlayer from "../components/YouTubePlayer";
@@ -20,10 +21,16 @@ import VideoElement from "../components/VideoElement";
 import PropTypes from "prop-types";
 import openSocket from "socket.io-client";
 import { checksession } from "./Util";
+
+//--------------------------------Declarations-------------------------------//
 const socket = openSocket("http://localhost:8000");
 const divStyle = {
   color: "blue"
 };
+
+//****************************************************************************
+//This component enables the chat and userlist per room
+//****************************************************************************
 
 export default class Chat extends Component {
   constructor(props) {
@@ -47,18 +54,18 @@ export default class Chat extends Component {
     this.__authentificateOnServer = this._authentificateOnServer.bind(this);
     //  setInterval(this._refreshChatText, 1000);
   }
+
   static get defaultProps() {
     return {
       username: "user"
     };
   }
+
   //-------------------------functions of react----------------------------//
 
+  // componentDidMount() is invoked immediately after a component is mounted
+  // Register user to the chat on the server
   componentDidMount() {
-    // Register user to the chat on the server
-    //socket.emit("registerToChat", {username: this.state.username, roomId: this.props.hv});
-    //console.log("roomId:");
-    //console.log(this.props.hv);
     window.addEventListener("beforeunload", ev => {
       ev.preventDefault();
       socket.emit("leaveRoom", {
@@ -71,23 +78,29 @@ export default class Chat extends Component {
     }
   }
 
+  // componentWillMount() is invoked just before mounting occurs
   componentWillMount() {
     this.props.hv != undefined && this.props.hv != ""
       ? this.setState({ hv: this.props.hv, username: this.props.username })
       : this.setState({ hv: "", username: this.props.username });
   }
 
+  // componentWillUnmount() is invoked immediately before a component is unmounted and destroyed
+  // user leave the Room
   componentWillUnmount() {
     socket.emit("leaveRoom", {
       username: this.state.username
     });
   }
 
+  // componentWillUpdate() is invoked just before rendering when new props or state are being received
   componentWillUpdate(nextProps, nextState) {
     if (nextProps.username != this.state.username) {
       this.setState({ username: nextProps.username });
     }
   }
+
+  // componentDidUpdate() is invoked immediately after updating occurs
   componentDidUpdate(prevProps, prevState) {
     if (prevState.username != this.state.username) {
       this._authentificateOnServer();
@@ -95,7 +108,6 @@ export default class Chat extends Component {
   }
 
   //----------------------------event handlers---------------------------//
-
   _messageUpdated(e) {
     this.setState({ message: e.target.value });
   }
@@ -105,8 +117,10 @@ export default class Chat extends Component {
       this._send();
     }
   }
+
   //----------------------functions------------------------------//
 
+  //authentificate
   _authentificateOnServer() {
     console.log("Authentificate on Server");
     socket.emit("authentificate", {
@@ -116,6 +130,7 @@ export default class Chat extends Component {
     this._refreshChatText();
   }
 
+  //send message
   _send() {
     if (this.state.message != "") {
       var timeStamp = Math.floor(Date.now() / 1000);
@@ -129,23 +144,23 @@ export default class Chat extends Component {
     }
   }
 
+  //refresh chat
   _refreshChatText() {
     socket.on("sendMessageBack", message => {
       var userInList = false;
       if (message.length != 0) {
-        //console.log(message);
-        if (message.userlist.length != "0") {
-          message.userlist.map(user => {
-            user == this.state.username ? (userInList = true) : null;
-          });
+        if (message.userlist != undefined) {
+          if (message.userlist.length != "0") {
+            message.userlist.map(user => {
+              user == this.state.username ? (userInList = true) : null;
+            });
+          }
         } // end of if
       } // end of if
       //userInList = true;
       if (userInList == true) {
-        //  console.log("User in Userlist");
         var beautifulTime = this.getTime(message.message.timeStamp);
         var chat = this.state.chat;
-        //  console.log(chat);
         if (chat != [] && chat.length != "0") {
           if (chat[chat.length - 1].timeStamp != message.message.timeStamp) {
             chat.push({
@@ -167,8 +182,9 @@ export default class Chat extends Component {
         } //end of else
       } //end of if
     }); // end of socket.on
+
+    //send video command
     socket.on("sendVideoCommand", message => {
-      //console.log("Received Video Command");
       var userInList = false;
       if (message.length != 0) {
         console.log(message);
@@ -185,6 +201,7 @@ export default class Chat extends Component {
     });
   } // end of _refreshChatText
 
+  //get current video time
   getTime(timeStamp) {
     var date = new Date(timeStamp * 1000);
     var hours = date.getHours();
@@ -194,14 +211,13 @@ export default class Chat extends Component {
     var seconds = date.getSeconds();
     seconds = seconds < 10 ? "0" + seconds : seconds;
     var beautifulTime = hours + ":" + minutes + ":" + seconds;
-    //console.log(beautifulTime);
     return beautifulTime;
   }
 
   //--------------------------------Render----------------------------------//
   render() {
+    //create chatbox
     var chatTextElement = <div />;
-
     if (chatTextElement != [] && chatTextElement != undefined) {
       var chat = this.state.chat;
       var username = this.state.username;
@@ -233,10 +249,9 @@ export default class Chat extends Component {
       });
     } // end of chatText
 
+    // generate Userlist
     var userlistElement = <div />;
-    //console.log("Creating userlist");
     if (this.state.userlist != [] && this.state.userlist != undefined) {
-      //console.log(this.state.userlist);
       userlistElement = this.state.userlist.map(user => {
         var style = { color: "black" };
         //console.log(this.state.username + "|" + user);
@@ -252,11 +267,11 @@ export default class Chat extends Component {
           </List.Item>
         );
         console.log(userelement);
-        //  console.log({ user });
         return userelement;
       });
     } //end of if
 
+    // return userlist and Chat
     return (
       <Grid>
         <Grid.Row>
