@@ -132,6 +132,8 @@ class YouTubeSearch extends Component {
   }
 
   _chooseVideo(video) {
+    console.log("###########");
+    console.log(video);
     this.props.chooseVideo(video);
     this.setState({
       searchResults: [], //resets youtube search results
@@ -162,9 +164,15 @@ class YouTubeSearch extends Component {
               height="100px"
             />{" "}
           </Table.Cell>
-          <Table.Cell>{video.snippet.title}</Table.Cell>
+          <Table.Cell>
+            <a target="_blank" href={"https://youtube.com/watch?v=" + video.id.videoId}>
+              {video.snippet.title}
+            </a>
+          </Table.Cell>
           <Table.Cell width={3}>
-            <MyButton />
+            <a target="_blank" href={"https://youtube.com/channel/" + video.snippet.channelId}>
+              {video.snippet.channelTitle}
+            </a>
           </Table.Cell>
           <Table.Cell width={3}>
             <Button

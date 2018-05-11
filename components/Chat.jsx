@@ -21,7 +21,6 @@ import VideoElement from "../components/VideoElement";
 import PropTypes from "prop-types";
 import openSocket from "socket.io-client";
 import { checksession } from "./Util";
-import * as Scroll from "react-scroll";
 
 //--------------------------------Declarations-------------------------------//
 const socket = openSocket("http://localhost:8000");
@@ -325,11 +324,6 @@ export default class Chat extends Component {
               Send<Icon name="right arrow" />
             </Button>
             <p />
-            <div
-              ref={el => {
-                this.chatInputEnd = el;
-              }}
-            />
           </div>
         </Grid.Row>
       </Grid>
