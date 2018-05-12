@@ -6,6 +6,7 @@ import $ from "jquery";
 import { userFunctionLogin } from "./PostMethods";
 import { bake_cookie} from "sfcookies";
 import {checksession, checksessionfortempuser} from "../components/Util";
+import {getSessionKey} from "../components/Keys";
 import {
   Button,
   Form,
@@ -74,7 +75,7 @@ export default class Login extends Component {
               tempuser: "no",
               exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24
             },
-            "shhhhh"
+            getSessionKey()
           );
           console.log(sessiontoken);
           bake_cookie("StreamTogether", sessiontoken);

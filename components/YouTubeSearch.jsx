@@ -4,9 +4,10 @@ import axios from "axios";
 import MyButton from "../components/Button";
 import { List, Button, Icon, Input, Grid, Table } from "semantic-ui-react";
 import PropTypes from "prop-types";
+import {getApiKey} from "../components/Keys";
 
 //--------------------------------Declarations-------------------------------//
-const API_KEY = "AIzaSyCkXsSdyK3kKmUYEe9T9wf6AUli3V6Nzus";
+const API_KEY = getApiKey();
 
 //****************************************************************************
 //This component is used for the Youtube_Search

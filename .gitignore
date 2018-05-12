@@ -9,6 +9,7 @@
 # production
 /.next
 /static/public
+/components/Keys.jsx
 
 # ide
 /.idea/
