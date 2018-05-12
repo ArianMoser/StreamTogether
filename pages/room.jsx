@@ -10,7 +10,7 @@ import Chat from "../components/Chat";
 import YouTubePlayer from "../components/YouTubePlayer";
 import VideoElement from "../components/VideoElement";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import {getSessionKey} from "../components/Keys";
+import { getSessionKey } from "../components/Keys";
 import openSocket from "socket.io-client";
 import { getAdjective, getNoun } from "../components/Words";
 import { bake_cookie } from "sfcookies";
@@ -522,6 +522,15 @@ export default class Room extends Component {
           videoId={videos[0].youtube_id}
         />
       );
+      var playButton = (
+        <Button
+          onClick={(roomId, videoId) =>
+            this.handlePlayerPlay(videos[0].room_ID, videos[0].video_ID, started)
+          }
+        >
+          Play Video{" "}
+        </Button>
+      );
       var pauseButton = (
         <Button
           onClick={(roomId, videoId) =>
@@ -531,6 +540,12 @@ export default class Room extends Component {
           Pause Video{" "}
         </Button>
       );
+      var videoControlButton = <div />;
+      if (status == "play") {
+        videoControlButton = pauseButton;
+      } else {
+        videoControlButton = <div></div>;
+      }
       // loads the playlist
       console.log("Loads the playlist");
       playlist = videos.map(video => {
@@ -577,7 +592,7 @@ export default class Room extends Component {
                   <Grid.Row>
                     <Grid.Column width={10}>
                       {videoPlayer}
-                      {pauseButton}
+                      {videoControlButton}
                       <Header as="h2">Search</Header>
                       <YouTubeSearch
                         creator={this.state.creator}
@@ -619,8 +634,7 @@ export default class Room extends Component {
                   </CopyToClipboard>
                   <div id="copied" />
                 </Grid>
-                <div style={{height:50}}>
-                    </div>
+                <div style={{ height: 50 }} />
               </List>
             </Grid.Row>
           </Grid>
