@@ -284,6 +284,7 @@ export default class Room extends Component {
         console.log("Video inserted succesfully");
         // Now get the database-id to connect room and video inside of playlist
         databaseId = await this._getDatabaseId(videoId);
+
       } else {
         console.log("Couldnt insert Video into database");
         return false;
@@ -307,12 +308,16 @@ export default class Room extends Component {
     }
     var videos = await this._getVideos(this.state.roomId);
     // alters the delete room event
-    this._alterDeleteEvent(this.state.roomId);
+    await this._alterDeleteEvent(this.state.roomId);
     console.log("Videos");
     console.log(videos);
 
     this.setState({
       videos: videos
+    });
+    socket.emit("triggerRefresh", {
+      content: " has added a new video",
+      username: this.state.userName
     });
   }
 
@@ -355,6 +360,11 @@ export default class Room extends Component {
       });
       console.log("Timeout for vote started");
       setTimeout(this._setEnabled, 30000);
+
+      socket.emit("triggerRefresh", {
+        content: " has voted a video",
+        username: this.state.userName
+      });
     } else {
       console.log("Error during voting process");
     }
