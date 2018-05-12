@@ -23,6 +23,7 @@ export default class VideoElement extends React.Component {
     channelId: PropTypes.string,
     channelName: PropTypes.string,
     databaseId: PropTypes.number.isRequired,
+    enabled: PropTypes.bol,
     handleDelete: PropTypes.func.isRequired,
     handleVote: PropTypes.func.isRequired,
     roomId: PropTypes.number.isRequired,
@@ -38,6 +39,7 @@ export default class VideoElement extends React.Component {
       channelId: "default-channelId",
       channelName: "default-channelName",
       databaseId: 0,
+      enabled: true,
       roomId: 0,
       videoDescription: "default-videoDescription",
       videoId: "default-videoId",
@@ -58,9 +60,26 @@ export default class VideoElement extends React.Component {
     if (nextProps.videoId != this.state.videoId) {
       this.setState(nextProps);
     }
+    if (nextProps.enabled != this.props.enabled) {
+      //this.setState({enabled: nextProps.enabled});
+      this.setButtonEnabled(nextProps.enabled);
+    }
+  }
+
+  componentDidMount() {
+    this.setButtonEnabled(this.props.enabled);
   }
 
   //----------------------------------Event-Handler-----------------------------//
+
+  setButtonEnabled(enabled) {
+    var disabled = !enabled;
+    const nodeThumbsDown = this.refs.refThumbsDown;
+    const nodeThumbsUp = this.refs.refThumbsUp;
+    nodeThumbsDown._setDisable(disabled);
+    nodeThumbsUp._setDisable(disabled);
+  }
+
   _handleDelete() {
     console.log("Clicked delete");
     console.log("DatabaseId:" + this.state.databaseId);

@@ -67,6 +67,7 @@ export default class Room extends Component {
       activeItem: "empty", //active item of the Navbar
       creator: "default-creator",
       description: "Default-description",
+      enabled: true,
       roomId: "0",
       title: "Default-title",
       userName: "",
@@ -74,6 +75,7 @@ export default class Room extends Component {
       urlForInvite: "",
       copied: false
     };
+    this._setEnabled = this._setEnabled.bind(this);
   }
 
   //-------------------------functions of react----------------------------//
@@ -99,6 +101,13 @@ export default class Room extends Component {
         videos: nextState.videos
       });
     }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    /*  if (this.state.enabled == false) {
+      console.log("Timeout for vote started");
+      setTimeout(this._setEnabled, 30000);
+    }*/
   }
 
   //----------------------functions------------------------------//
@@ -341,13 +350,20 @@ export default class Room extends Component {
       console.log("Video voted");
       var videos = await this._getVideos(roomId);
       this.setState({
+        enabled: false,
         videos: videos
       });
+      console.log("Timeout for vote started");
+      setTimeout(this._setEnabled, 30000);
     } else {
       console.log("Error during voting process");
     }
   }
 
+  _setEnabled() {
+    this.setState({ enabled: true });
+    console.log("Timeout over");
+  }
   // deletes connection between video and room (playlist table)
   async _deleteVideo(roomId, videoId) {
     console.log("Delete Video");
@@ -525,7 +541,11 @@ export default class Room extends Component {
       var playButton = (
         <Button
           onClick={(roomId, videoId) =>
-            this.handlePlayerPlay(videos[0].room_ID, videos[0].video_ID, started)
+            this.handlePlayerPlay(
+              videos[0].room_ID,
+              videos[0].video_ID,
+              started
+            )
           }
         >
           Play Video{" "}
@@ -544,7 +564,7 @@ export default class Room extends Component {
       if (status == "play") {
         videoControlButton = pauseButton;
       } else {
-        videoControlButton = <div></div>;
+        videoControlButton = <div />;
       }
       // loads the playlist
       console.log("Loads the playlist");
@@ -554,6 +574,7 @@ export default class Room extends Component {
             channelId={video.channel_id}
             channelName={video.channel_name}
             databaseId={video.video_ID}
+            enabled={this.state.enabled}
             handleDelete={(roomId, databaseId) =>
               this._deleteVideo(roomId, databaseId)
             }
