@@ -284,7 +284,6 @@ export default class Room extends Component {
         console.log("Video inserted succesfully");
         // Now get the database-id to connect room and video inside of playlist
         databaseId = await this._getDatabaseId(videoId);
-
       } else {
         console.log("Couldnt insert Video into database");
         return false;
@@ -387,6 +386,11 @@ export default class Room extends Component {
       var videos = await this._getVideos(this.state.roomId);
       this.setState({
         videos: videos
+      });
+
+      socket.emit("triggerRefresh", {
+        content: " has deleted a video",
+        username: this.state.userName
       });
     } else {
       console.log("Error during deleting process of video");
