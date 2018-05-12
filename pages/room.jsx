@@ -10,6 +10,7 @@ import Chat from "../components/Chat";
 import YouTubePlayer from "../components/YouTubePlayer";
 import VideoElement from "../components/VideoElement";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import {getSessionKey} from "../components/Keys";
 import openSocket from "socket.io-client";
 import { getAdjective, getNoun } from "../components/Words";
 import { bake_cookie } from "sfcookies";
@@ -153,7 +154,7 @@ export default class Room extends Component {
             tempuser: "yes",
             exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24
           },
-          "shhhhh"
+          getSessionKey()
         );
         console.log(sessiontoken);
         bake_cookie("StreamTogether", sessiontoken);

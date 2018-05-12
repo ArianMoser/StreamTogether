@@ -1,6 +1,7 @@
 //--------------------------------Imports-------------------------------//
 import React, {Component} from "react";
 import { read_cookie, delete_cookie } from "sfcookies";
+import {getSessionKey} from "../components/Keys";
 
 //--------------------------------Declarations-------------------------------//
 const jwt = require("jsonwebtoken");
@@ -15,7 +16,7 @@ export function checksession() {
     try {
       var decodedsession = jwt.verify(
         read_cookie("StreamTogether"),
-        "shhhhh"
+        getSessionKey()
       );
       return decodedsession.username;
     } catch (err) {
@@ -33,7 +34,7 @@ export function checksessionfortempuser() {
     try {
       var decodedsession = jwt.verify(
         read_cookie("StreamTogether"),
-        "shhhhh"
+        getSessionKey()
       );
       return decodedsession.tempuser;
     } catch (err) {
