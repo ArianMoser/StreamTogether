@@ -42,7 +42,7 @@ class MyButton extends Component {
   //----------------------------event handlers---------------------------//
   _handleClick(event) {
     this.props.onClick();
-    console.log("Button clicked");
+    //console.log("Button clicked");
   }
   //-----------------------------functions-------------------------------//
   _setDisable(value) {

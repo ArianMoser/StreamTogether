@@ -46,8 +46,8 @@ export default class Login extends Component {
     const username = event.target[0].value;
     const password = event.target[1].value;
 
-    console.log("Username : " + username);
-    console.log("Passwort : " + password);
+    //console.log("Username : " + username);
+    //console.log("Passwort : " + password);
 
     //check if user exist
     const response = await userFunctionLogin("/login", username, username);

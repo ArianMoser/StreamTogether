@@ -54,7 +54,6 @@ export default class YouTubePlayer extends Component {
   //componentDidUpdate() is invoked immediately after updating occurs
   componentDidUpdate(prevProps, prevState) {
     if (this.props.status != prevProps.status) {
-      console.log("Status changed");
       if (this.props.status == "pause") {
         this.refs.ytPlayer.internalPlayer.pauseVideo();
       } else {
@@ -68,14 +67,14 @@ export default class YouTubePlayer extends Component {
         console.log(
           Math.abs(Math.round((this.props.started - prevProps.started) / 1000))
         );
-        console.log("Started Time changed");
+        // console.log("Started Time changed");
         this.setState({ controlled: true });
       }
     }
   }
 
   async playVideo() {
-    console.log("Play Video (private function)");
+    // console.log("Play Video (private function)");
     var startTime = this.props.started;
     var currentTime = new Date().getTime();
     var timecode = Math.round((currentTime - startTime) / 1000);
@@ -143,11 +142,11 @@ export default class YouTubePlayer extends Component {
         newTimecode
       );
     } else {
-      console.log("startTime:" + startTime);
+      /*  console.log("startTime:" + startTime);
       console.log("currentTime:" + currentTime);
       console.log("timecode:" + timecode);
       console.log(currentVideoTimer);
-      console.log(diff);
+      console.log(diff); */
     }
   }
 
@@ -159,8 +158,8 @@ export default class YouTubePlayer extends Component {
       var startTime = this.props.started;
       var currentTime = new Date().getTime();
       var timecode = Math.round((currentTime - startTime) / 1000);
-      console.log(timecode);
-      console.log(this.refs.ytPlayer);
+      //console.log(timecode);
+      // console.log(this.refs.ytPlayer);
       this.refs.ytPlayer.internalPlayer.playVideo();
       this.refs.ytPlayer.internalPlayer.seekTo(timecode + 1);
       this.setState({ controlled: false });
@@ -168,8 +167,8 @@ export default class YouTubePlayer extends Component {
       var startTime = this.props.started;
       var currentTime = new Date().getTime();
       var timecode = Math.round((currentTime - startTime) / 1000);
-      console.log(timecode);
-      console.log(this.refs.ytPlayer);
+      // console.log(timecode);
+      // console.log(this.refs.ytPlayer);
       this.refs.ytPlayer.internalPlayer.pauseVideo();
       this.refs.ytPlayer.internalPlayer.seekTo(timecode + 1);
       this.setState({ controlled: false });
@@ -178,7 +177,7 @@ export default class YouTubePlayer extends Component {
 
   _onStateChanged(event) {
     console.log("Player state changed");
-    console.log(event);
+    //console.log(event);
   }
 
   handlePauseVideo(event) {

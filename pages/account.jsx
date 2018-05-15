@@ -55,7 +55,7 @@ export default class Account extends Component {
       userId: "",
       username: "default-username"
     };
-    
+
     // bind event handlers
     this._changePassword = this._changePassword.bind(this);
     this._handleOldPasswordChange = this._handleOldPasswordChange.bind(this);
@@ -78,7 +78,7 @@ export default class Account extends Component {
   // componentDidMount() is invoked immediately after a component is mounted
   //check if Cookie is set. Otherwise the user will be redirected to the login page
   componentDidMount() {
-    console.log("Check Cookie");
+    //console.log("Check Cookie");
     if (
       checksession() == "ErrorTokenFalse" ||
       checksessionfortempuser() == "yes"
@@ -130,10 +130,10 @@ export default class Account extends Component {
 
     //check if pattern is successfull
     if (pwExpression.test(newPassword1) && pwExpression.test(newPassword2)) {
-      console.log("oldPassword:  " + oldPassword);
+      /*console.log("oldPassword:  " + oldPassword);
       console.log("newPassword1: " + newPassword1);
       console.log("newPassword2: " + newPassword2);
-      console.log("userid:       " + userId);
+      console.log("userid:       " + userId);*/
 
       //check if passwords ars equal
       if (newPassword1 == newPassword2) {
@@ -185,7 +185,7 @@ export default class Account extends Component {
   async _deleteAccount(event) {
     event.preventDefault();
     console.log("Delete user");
-    console.log(this.state);
+    // console.log(this.state);
 
     const deleteAccountCheck = this.state.deleteAccountCheck;
     const userId = this.state.userId;
@@ -294,7 +294,6 @@ export default class Account extends Component {
     /*--------------------Panel----------------------------*/
     const panes = [
       {
-
         //account info
         menuItem: "Info",
         render: () => (

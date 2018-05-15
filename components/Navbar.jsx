@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Button, Container, Menu } from "semantic-ui-react";
 import { bake_cookie, read_cookie, delete_cookie } from "sfcookies";
 import PropTypes from "prop-types";
-import {checksession, checksessionfortempuser} from "./Util";
+import { checksession, checksessionfortempuser } from "./Util";
 
 //****************************************************************************
 //This component creates the header/navbar and controles which buttons are visible
@@ -35,8 +35,8 @@ export default class Navbar extends Component {
   componentDidMount() {
     this.setState({ activeItem: this.props.name });
     var answer = checksession();
-    console.log("Current user: '" + answer + "'");
-    console.log("Active Item: " + this.props.name);
+    // console.log("Current user: '" + answer + "'");
+    // console.log("Active Item: " + this.props.name);
   }
 
   //----------------------------event handlers---------------------------//
@@ -58,7 +58,10 @@ export default class Navbar extends Component {
     var buttonPlaceholder = "";
 
     // If no cookie is set or user is a temp user then...
-    if (checksession() != "ErrorTokenFalse" && checksessionfortempuser() == "no") {
+    if (
+      checksession() != "ErrorTokenFalse" &&
+      checksessionfortempuser() == "no"
+    ) {
       var buttonPlaceholder = (
         <span>
           <Link href="/account">

@@ -84,7 +84,7 @@ export default class roomOverview extends Component {
     //to highlight the current room
     if (rooms != {} && rooms != undefined) {
       roomCardList = Object.keys(rooms).map(room => {
-         console.log(rooms[room]);
+        console.log(rooms[room]);
         if (this.state.roomId == rooms[room].id) {
           userRoom = (
             <div style={spanstyle}>
@@ -103,20 +103,19 @@ export default class roomOverview extends Component {
         } else {
           return (
             <div>
-            <RoomCard
-              creator={rooms[room].creator}
-              description={rooms[room].description}
-              hashedValue={rooms[room].hashedValue}
-              key={room}
-              password={rooms[room].password}
-              thumbnail={rooms[room].thumbnail}
-              title={rooms[room].title}
-              userNumber={rooms[room].ActiveUser}
-            />
+              <RoomCard
+                creator={rooms[room].creator}
+                description={rooms[room].description}
+                hashedValue={rooms[room].hashedValue}
+                key={room}
+                password={rooms[room].password}
+                thumbnail={rooms[room].thumbnail}
+                title={rooms[room].title}
+                userNumber={rooms[room].ActiveUser}
+              />
             </div>
           );
         } //end of else
-        
       });
       console.log(".........");
       console.log(userRoom);
@@ -145,19 +144,19 @@ export default class roomOverview extends Component {
             {roomCardList.map(function(roomCard) {
               if (roomCard != undefined) {
                 if (roomCard.key % 3 == 0) {
-                  console.log("even");
+                  //  console.log("even");
                   var returnValue = (
                     <Grid.Column width={5}>{roomCard}</Grid.Column>
                   );
                 }
                 if (roomCard.key % 3 == 1) {
-                  console.log("even");
+                  // console.log("even");
                   var returnValue = (
                     <Grid.Column width={5}>{roomCard}</Grid.Column>
                   );
                 }
                 if (roomCard.key % 3 == 2) {
-                  console.log("even");
+                  //  console.log("even");
                   var returnValue = (
                     <Grid.Column width={5}>{roomCard}</Grid.Column>
                   );

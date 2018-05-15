@@ -154,11 +154,7 @@ export default class VideoElement extends React.Component {
         </Table.Cell>
         <Table.Cell width={3}>
           <MyButton color="red" icon="delete" onClick={this._handleDelete} />
-          <Button icon color="red" onClick={this._handleStartVideo}>
-            <Icon name="youtube" />
-            <Icon name="play" />
-          </Button>
-        </Table.Cell>
+          </Table.Cell>
       </Table.Row>
     ); //end of return
   } // end of render

@@ -73,7 +73,7 @@ export default class Chat extends Component {
       });
     });
     if (this.state.username != "" && this.state.username != undefined) {
-      console.log("#####" + this.state.username);
+      //console.log("#####" + this.state.username);
       this._authentificateOnServer();
     }
   }
@@ -188,7 +188,7 @@ export default class Chat extends Component {
     socket.on("sendVideoCommand", message => {
       var userInList = false;
       if (message.length != 0) {
-        console.log(message);
+        //console.log(message);
         if (message.userlist.length != "0") {
           message.userlist.map(user => {
             user == this.state.username ? (userInList = true) : null;
@@ -196,7 +196,7 @@ export default class Chat extends Component {
         } // end of if
       } // end of if
       if (userInList == true) {
-        console.log("Handle the video command");
+        //console.log("Handle the video command");
         this.props.handleVideoCommand(this.props.roomId);
       }
     });
@@ -219,16 +219,7 @@ export default class Chat extends Component {
     var scrollY = window.scrollY;
     var scrollX = window.scrollX;
     this.chatEnd.scrollIntoView({ behavior: "instant", block: "start" });
-    //this.chatInputEnd.scrollIntoView({ behavior: "instant", block: "end" });
-    console.log(window);
-    //window.scrollTo(scrollY);
     window.scrollTo(scrollX, scrollY);
-    console.log(scrollX, scrollY);
-    console.log("----");
-    //this.scrollTop = 300;
-    //this.refs.chat.scrollToBottom();
-
-    //Scroll.animateScroll.scrollTo(400)
   };
 
   //--------------------------------Render----------------------------------//
