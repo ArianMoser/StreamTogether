@@ -123,7 +123,7 @@ export default class Chat extends Component {
 
   //authentificate
   _authentificateOnServer() {
-    console.log("Authentificate on Server");
+    //console.log("Authentificate on Server");
     socket.emit("authentificate", {
       hashedValue: this.state.hv,
       username: this.state.username
@@ -274,7 +274,7 @@ export default class Chat extends Component {
             </List.Content>
           </List.Item>
         );
-        console.log(userelement);
+        //console.log(userelement);
         return userelement;
       });
     } //end of if

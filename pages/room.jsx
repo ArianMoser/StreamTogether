@@ -88,7 +88,7 @@ export default class Room extends Component {
     this._getInformation();
     //this._updateUserRoomId();
     this.state.urlForInvite = window.location.href;
-    console.log("url:" + this.state.urlForInvite);
+    //console.log("url:" + this.state.urlForInvite);
   }
 
   // componentWillUpdate() is invoked just before rendering when new props or state are being received
@@ -113,16 +113,16 @@ export default class Room extends Component {
   //----------------------functions------------------------------//
   // updates the active room of the current user in the user table
   async _updateUserRoomId() {
-    console.log("Update current room of current user");
+    //console.log("Update current room of current user");
     // gets the username of current user
     var user = await checksession();
-    console.log("user:" + user);
+    //console.log("user:" + user);
     if (user == undefined || user == "ErrorTokenFalse") {
       var responseSelectUsername = "";
       do {
         //generate a new temp username
         user = this.generateUserName();
-        console.log("user: " + user);
+        //console.log("user: " + user);
         responseSelectUsername = await userFunctionByUsername(
           "/getuserbyusername",
           user
@@ -145,7 +145,7 @@ export default class Room extends Component {
         responseSelectUsername.length == "1"
       ) {
         // get user id
-        console.log(responseSelectUsername);
+        //console.log(responseSelectUsername);
         var userId = responseSelectUsername[0].ID;
         // create drop event
         const responseDropUserEvent = await dropUserEvent(
@@ -153,8 +153,8 @@ export default class Room extends Component {
           userId
         );
 
-        console.log("sessiontoken will be set");
-        console.log(user);
+        //console.log("sessiontoken will be set");
+        //console.log(user);
 
         //Create cookie
         var sessiontoken = jwt.sign(
@@ -165,10 +165,10 @@ export default class Room extends Component {
           },
           getSessionKey()
         );
-        console.log(sessiontoken);
+        //console.log(sessiontoken);
         bake_cookie("StreamTogether", sessiontoken);
       } else {
-        console.log("sessiontoken wont be set");
+        //console.log("sessiontoken wont be set");
         window.location = "/roomOverview";
       }
     } //end of if
@@ -184,9 +184,9 @@ export default class Room extends Component {
       roomId
     );
     if (responseUpdate.affectedRows == "1") {
-      console.log("Changed current room of active user ");
+      //console.log("Changed current room of active user ");
     } else {
-      console.log("Couldnt change current room of active user");
+      //console.log("Couldnt change current room of active user");
     }
   } // end of _updateUserRoomId
 
@@ -196,9 +196,9 @@ export default class Room extends Component {
 
     //reads hashedValue from the given url query
     var hashedValue = this.props.url.query.hv;
-    console.log("Found hashedValue :" + hashedValue);
+    //console.log("Found hashedValue :" + hashedValue);
     this.setState({ hv: hashedValue });
-    console.log("Tries to receive room information of the database");
+    //console.log("Tries to receive room information of the database");
     // trys to receive more room information from the database
     const responseRoomInformation = await roomFunctionByHashedValue(
       "/selectRoomInformation",
@@ -207,7 +207,7 @@ export default class Room extends Component {
 
     //check if db push succeded
     if (responseRoomInformation.length == "1") {
-      console.log("Request for more room information succeded");
+      //console.log("Request for more room information succeded");
       // get videos of room
       var videos = await this._getVideos(responseRoomInformation[0].ID);
       // saves the received room information
@@ -223,7 +223,7 @@ export default class Room extends Component {
     } else {
       window.location = "/roomOverview";
       // exception during receiving room information
-      console.log("Cant receive room information from the database");
+      //console.log("Cant receive room information from the database");
     }
   } //end of function _getInformation()
 
@@ -265,7 +265,7 @@ export default class Room extends Component {
     };
     videoList.push(video);
 
-    console.log("Start pushing video to database");
+    //console.log("Start pushing video to database");
     //check if video is already inside of the database
     var databaseId = await this._getDatabaseId(videoId);
     if (databaseId == 0) {
@@ -281,16 +281,16 @@ export default class Room extends Component {
         this.state.userName
       );
       if (responseVideoInsertion.affectedRows == "1") {
-        console.log("Video inserted succesfully");
+        //console.log("Video inserted succesfully");
         // Now get the database-id to connect room and video inside of playlist
         databaseId = await this._getDatabaseId(videoId);
       } else {
-        console.log("Couldnt insert Video into database");
+        //console.log("Couldnt insert Video into database");
         return false;
       } //end of else
     } else {
       // Video is already in the database
-      console.log("Video is already in the database");
+      //console.log("Video is already in the database");
     } // end of else
 
     // connect room and video
@@ -301,15 +301,15 @@ export default class Room extends Component {
     );
     // check if db push succeded
     if (responsePlaylistInsertion.affectedRows == "1") {
-      console.log("Created connection between video and room");
+      //console.log("Created connection between video and room");
     } else {
-      console.log("Couldnt create connection between video and room");
+      //console.log("Couldnt create connection between video and room");
     }
     var videos = await this._getVideos(this.state.roomId);
     // alters the delete room event
     await this._alterDeleteEvent(this.state.roomId);
-    console.log("Videos");
-    console.log(videos);
+    //console.log("Videos");
+    //console.log(videos);
 
     this.setState({
       videos: videos
@@ -322,13 +322,13 @@ export default class Room extends Component {
 
   // alters the deletion event of the room
   async _alterDeleteEvent(roomId) {
-    console.log("Alter room event");
+    //console.log("Alter room event");
     if (roomId != 0 && roomId != undefined) {
       const responseAlterEvent = await alterRoomEvent(
         "/updateDeleteEvent",
         roomId
       );
-      console.log(responseAlterEvent);
+      //console.log(responseAlterEvent);
     }
   }
 
@@ -336,14 +336,14 @@ export default class Room extends Component {
   // deletes connection between video and room (playlist table)
   // alters the delete event for the room
   async _nextVideo(roomId, videoId) {
-    console.log("Next Video");
+    //console.log("Next Video");
     this._deleteVideo(roomId, videoId);
     this._alterDeleteEvent(roomId);
   }
 
   // votes for the video (inside of the playlist table)
   async _voteVideo(roomId, databaseId, voteValue) {
-    console.log("Vote video");
+    //console.log("Vote video");
     const responseVoteVideo = await voteVideo(
       "/updateUpVotes",
       roomId,
@@ -351,13 +351,13 @@ export default class Room extends Component {
       voteValue
     );
     if (responseVoteVideo.affectedRows == "1") {
-      console.log("Video voted");
+      //console.log("Video voted");
       var videos = await this._getVideos(roomId);
       this.setState({
         enabled: false,
         videos: videos
       });
-      console.log("Timeout for vote started");
+      //console.log("Timeout for vote started");
       setTimeout(this._setEnabled, 30000);
 
       socket.emit("triggerRefresh", {
@@ -365,24 +365,24 @@ export default class Room extends Component {
         username: this.state.userName
       });
     } else {
-      console.log("Error during voting process");
+      //console.log("Error during voting process");
     }
   }
 
   _setEnabled() {
     this.setState({ enabled: true });
-    console.log("Timeout over");
+    //console.log("Timeout over");
   }
   // deletes connection between video and room (playlist table)
   async _deleteVideo(roomId, videoId) {
-    console.log("Delete Video");
+    //console.log("Delete Video");
     const responseDeleteVideo = await deletePlaylist(
       "/deletePlaylist",
       roomId,
       videoId
     );
     if (responseDeleteVideo.affectedRows == "1") {
-      console.log("Deleted Video in table playlist");
+      //console.log("Deleted Video in table playlist");
       var videos = await this._getVideos(this.state.roomId);
       this.setState({
         videos: videos
@@ -393,7 +393,7 @@ export default class Room extends Component {
         username: this.state.userName
       });
     } else {
-      console.log("Error during deleting process of video");
+      //console.log("Error during deleting process of video");
     }
   }
 
@@ -405,14 +405,14 @@ export default class Room extends Component {
       youtubeId
     );
     if (responseDatabaseId.length == "1") {
-      console.log("Found a data set");
+      //console.log("Found a data set");
       return responseDatabaseId[0].ID;
     } else {
       if (responseDatabaseId.length == "0") {
-        console.log("Couldnt find any dataset");
+        //console.log("Couldnt find any dataset");
         return 0;
       } else {
-        console.log("Found multiple datasets. Working with default (0)");
+        //console.log("Found multiple datasets. Working with default (0)");
         return responseDatabaseId[0].ID;
       }
     }
@@ -420,7 +420,7 @@ export default class Room extends Component {
 
   // updates the started attribute of a video inside of the table Playlist
   async _updateStarted(roomId, videoId, started, status) {
-    console.log("Update started");
+    //console.log("Update started");
     const responseUpdateStarted = await updateStarted(
       "/updatePlaylistStarted",
       roomId,
@@ -429,17 +429,17 @@ export default class Room extends Component {
       status
     );
     if (responseUpdateStarted.affectedRows == "1") {
-      console.log("Updated started value");
+      //console.log("Updated started value");
       return true;
     } else {
-      console.log("Error during update process(started)");
+      //console.log("Error during update process(started)");
       return false;
     }
   }
 
   // updates the status of the videos
   async _updateStatus(roomId, videoId, status) {
-    console.log("Update started");
+    //console.log("Update started");
     const responseUpdateStatus = await updateStatus(
       "/updatePlaylistStatus",
       roomId,
@@ -447,17 +447,17 @@ export default class Room extends Component {
       status
     );
     if (responseUpdateStatus.affectedRows == "1") {
-      console.log("Updated status value");
+     // console.log("Updated status value");
       return true;
     } else {
-      console.log("Error during update process(started)");
+      //console.log("Error during update process(started)");
       return false;
     }
   }
 
   //handles the pause event
   async handlePlayerPause(roomId, videoId) {
-    console.log("******Player will paused on the room");
+    //console.log("******Player will paused on the room");
     var res = await this._updateStatus(roomId, videoId, "pause");
     if (res == true) {
       // trigger socket call //this.props.url.query.hv
@@ -471,7 +471,7 @@ export default class Room extends Component {
 
   // handles the play event
   async handlePlayerPlay(roomId, videoId, timecode) {
-    console.log("************Player will started on the room");
+   // console.log("************Player will started on the room");
     var res = await this._updateStarted(roomId, videoId, timecode, "play");
     if (res == true) {
       // trigger socket call
@@ -508,20 +508,20 @@ export default class Room extends Component {
     var videoPlayer = <h2>Noch kein Video ausgewählt.</h2>;
     var playlist = <div />;
     // loads the videoPlayer
-    console.log("Loads videoPlayer");
+    //console.log("Loads videoPlayer");
     var videos = this.state.videos;
     if (videos[0] != undefined) {
       var video = videos[0];
       var started = "0";
       var status = "play";
-      console.log(video);
+     // console.log(video);
       //check if started is
       if (video.started == 0) {
         // videoId: video_ID
         // roomId: room_ID
         // set started to current Timestamp
         started = new Date().getTime();
-        console.log(started);
+        //console.log(started);
         this._updateStarted(
           video.room_ID,
           video.video_ID,
@@ -581,7 +581,7 @@ export default class Room extends Component {
         videoControlButton = <div />;
       }
       // loads the playlist
-      console.log("Loads the playlist");
+      //console.log("Loads the playlist");
       playlist = videos.map(video => {
         return (
           <VideoElement

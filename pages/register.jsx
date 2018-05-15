@@ -35,10 +35,10 @@ export default class register extends Component {
     const pw = event.target[2].value;
     const pw2 = event.target[3].value;
 
-    console.log("Input :" + username);
-    console.log("Input :" + email);
-    console.log("Input :" + pw);
-    console.log("Input :" + pw2);
+    //console.log("Input :" + username);
+    //console.log("Input :" + email);
+    //console.log("Input :" + pw);
+    //console.log("Input :" + pw2);
 
     //define pattern
     var userExpression = /^[A-Za-z0-9_]{1,32}$/;
@@ -58,24 +58,24 @@ export default class register extends Component {
           "/getuserbyusername",
           username
         );
-        console.log(
+        /*console.log(
           "Number of entries in the database with username " +
             username +
             " :" +
             responseSelectUsername.length
-        );
+        );*/
         //Check if username is used!
         if (responseSelectUsername.length == "0") {
           const responseSelectEmail = await userFunctionByEmail(
             "/getuserbyemail",
             email
           );
-          console.log(
+          /*console.log(
             "Number of entries in the database with email " +
               email +
               " :" +
               responseSelectEmail.length
-          );
+          );*/
           //Check if email is used!
           if (responseSelectEmail.length == "0") {
             //Send registration
@@ -85,9 +85,9 @@ export default class register extends Component {
               email,
               pw
             );
-            console.log(
+            /*console.log(
               "Reg. Complete | Affected Rows: " + responseRegister.affectedRows
-            );
+            );*/
             //check if db push is succedd
             if (responseRegister.affectedRows == "1") {
               // Registration completed
@@ -103,17 +103,17 @@ export default class register extends Component {
               '<div class="ui negative message"><div class="header">Error</div><p>Internal Error</p></div>';
             }
           } else {
-            console.log("Email is Used!");
+            //console.log("Email is Used!");
             document.getElementById("feedback").innerHTML =
               '<div class="ui negative message"><div class="header">Email is already used</div><p>Please choose a different email</p></div>';
           }
         } else {
-          console.log("Username is Used!");
+          //console.log("Username is Used!");
           document.getElementById("feedback").innerHTML =
             '<div class="ui negative message"><div class="header">Username is already used</div><p>Please choose a different username</p></div>';
         }
       } else {
-        console.log("Password not Equal!");
+        //console.log("Password not Equal!");
         document.getElementById("feedback").innerHTML =
           '<div class="ui negative message"><div class="header">Passwords are not equal</div><p>Please enter your password again</p></div>';
       }

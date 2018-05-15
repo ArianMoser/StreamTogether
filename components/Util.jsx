@@ -20,7 +20,7 @@ export function checksession() {
       );
       return decodedsession.username;
     } catch (err) {
-      console.log("Error-Message: " + err.message);
+      //console.log("Error-Message: " + err.message);
       return "ErrorTokenFalse";
     }
   } else {
@@ -38,7 +38,7 @@ export function checksessionfortempuser() {
       );
       return decodedsession.tempuser;
     } catch (err) {
-      console.log("Error-Message: " + err.message);
+      //console.log("Error-Message: " + err.message);
       return "ErrorTokenFalse";
     }
   } else {

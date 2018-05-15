@@ -84,7 +84,7 @@ export default class Account extends Component {
       checksessionfortempuser() == "yes"
     ) {
       window.location = "/login";
-      console.log("Cookie not found");
+      //console.log("Cookie not found");
     } else {
       $("OwnHeader").show();
       this._getInformation();
@@ -118,7 +118,7 @@ export default class Account extends Component {
   //changes the password
   async _changePassword(event) {
     event.preventDefault();
-    console.log("Handle password change");
+    //console.log("Handle password change");
 
     //password pattern
     var pwExpression = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
@@ -137,76 +137,76 @@ export default class Account extends Component {
 
       //check if passwords ars equal
       if (newPassword1 == newPassword2) {
-        console.log("Passwords are equal. Continues ... ");
+        //console.log("Passwords are equal. Continues ... ");
         //check oldPassword
         if (
           bcrypt.compareSync(oldPassword, this.state.hashedPassword) &&
           this.state.hashedPassword != ""
         ) {
-          console.log("Password accepted");
+          //console.log("Password accepted");
           //change password
           const responseChangePassword = await changePassword(
             "/updateUserPassword",
             userId,
             newPassword2
           );
-          console.log(
+          /*console.log(
             "Reg. Complete | Affected Rows: " +
               responseChangePassword.affectedRows
-          );
+          );*/
           //check if db push succeded
           if (responseChangePassword.affectedRows == "1") {
             document.getElementById("feedback_password").innerHTML =
               '<div class="ui positive message"><div class="header">Password changed</div><p>Your password has been changed successfully</p></div>';
-            console.log("DB push succeeded");
+            //console.log("DB push succeeded");
           } else {
             document.getElementById("feedback_password").innerHTML =
               '<div class="ui negative message"><div class="header">Error</div><p>Internal Error</p></div>';
-            console.log("DB push failed");
+            //console.log("DB push failed");
           }
         } else {
           document.getElementById("feedback_password").innerHTML =
             '<div class="ui negative message"><div class="header">Password not correct</div><p>Old password not correct</p></div>';
-          console.log("Password wrong");
+          //console.log("Password wrong");
         }
       } else {
         document.getElementById("feedback_password").innerHTML =
           '<div class="ui negative message"><div class="header">Password not equal</div><p>Please try again</p></div>';
-        console.log("Exception: 'Passwords are not equal'");
+        //console.log("Exception: 'Passwords are not equal'");
       }
     } else {
       document.getElementById("feedback_password").innerHTML =
         '<div class="ui negative message"><div class="header">New password not accepted</div><p>Please try another password</p></div>';
-      console.log("Pattern Error!");
+      //console.log("Pattern Error!");
     }
   }
 
   // deletes the account
   async _deleteAccount(event) {
     event.preventDefault();
-    console.log("Delete user");
+    //console.log("Delete user");
     // console.log(this.state);
 
     const deleteAccountCheck = this.state.deleteAccountCheck;
     const userId = this.state.userId;
 
     if (deleteAccountCheck) {
-      console.log("Delete Account check succeded");
+      //console.log("Delete Account check succeded");
       //delete account
       const responseDeleteAccount = await deleteUser("/deleteUser", userId);
-      console.log(
+      /*console.log(
         "Reg. Complete | Affected Rows: " + responseDeleteAccount.affectedRows
-      );
+      );*/
       //check if db push is succeded
       if (responseDeleteAccount.affectedRows == "1") {
-        console.log("Deletion completed");
+        //console.log("Deletion completed");
         delete_cookie("StreamTogether");
         window.location = "/login";
       } else {
-        console.log("Deletion failed");
+        //console.log("Deletion failed");
       }
     } else {
-      console.log("Delete Account check failed");
+      //console.log("Delete Account check failed");
     }
   }
 
@@ -217,22 +217,22 @@ export default class Account extends Component {
     await this._getUserId(username);
     var userId = this.state.userId;
 
-    console.log("Tries to receive room information of the database");
-    console.log("Found Username: " + username);
+    //console.log("Tries to receive room information of the database");
+    //console.log("Found Username: " + username);
     //get user information
     const responseUserInformation = await userFunctionLogin(
       "/login",
       username,
       username
     );
-    console.log(responseUserInformation);
-    console.log("Reg. Complete | Count : " + responseUserInformation.length);
+    //console.log(responseUserInformation);
+    //console.log("Reg. Complete | Count : " + responseUserInformation.length);
     //check if db push succeed
     if (responseUserInformation.length == "1") {
-      console.log("DB push succeeded");
-      console.log("Get room name");
-      console.log(responseUserInformation);
-      console.log(responseUserInformation[0].current_room_id);
+      //console.log("DB push succeeded");
+      //console.log("Get room name");
+      //console.log(responseUserInformation);
+      //console.log(responseUserInformation[0].current_room_id);
       var currentRoomId = !responseUserInformation[0].current_room_id
         ? ""
         : responseUserInformation[0].current_room_id;
@@ -262,17 +262,17 @@ export default class Account extends Component {
 
   // gets the username by the userid
   async _getUserId(username) {
-    console.log("Passed username: " + username);
+    //console.log("Passed username: " + username);
     const response = await userFunctionByUsername(
       "/getuserbyusername",
       username
     );
-    console.log(response);
+    //console.log(response);
     //check if db select succeded
     if (response.length == "1") {
       var hashedPassword = response[0].password;
       var currentUserId = response[0].ID;
-      console.log("Found id " + currentUserId);
+      //console.log("Found id " + currentUserId);
     } else {
       console.log("Could not resolve username into id");
       var currentUserId = "0";

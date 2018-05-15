@@ -57,8 +57,8 @@ export default class RoomCard extends Component {
   //----------------------------event handlers---------------------------//
   _handleRoomJoining(event, hashed) {
     event.preventDefault();
-    console.log("Join Room clicked");
-    console.log("Target room: " + hashed);
+    //console.log("Join Room clicked");
+    //console.log("Target room: " + hashed);
     window.location = "./room?hv=" + hashed;
   }
 
@@ -72,12 +72,12 @@ export default class RoomCard extends Component {
   //check password
   _handlePasswordCheck(event) {
     if (event.charCode == 13) {
-      console.log("Check password");
+      //console.log("Check password");
       if (bcrypt.compareSync(this.state.inputPassword, this.state.password)) {
-        console.log("Password correct");
+        //console.log("Password correct");
         window.location = "./room?hv=" + this.state.hashedValue;
       } else {
-        console.log("Password wrong");
+        //console.log("Password wrong");
       }
     }
   }
@@ -86,13 +86,13 @@ export default class RoomCard extends Component {
   //get username
   async _getUsername(id) {
     const responseUsername = await userFunctionById("/getUserById", id);
-    console.log(responseUsername);
+    //console.log(responseUsername);
     if (responseUsername.length == "1") {
       this.setState({
         userName: responseUsername[0].username
       });
     } else {
-      console.log("Failed to resolve creator");
+      //console.log("Failed to resolve creator");
     }
   }
 

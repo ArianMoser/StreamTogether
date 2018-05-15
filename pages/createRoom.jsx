@@ -56,7 +56,7 @@ export default class RoomCreator extends Component {
   // componentDidMount() is invoked immediately after a component is mounted
   componentDidMount() {
     var currentUsername = checksession();
-    console.log("Username: " + currentUsername);
+    //console.log("Username: " + currentUsername);
     var currentUserId = this._getUserId(currentUsername);
     //When user is not loged in...
     if (checksession() == "ErrorTokenFalse" || checksessionfortempuser() == "yes") {
@@ -113,7 +113,7 @@ export default class RoomCreator extends Component {
       password = this.state.password;
     }
 
-    console.log(
+    /*console.log(
       "Title: " +
         title +
         "| description: " +
@@ -124,22 +124,22 @@ export default class RoomCreator extends Component {
         password +
         "| currentUser: " +
         currentUser
-    );
+    );*/
 
     //check title and password
     if (title != " " && title != "" && title != undefined) {
       if ((password != undefined && password != "") || !checkPassword) {
-        console.log("Testpattern succeded");
+        //console.log("Testpattern succeded");
         const responseSelectTitle = await roomFunctionByTitle(
           "/selectRoomByTitle",
           title
         );
-        console.log(
+        /*console.log(
           "Number of entries in the database with roomtitle '" +
             title +
             "' :" +
             responseSelectTitle.length
-        );
+        );*/
 
         //check if title is already used
         if (responseSelectTitle.length == "0") {
@@ -147,7 +147,7 @@ export default class RoomCreator extends Component {
 
           //Upload Image
           if (this.state.selectedFile != "") {
-            console.log(this.state.selectedFile);
+            //console.log(this.state.selectedFile);
             const formData = new FormData();
             formData.append(
               "Image",
@@ -155,7 +155,7 @@ export default class RoomCreator extends Component {
               this.state.selectedFile.name
             );
             responseUploadImage = await uploadImage("/uploadImage", formData);
-            console.log(responseUploadImage);
+            //console.log(responseUploadImage);
           }
 
           // send the room information to the database
@@ -167,28 +167,28 @@ export default class RoomCreator extends Component {
             currentUser,
             responseUploadImage
           );
-          console.log(
+          /*console.log(
             "Reg. Complete | Affected Rows: " +
               responseRoomCreation.affectedRows
-          );
+          );*/
 
           //check if db push succeded
           if (responseRoomCreation.affectedRows == "1") {
-            console.log("DB push succeeded");
+            //console.log("DB push succeeded");
 
             //get the link to the room
-            console.log("Get the hashed value to reach the room");
+            //console.log("Get the hashed value to reach the room");
             const responseGetHashedValue = await roomFunctionByTitle(
               "/selectRoomByTitle",
               title
             );
-            console.log(
+            /*console.log(
               "Number of entries in the database with roomtitle '" +
                 title +
                 "' :" +
                 responseGetHashedValue.length
-            );
-            console.log(responseGetHashedValue);
+            );*/
+            //console.log(responseGetHashedValue);
             var hashedValue = responseGetHashedValue[0].hashedValue;
             var roomid = responseGetHashedValue[0].ID;
             // create DropEvent
@@ -196,30 +196,30 @@ export default class RoomCreator extends Component {
               "createEventDropRoom",
               roomid
             );
-            console.log(responseDropRoomEvent);
+           // console.log(responseDropRoomEvent);
             if (responseDropRoomEvent.serverStatus == "2") {
-              console.log("The drop event was scheduled in 1 hour");
+              //console.log("The drop event was scheduled in 1 hour");
             } else {
-              console.log("Error during the event creation process");
+             // console.log("Error during the event creation process");
             }
             document.getElementById("feedback").innerHTML =
               '<div class="ui positive message"><div class="header">Room created</div><p>Forwarding...</p></div>';
             window.location = "./room?hv=" + hashedValue;
           } else {
-            console.log("DB push failed");
+            //console.log("DB push failed");
             document.getElementById("feedback").innerHTML =
               '<div class="ui negative message"><div class="header">Room not created</div><p>Internal Error - DB push</p></div>';
           }
         } else {
-          console.log("A room with this title already exists");
+          //console.log("A room with this title already exists");
           document.getElementById("feedback").innerHTML =
             '<div class="ui negative message"><div class="header">Room not created</div><p>A room with this title already exists</p></div>';
         }
       } else {
-        console.log("Testpattern failed");
+        //console.log("Testpattern failed");
       }
     } else {
-      console.log("Roomname can not be empty");
+      //console.log("Roomname can not be empty");
       document.getElementById("feedback").innerHTML =
         '<div class="ui negative message"><div class="header">Room not created</div><p>Roomname can not be empty</p></div>';
     }
@@ -228,17 +228,17 @@ export default class RoomCreator extends Component {
   //----------------------functions------------------------------//
   // gets the username by an id
   async _getUserId(username) {
-    console.log("Passed username: " + username);
+    //console.log("Passed username: " + username);
     const response = await userFunctionByUsername(
       "/getuserbyusername",
       username
     );
-    console.log(response);
+    //console.log(response);
     if (response.length == "1") {
       var currentUserId = response[0].ID;
-      console.log("Found id " + currentUserId);
+      //console.log("Found id " + currentUserId);
     } else {
-      console.log("Could not resolve username into id");
+     // console.log("Could not resolve username into id");
       var currentUserId = "0";
     }
     this.setState({

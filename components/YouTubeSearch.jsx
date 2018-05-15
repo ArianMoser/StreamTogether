@@ -124,7 +124,7 @@ class YouTubeSearch extends Component {
     axios
       .get("https://www.googleapis.com/youtube/v3/search", { params: params })
       .then(function(response) {
-        console.log(response.data);
+        //console.log(response.data);
         callback(response.data);
       })
       .catch(function(error) {
@@ -133,8 +133,8 @@ class YouTubeSearch extends Component {
   }
 
   _chooseVideo(video) {
-    console.log("###########");
-    console.log(video);
+    //console.log("###########");
+    //console.log(video);
     this.props.chooseVideo(video);
     this.setState({
       searchResults: [], //resets youtube search results

@@ -81,14 +81,14 @@ export default class VideoElement extends React.Component {
   }
 
   _handleDelete() {
-    console.log("Clicked delete");
-    console.log("DatabaseId:" + this.state.databaseId);
-    console.log("RoomId: " + this.state.roomId);
+    //console.log("Clicked delete");
+    //console.log("DatabaseId:" + this.state.databaseId);
+    //console.log("RoomId: " + this.state.roomId);
     this.props.handleDelete(this.state.roomId, this.state.databaseId);
   }
 
   _handleThumbsUp() {
-    console.log("Clicked thumbsup");
+    //console.log("Clicked thumbsup");
 
     const nodeThumbsDown = this.refs.refThumbsDown;
     const nodeThumbsUp = this.refs.refThumbsUp;
@@ -99,7 +99,7 @@ export default class VideoElement extends React.Component {
   }
 
   _handleThumbsDown() {
-    console.log("Clicked thumbsdown");
+    //console.log("Clicked thumbsdown");
 
     const nodeThumbsDown = this.refs.refThumbsDown;
     const nodeThumbsUp = this.refs.refThumbsUp;
@@ -110,7 +110,7 @@ export default class VideoElement extends React.Component {
   }
 
   _handleStartVideo() {
-    console.log("Clicked start video");
+    //console.log("Clicked start video");
     // future feature for admins
     // start video earlier (switches the position in the queue)
   }

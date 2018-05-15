@@ -44,16 +44,16 @@ export default class roomOverview extends Component {
   //componentDidMount() is invoked immediately after a component is mounted
   componentDidMount() {
     var userName = checksession();
-    console.log("user:" + userName);
+    //console.log("user:" + userName);
     this._getUserRoom(userName);
   }
 
   //----------------------functions------------------------------//
   async _getAllRooms() {
-    console.log("Loading rooms");
+    //console.log("Loading rooms");
     const responseGetRooms = await roomFunctionShowAll("/selectRooms");
-    console.log("Reg. Complete | Count : " + responseGetRooms.length);
-    console.log(responseGetRooms);
+    //console.log("Reg. Complete | Count : " + responseGetRooms.length);
+    //console.log(responseGetRooms);
     this.setState({ rooms: responseGetRooms });
   }
 
@@ -64,8 +64,8 @@ export default class roomOverview extends Component {
         userName
       );
       if (responseUserInformation.length == "1") {
-        console.log(responseUserInformation);
-        console.log("RoomId: " + responseUserInformation[0].current_room_id);
+        //console.log(responseUserInformation);
+       // console.log("RoomId: " + responseUserInformation[0].current_room_id);
         this.setState({ roomId: responseUserInformation[0].current_room_id });
       }
     }
@@ -84,7 +84,7 @@ export default class roomOverview extends Component {
     //to highlight the current room
     if (rooms != {} && rooms != undefined) {
       roomCardList = Object.keys(rooms).map(room => {
-        console.log(rooms[room]);
+        //console.log(rooms[room]);
         if (this.state.roomId == rooms[room].id) {
           userRoom = (
             <div style={spanstyle}>
@@ -117,10 +117,10 @@ export default class roomOverview extends Component {
           );
         } //end of else
       });
-      console.log(".........");
-      console.log(userRoom);
-      console.log(roomCardList);
-      console.log(".........");
+      //console.log(".........");
+      //console.log(userRoom);
+      //console.log(roomCardList);
+     // console.log(".........");
       if (
         roomCardList.length == "0" ||
         roomCardList == undefined ||

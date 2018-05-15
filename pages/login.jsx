@@ -51,19 +51,19 @@ export default class Login extends Component {
 
     //check if user exist
     const response = await userFunctionLogin("/login", username, username);
-    console.log(response);
+    //console.log(response);
     //check response
     if (response.length == "0") {
-      console.log("No user found");
+      //console.log("No user found");
       document.getElementById("feedback").innerHTML =
         '<div class="ui negative message"><div class="header">Error</div><p>Username or Password not correct</p></div>';
     } else {
-      console.log("User found");
+      //console.log("User found");
       //check if password is equal
       if (bcrypt.compareSync(password, response[0].password)) {
         document.getElementById("test").innerHTML =
           "Welcome " + response[0].username;
-        console.log("Password correct!");
+        //console.log("Password correct!");
         document.getElementById("feedback").innerHTML =
           '<div class="ui positive message"><div class="header">Login successful</div><p>Forwarding...</p></div>';
         setTimeout(continueToLogIn, 2000);
@@ -77,12 +77,12 @@ export default class Login extends Component {
             },
             getSessionKey()
           );
-          console.log(sessiontoken);
+          //console.log(sessiontoken);
           bake_cookie("StreamTogether", sessiontoken);
           window.location = "./index";
         }
       } else {
-        console.log("Password incorrect");
+        //console.log("Password incorrect");
         document.getElementById("feedback").innerHTML =
           '<div class="ui negative message"><div class="header">Error</div><p>Username or Password not correct</p></div>';
       }

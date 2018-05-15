@@ -64,9 +64,9 @@ export default class YouTubePlayer extends Component {
         Math.abs(Math.round((this.props.started - prevProps.started) / 1000)) >
         2
       ) {
-        console.log(
+        /*console.log(
           Math.abs(Math.round((this.props.started - prevProps.started) / 1000))
-        );
+        );*/
         // console.log("Started Time changed");
         this.setState({ controlled: true });
       }
@@ -112,20 +112,20 @@ export default class YouTubePlayer extends Component {
 
   //----------------------------------Event-Handler-----------------------------//
   _onError(event) {
-    console.log("Player error");
+    //console.log("Player error");
   }
 
   _onEnd(event) {
-    console.log("Player end");
+    //console.log("Player end");
     this.props.handleVideoEnd(this.props.roomId, this.props.databaseId);
   }
 
   _onPause(event) {
-    console.log("Player paused");
+    //console.log("Player paused");
   }
 
   _onPlay(event) {
-    console.log("Player started");
+    //console.log("Player started");
     var currentTime = new Date().getTime();
     var startTime = this.props.started;
     var timecode = Math.round((currentTime - startTime) / 1000);
@@ -152,7 +152,7 @@ export default class YouTubePlayer extends Component {
 
   // access to player in all event handlers via event.target
   _onReady(event) {
-    console.log("Player ready");
+    //console.log("Player ready");
     //console.log(event.target);
     if (this.status == "play") {
       var startTime = this.props.started;
@@ -176,7 +176,7 @@ export default class YouTubePlayer extends Component {
   }
 
   _onStateChanged(event) {
-    console.log("Player state changed");
+    //console.log("Player state changed");
     //console.log(event);
   }
 
